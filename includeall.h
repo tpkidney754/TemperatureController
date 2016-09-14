@@ -1,3 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "hw1.h"
+#include <stdint.h>
+#include "memory.h"
+#include "data.h"
+//#include "project1.h"z
