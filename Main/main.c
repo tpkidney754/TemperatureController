@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #define LEN 10
 
-int main(){
+int main()
+{
   /*
   uint8_t array[LEN] = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
 

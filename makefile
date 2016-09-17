@@ -1,25 +1,49 @@
-CC = c99
-XCC = arm-linux-gnueabihf-gcc
-LD = ld
-XLD = arm-linux.gnueabi-ld
+host: CC = gcc
+bbb:  CC = arm-linux-gnueabi-gcc
+frdm: CC = arm-none-eabi-gcc
+include sources.mk
 CFLAGS = -Werror -g -O0 -std=c99
-LDFLAGS = -Map hw2.map -T
-SRCS = \
-	main.c \
-	memory.c \
-	data.c
+LDFLAGS = -Xlinker -Map=main.map
 OBJS = $(SRCS:.c=.o)
-INCLUDES = -I .
-OUTPUT = hw2
+OBJS = $(SRCS:.c=.o)
+LIBOBJS = $(LIBS:.c=.o)
+PREOBJS = $(SRCS:.c=.i)
+ASMOBJS = $(SRCS:.c=.S)
+OUTPUT = proj1
+.PHONY: host bbb frdm preprocess asm-file compile-all build clean build-lib %.o %.i %.S
 
-hw2.exe: $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) -o $(OUTPUT).exe
+host: $(OBJS)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)
 
-hw2BB.exe: $(OBJS)
-	$(XCC) $(CFLAGS) $(INCLUDES) $(SRCS) -o $(OUTPUT)BB.exe
+bbb: $(OBJS)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)bbb
+
+frdm: $(OBJS)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)frdm
+
+preprocess: $(PREOBJS)
+
+asm-file: $(ASMOBJS)
+
+compile-all: $(OBJS)
+
+build: host bbb frdm
+
+upload: bbb
+	scp $(OUTPUT)bbb root@192.168.1.10:/home/debian/bin/
+
+build-lib: $(LIBOBJS)
+	ar rcs libproject1.a $(LIBOBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $*.c $(INCLUDES) 
+	$(CC) $(CFLAGS) -c $*.c $(INCLUDES) -o $@
+	$(CC) -M $(CFLAGS) $*.c > $*.d $(INCLUDES)
+
+%.i: %.c
+	$(CC) -E -o $*.i $*.c $(INCLUDES)
+
+%.S: %.c
+	$(CC) $(CFLAGS) -S -o $*.S $*.c $(INCLUDES)
 
 clean:
-	-rm -f *.exe *.o
+	-rm -f $(OUTPUT)* ./*/*.o ./*/*.d ./*/*.i ./*/*.S main.map *.a
