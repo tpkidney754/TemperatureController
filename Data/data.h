@@ -12,6 +12,9 @@
 #define BYTE1_SHIFT  8
 #define BYTE0_SHIFT  0
 
+#define ASCIINUMBASE    0x30
+#define ASCIILETTERBASE 0X37
+
 int8_t * MyItoa( uint8_t * str, int32_t data, int32_t base );
 int32_t MyAtoi( uint8_t * str );
 void DumpMemory( uint8_t * start, uint32_t length );

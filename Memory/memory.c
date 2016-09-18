@@ -7,9 +7,9 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t length )
 		return -1;
 	}
 
-	for( int32_t i = 0; i < length-1; i++ )
+	for( int32_t i = 0; i < length; i++ )
 	{
-		*dst++ = *src;
+		*dst++ = *src++;
 	}
 
 	return dst ? 0 : -1;
