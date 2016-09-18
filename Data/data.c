@@ -1,5 +1,18 @@
 #include "data.h"
 
+//-----------------------------------------------------------------------
+// Function:  MyItoa
+//
+// Description: Inputs a integer value and coverts into a stirng.
+//
+// Parameters: uint8_t * str: pointer to a string
+//             int32_t data: interger to be converted into a string.
+//             int32_t base: What base the integer is going to be
+//                           converted to
+// Return Value:  int8_t: pass/fail value. A return of 0 is a successfull
+//                        conversion. Anything else is a failure.
+//-----------------------------------------------------------------------
+
 int8_t * MyItoa( uint8_t * str, int32_t data, int32_t base )
 {
    uint8_t negative = 0;
