@@ -22,10 +22,15 @@ make /Directory/file.S: This will individually compile but not assemble a file w
 make clean: This will remove and *.o, *.d, *.i, *.S, *.map or *.a file located in the 
 				directory.
 
-make size: This will output the sizze of the *.o files, but should not be
-		   called directly becuase it is automatically called during a build.
+The size of the executable will be outputed after the specified build target is finished
+building.
 
-The make file will output and executable as follows:
+The make file will output an executable as follows:
 host: proj1
 bbb: proj1bbb
 frdm: proj1frdm
+
+To run testing run the make file as follows:
+	make target DEFINES=-DDEBUG
+this will add in a #define DEBUG to the preprocessor that will compile the 
+testing code written into the main.c file.

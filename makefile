@@ -8,7 +8,7 @@ include sources.mk
 host: CFLAGS = -Werror -g -O0 -std=c99 -Arch=x86
 bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
 frdm:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM --specs=nosys.specs
-DEFINES = -DPROJECT1
+override DEFINES += -DPROJECT1
 LDFLAGS = -Xlinker -Map=main.map
 OBJS = $(SRCS:.c=.o)
 LIBOBJS = $(LIBS:.c=.o)
