@@ -46,7 +46,7 @@ int8_t MyMemZero( uint8_t * src, uint32_t length )
       return -1;
    }
 
-   for( int32_t i = 0; i < length-1; i++ )
+   for( int32_t i = 0; i < length; i++ )
    {
       *src++ = 0;
    }

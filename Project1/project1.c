@@ -26,5 +26,4 @@ void Project1Report( void )
    MyReverse( array, ARRAY_SIZE );
 
    DumpMemory( array, ARRAY_SIZE );
-
 }
