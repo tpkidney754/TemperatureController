@@ -3,3 +3,6 @@
 #include "memory.h"
 #include "data.h"
 #include "project1.h"
+#ifdef FRDM
+	#define printf( ... ) ( 0 )
+#endif

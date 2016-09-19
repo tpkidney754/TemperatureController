@@ -1,29 +1,34 @@
 host: CC = gcc
 bbb:  CC = arm-linux-gnueabihf-gcc
 frdm: CC = arm-none-eabi-gcc
+host: SZ = size
+bbb:  SZ = arm-linux-gnueabihf-size
+frdm: SZ = arm-none-eabi-size
 include sources.mk
 host: CFLAGS = -Werror -g -O0 -std=c99 -Arch=x86
 bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
-frdm:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
+frdm:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM --specs=nosys.specs
 DEFINES = -DPROJECT1
 LDFLAGS = -Xlinker -Map=main.map
-OBJS = $(SRCS:.c=.o)
 OBJS = $(SRCS:.c=.o)
 LIBOBJS = $(LIBS:.c=.o)
 PREOBJS = $(SRCS:.c=.i)
 ASMOBJS = $(SRCS:.c=.S)
 OUTPUT = proj1
 
-.PHONY: host bbb frdm preprocess asm-file compile-all build clean build-lib %.o %.i %.S
+.PHONY: size host bbb frdm preprocess asm-file compile-all build clean build-lib %.o %.i %.S
 
 host: $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT) $(LDFLAGS) $(DEFINES)
+	$(SZ) $(OUTPUT)
 
 bbb: $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)bbb $(LDFLAGS) $(DEFINES)
+	$(SZ) $(OUTPUT)bbb
 
 frdm: $(OBJS)
-	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)frdm $(LDFLAGS) $(DEFINES)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)frdm $(DEFINES) -DFRDM
+	$(SZ) $(OUTPUT)frdm
 
 preprocess: $(PREOBJS)
 

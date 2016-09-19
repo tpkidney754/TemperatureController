@@ -12,7 +12,7 @@
 // Return Value:  int8_t: pass/fail value. A return of 0 is a successfull *
 //                        conversion. Anything else is a failure.         *
 //*************************************************************************
-int8_t * MyItoa( uint8_t * str, int32_t data, int32_t base )
+int8_t MyItoa( uint8_t * str, int32_t data, int32_t base )
 {
    uint8_t negative = 0;
    uint32_t i = 0;

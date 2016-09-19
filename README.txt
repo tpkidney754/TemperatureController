@@ -22,6 +22,9 @@ make /Directory/file.S: This will individually compile but not assemble a file w
 make clean: This will remove and *.o, *.d, *.i, *.S, *.map or *.a file located in the 
 				directory.
 
+make size: This will output the sizze of the *.o files, but should not be
+		   called directly becuase it is automatically called during a build.
+
 The make file will output and executable as follows:
 host: proj1
 bbb: proj1bbb
