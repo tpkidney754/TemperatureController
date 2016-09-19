@@ -1,24 +1,58 @@
-CC = c99
-XCC = arm-linux-gnueabihf-gcc
-LD = ld
-XLD = arm-linux.gnueabi-ld
-CFLAGS = -Wall -g -O0 -std=c99
-LDFLAGS = -Map hw2.map -T
-SRCS = \
-	main.c \
-	hw1.c
+host: CC = gcc
+bbb:  CC = arm-linux-gnueabihf-gcc
+frdm: CC = arm-none-eabi-gcc
+host: SZ = size
+bbb:  SZ = arm-linux-gnueabihf-size
+frdm: SZ = arm-none-eabi-size
+include sources.mk
+host: CFLAGS = -Werror -g -O0 -std=c99 -Arch=x86
+bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
+frdm:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM --specs=nosys.specs
+override DEFINES += -DPROJECT1
+LDFLAGS = -Xlinker -Map=main.map
 OBJS = $(SRCS:.c=.o)
-INCLUDES = -I .
-OUTPUT = hw2
+LIBOBJS = $(LIBS:.c=.o)
+PREOBJS = $(SRCS:.c=.i)
+ASMOBJS = $(SRCS:.c=.S)
+OUTPUT = proj1
 
-hw2.exe: $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) -o $(OUTPUT).exe
+.PHONY: size host bbb frdm preprocess asm-file compile-all build clean build-lib %.o %.i %.S
 
-hw2BB.exe: $(OBJS)
-	$(XCC) $(CFLAGS) $(INCLUDES) $(SRCS) -o $(OUTPUT)BB.exe
+host: $(OBJS)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT) $(LDFLAGS) $(DEFINES)
+	$(SZ) $(OUTPUT)
+
+bbb: $(OBJS)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)bbb $(LDFLAGS) $(DEFINES)
+	$(SZ) $(OUTPUT)bbb
+
+frdm: $(OBJS)
+	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)frdm $(DEFINES) -DFRDM
+	$(SZ) $(OUTPUT)frdm
+
+preprocess: $(PREOBJS)
+
+asm-file: $(ASMOBJS)
+
+compile-all: $(OBJS)
+
+build: host bbb frdm
+
+upload: bbb
+	scp $(OUTPUT)bbb root@192.168.1.10:/home/debian/bin/
+
+build-lib: $(LIBOBJS)
+	ar rcs libproject1.a $(LIBOBJS)
 
 %.o: %.c
-	$(CC) $(OPTIONS) -c $*.c $(INCLUDES) 
+	$(CC) $(CFLAGS) -c $*.c $(INCLUDES) -o $@
+	$(CC) -M $(CFLAGS) $*.c > $*.d $(INCLUDES)
+
+%.i: %.c
+	$(CC) -E -o $*.i $*.c $(INCLUDES)
+
+%.S: %.c
+	$(CC) $(CFLAGS) -S -o $*.S $*.c $(INCLUDES)
 
 clean:
-	-rm -f *.exe *.o
+	-rm -f $(OUTPUT)* ./*/*.o ./*/*.d ./*/*.i ./*/*.S main.map *.a
