@@ -1,3 +1,4 @@
+CC = arm-linux-gnueabihf-gcc
 host: CC = gcc
 bbb:  CC = arm-linux-gnueabihf-gcc
 frdm: CC = arm-none-eabi-gcc
