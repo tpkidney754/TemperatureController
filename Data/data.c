@@ -96,6 +96,56 @@ int32_t MyAtoi( uint8_t * str )
 }
 
 //*************************************************************************
+// Function:  MyFtoi                                                      *
+//                                                                        *
+// Description: Inputs floating point number and converts it to a string. *
+//                                                                        *
+// Parameters: uint8_t * str: pointer to a string buffer that is filled.  *
+//             float data: floating point number to be converted          *
+//             int32_t decimalPlaces: How many decimal places to be       *
+//                                    to be converted to a string.        *
+//                                                                        *
+// Return Value:  int32_t: integer value converted from the string input  *
+//*************************************************************************
+int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
+{
+   if( str == NULL )
+   {
+      return -1;
+   }
+
+   uint32_t integral = 0;
+   double fractal = 0.0;
+
+   if( data < 0 )
+   {
+      data *= -1.0;
+      *str++ = '-';
+   }
+
+   integral = ( uint32_t ) data;
+   fractal = data - integral;
+   
+   MyItoa( str, integral, 10 );
+
+   while( *str++ != '\0' );
+   *( str - 1 ) = '.';
+
+   uint8_t temp = 0;
+   for( uint32_t i = 0; i < decimalPlaces; i++ )
+   {
+      fractal *= 10;
+      temp = ( uint8_t ) fractal;
+      fractal -= temp;
+      *str++ = temp + ASCIINUMBASE; 
+   }
+
+   *str = '\0';
+
+   return str ? 0 : -1;
+}
+
+//*************************************************************************
 // Function:  DumpMemory                                                  *
 //                                                                        *
 // Description: Prints whats stored in memory starting at pointed         *

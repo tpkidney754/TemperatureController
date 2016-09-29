@@ -96,7 +96,19 @@ void Testing()
    int8_t strneg[] = "-598403";
    data = MyAtoi( strneg );
    printf( "\nStr: %s, Data: %d \n", strneg, data );
+   
+   printf( "\n***************** MyFtoi Test *********************** \n");
+   int8_t buffer2[100];
+   double fdata = 145643.0123456789876543210;
+   MyFtoa( buffer2, fdata, 12 );
+   printf( "\nStr: %s, Data: %f \n", buffer2, fdata );
 
+   printf( "\n*****************  MyFtoi Test  *********************** \n");
+   printf( "***************** Negative Num  *********************** \n");
+   fdata = -145643.0123456789876543210;
+   MyFtoa( buffer2, fdata, 10 );
+   printf( "\nStr: %s, Data: %f \n", buffer2, fdata );
+   
    data = 0xDEADBEEF;
    uint8_t * pData = ( uint8_t * ) &data;
    printf( "\n***************** LittleToBig Test *********************** \n");
@@ -109,6 +121,6 @@ void Testing()
    data = BigToLittle( data );
    printf( "After BigToLittle\n");
    DumpMemory( pData, 4 );
-   printf( "\n" );
+   printf( "\n" );   
 }
 #endif

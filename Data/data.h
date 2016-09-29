@@ -17,6 +17,7 @@
 
 int8_t MyItoa( uint8_t * str, int32_t data, int32_t base );
 int32_t MyAtoi( uint8_t * str );
+int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces );
 void DumpMemory( uint8_t * start, uint32_t length );
 int32_t BigToLittle( int32_t data );
 int32_t LittleToBig( int32_t data );
