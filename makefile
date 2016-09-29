@@ -5,6 +5,7 @@ host: SZ = size
 bbb:  SZ = arm-linux-gnueabihf-size
 frdm: SZ = arm-none-eabi-size
 include sources.mk
+CFLAGS = -Werror -g -O0 -std=c99 -Arch=x86
 host: CFLAGS = -Werror -g -O0 -std=c99 -Arch=x86
 bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
 frdm:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM --specs=nosys.specs
@@ -47,12 +48,16 @@ build-lib: $(LIBOBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $*.c $(INCLUDES) -o $@
 	$(CC) -M $(CFLAGS) $*.c > $*.d $(INCLUDES)
+	mv $*.o ./ObjectFiles/
 
 %.i: %.c
 	$(CC) -E -o $*.i $*.c $(INCLUDES)
+	mv $*.i ./Preprocess/
 
 %.S: %.c
 	$(CC) $(CFLAGS) -S -o $*.S $*.c $(INCLUDES)
+	mv $*.S ./Assembly/
 
 clean:
-	-rm -f $(OUTPUT)* ./*/*.o ./*/*.d ./*/*.i ./*/*.S main.map *.a
+	-rm -f $(OUTPUT)* ./*/*.o ./*/*.d ./*/*.i ./*/*.S main.map *.a ./Preprocess/* \
+	./ObjectFiles/* ./Assembly/*

@@ -19,6 +19,18 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t length )
       return -1;
    }
 
+   if( ( dst > src ) && ( dst <= ( src + length ) ) )
+   {
+      dst += length-1;
+      src += length-1;
+      for( int32_t i = 0; i >= 0; i-- )
+      {
+         *dst-- = *src--;
+      }
+
+      return dst ? 0 : -1;
+   }
+
    for( int32_t i = 0; i < length; i++ )
    {
       *dst++ = *src++;
