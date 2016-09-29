@@ -49,14 +49,17 @@ build-lib: $(LIBOBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $*.c $(INCLUDES) -o $@
 	$(CC) -M $(CFLAGS) $*.c > $*.d $(INCLUDES)
+	if [ ! -d ObjectFiles ]; then mkdir ObjectFiles; fi
 	mv $*.o ./ObjectFiles/
 
 %.i: %.c
 	$(CC) -E -o $*.i $*.c $(INCLUDES)
+	if [ ! -d Preprocess ]; then mkdir Preprocess; fi
 	mv $*.i ./Preprocess/
 
 %.S: %.c
 	$(CC) $(CFLAGS) -S -o $*.S $*.c $(INCLUDES)
+	if [ ! -d "./Assembly" ]; then mkdir Assembly; fi
 	mv $*.S ./Assembly/
 
 clean:
