@@ -1,3 +1,4 @@
+CC = arm-linux-gnueabihf-gcc
 host: CC = gcc
 bbb:  CC = arm-linux-gnueabihf-gcc
 frdm: CC = arm-none-eabi-gcc
@@ -5,6 +6,7 @@ host: SZ = size
 bbb:  SZ = arm-linux-gnueabihf-size
 frdm: SZ = arm-none-eabi-size
 include sources.mk
+CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM7
 host: CFLAGS = -Werror -g -O0 -std=c99 -Arch=x86
 bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
 frdm:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM --specs=nosys.specs
