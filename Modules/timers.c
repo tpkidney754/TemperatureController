@@ -1,0 +1,11 @@
+#include "timers.h"
+
+void SetupPWM( void )
+{
+	SET_BITS_IN_REG( TPM2_SC, TPM_SC_CMOD( 2 ) );
+	SET_BITS_IN_REG( TPM2_MOD, TPM_MOD_MOD( 99 ) );
+	SET_BITS_IN_REG( TPM2_C0SC, TPM_CnSC_MSB_MASK );
+	SET_BITS_IN_REG( TPM2_C0SC, TPM_CnSC_ELSB_MASK );
+	SET_BITS_IN_REG( TPM2_C0V, TPM_CnV_VAL( 50 ) );  //Set up a 50% duty cycle
+
+}

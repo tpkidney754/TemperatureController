@@ -102,3 +102,31 @@ int8_t MyReverse( uint8_t * src, uint32_t length )
 
    return src ? 0 : -1;
 }
+
+//*************************************************************************
+// Function:  MyStringLength                                              *
+//                                                                        *
+// Description: Reverses the bytes starting at a location given           *
+//                                                                        *
+// Parameters: uint8_t * src: Start of memory to be reversed              *
+//             int32_t length: Number of bytes to be revversed            *
+//                                                                        *
+// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
+//                        values are a failure.                           *
+//*************************************************************************
+int32_t MyStrLen( uint8_t * str )
+{
+   if( str == NULL )
+   {
+      return -1;
+   }
+
+   int32_t length = 0;
+   
+   while( *str++ != '\0' )
+   {
+      length++;
+   }
+
+   return length;
+}

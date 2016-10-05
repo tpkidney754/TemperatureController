@@ -158,9 +158,17 @@ int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
 //*************************************************************************
 void DumpMemory( uint8_t * start, uint32_t length )
 {
+#ifdef FRDM
+   uint8_t TXbuffer[256];
+#endif
    for(uint32_t i = 0; i < length; i ++ )
    {
+   #ifdef FRDM
+      sprintf( TXbuffer, "%02X ", *(start + i ) );
+      Uart0TX( TXbuffer, MyStrLen( TXbuffer ) );
+   #else
       printf( "%02X ", *(start + i ) );
+   #endif
    }
 
    printf("\n");
