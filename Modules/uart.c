@@ -1,7 +1,5 @@
 #include "uart.h"
 
-#ifdef FRDM
-
 void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 {
    uint32_t uart0Clk = 0;
@@ -101,6 +99,10 @@ void ParseSetString( uint8_t * buffer )
       {
          color = YELLOW;
       }
+      else if( strstr( buffer, "cyan") )
+      {
+         color = CYAN;  
+      }
       else if( strstr( buffer, "white" ) )
       {
          color = WHITE;
@@ -112,6 +114,10 @@ void ParseSetString( uint8_t * buffer )
 
       SwitchLEDs( color );
    }
+   else if ( strstr( buffer, "power" ) )
+   {
+      uint16_t pulseWidth = 0;
+      sscanf( buffer, "set power %d", &pulseWidth );
+      ChangePW( pulseWidth );
+   }
 }
-
-#endif

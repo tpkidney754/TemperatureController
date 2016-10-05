@@ -3,6 +3,10 @@
 
 #include "includeall.h"
 
+#define RED_PIN    1 << 18
+#define GREEN_PIN  1 << 19
+#define BLUE_PIN   1 << 1
+
 #define WAIT_FOR_BIT_SET( BIT ) while( ( BIT ) == 0 )
 #define WAIT_FOR_BIT_CLEAR( BIT ) while( ( BIT ) )
 #define CLEAR_BITS_IN_REG( REG, BIT ) ( ( REG ) &= ~( BIT ) )

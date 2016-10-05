@@ -86,5 +86,4 @@ frdm-startup: $(OBJSS)
 	mv $*.S ./Assembly/
 
 clean:
-	-rm -f $(OUTPUT)* ./*/*.o ./*/*.d main.map *.a ./Preprocess/* \
-	./ObjectFiles/* ./Assembly/* ./*.d
+	-rm -f $(OUTPUT)*  main.map *.a ./Preprocess/* ./ObjectFiles/* ./Assembly/* ./*.d ./*/*.d

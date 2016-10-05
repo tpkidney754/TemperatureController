@@ -10,6 +10,7 @@
 #ifdef FRDM
 #define printf( ... ) (0)
 #include "MKL25Z4.h"
+#include "core_cm0plus.h"
 #include "io.h"
 #include "uart.h"
 #include "led.h"
