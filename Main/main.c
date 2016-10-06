@@ -6,7 +6,6 @@ int main()
 #ifdef FRDM
    SystemInit();
    Uart0Setup( 57600, 0 );
-   SetupPWM();
    LEDSetup();
 #endif
 
@@ -36,7 +35,7 @@ while( 1 )
    buffer = head;
    if( strstr( buffer, "set" ) )
    {
-      ParseSetString( buffer );
+      ParseDiag( buffer );
    }
    
 }

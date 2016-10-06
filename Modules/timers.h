@@ -3,9 +3,10 @@
 
 #include "includeall.h"
 
-#define MODULUS 65535
+#define MAX_MODULUS 	0xFFFF
+#define MAX_PRESCALER 	0x7
 
-void SetupPWM( void );
-void ChangePW( uint16_t pulseWidth );
+void SetupPWM( uint8_t tpm, uint8_t ch, uint16_t modulus, uint8_t prescaler, uint16_t pulseWidth );
+void ChangeLEDPW( uint16_t pulseWidth );
 
 #endif //__TIMERS__

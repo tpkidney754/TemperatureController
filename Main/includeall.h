@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "data.h"
 #include "project1.h"
+#include "diags.h"
 //#include "circularbuffer.h"
 
 #ifdef FRDM

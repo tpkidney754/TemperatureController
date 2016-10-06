@@ -21,6 +21,7 @@ SRCS = \
 	./Modules/uart.c \
 	./Modules/led.c \
 	./Modules/timers.c \
+	./Modules/diags.c \
 	./FRDM_Startup_Code/system_MKL25Z4.c \
 
 STARTUP = \
@@ -33,3 +34,4 @@ LIBS = \
 	./Modules/uart.c \
 	./Modules/led.c \
 	./Modules/timers.c \
+	./Modules/diags.c 	\

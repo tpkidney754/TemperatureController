@@ -1,64 +1,85 @@
 #include "led.h"
 
-
+//*************************************************************************
+// Function:  SwitchLEDs                                                  *
+//                                                                        *
+// Description: Sets up the LEDs to be used as GPIO outputs               *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void LEDSetup( void )
 {
-   SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;
-   SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK;
-   PORTB_PCR18 = PORT_PCR_MUX(0);
-   PORTB_PCR19 = PORT_PCR_MUX(0);
-   PORTD_PCR1 = PORT_PCR_MUX(0);
-   SET_BITS_IN_REG( GPIOB_PDDR, RED_PIN  );
-   //GPIOB_PDOR |= ( RED_PIN );
-   GPIOB_PDDR |= ( GREEN_PIN );
-   //GPIOB_PDOR |= ( GREEN_PIN );
-   GPIOD_PDDR |= ( BLUE_PIN );
-   //GPIOD_PDOR |= ( BLUE_PIN );
+   // Enable Port B and Port D Clocks
+   SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTD_MASK );
+   // Leave LEDs off for now;
+   RED_LED_OFF;
+   GREEN_LED_OFF;
+   BLUE_LED_OFF;
+
+   // Setup the PWM needed for each pin with an initial 50% duty cycle
+   SetupPWM( RED_TPM, RED_CHANNEL, MAX_MODULUS, 0, 50 );
+   SetupPWM( GREEN_TPM, GREEN_CHANNEL, MAX_MODULUS, 0, 50 );
+   SetupPWM( BLUE_TPM, BLUE_CHANNEL, MAX_MODULUS, 0, 50 );
+
+   // Sets the ports as GPIO output.
+   SET_BIT_IN_REG( GPIOB_PDDR, RED_PIN  );
+   SET_BIT_IN_REG( GPIOB_PDDR, GREEN_PIN );
+   SET_BIT_IN_REG( GPIOD_PDDR, BLUE_PIN );
 }
 
+//*************************************************************************
+// Function:  SwitchLEDs                                                  *
+//                                                                        *
+// Description: Changes which LEDs are on/off based on the input color.   *
+//                                                                        *
+// Parameters: Color_t color: typedef enum expressing a desired color.    *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void SwitchLEDs( Color_t color )
 {
    switch( color )
    {
       case RED: 
-            PORTB_PCR18 = PORT_PCR_MUX(3);
-            PORTB_PCR19 = PORT_PCR_MUX(0);
-            PORTD_PCR1 =  PORT_PCR_MUX(0);
+            RED_LED_ON;
+            GREEN_LED_OFF;
+            BLUE_LED_OFF;
             break;
       case GREEN: 
-            PORTB_PCR18 = PORT_PCR_MUX(0);
-            PORTB_PCR19 = PORT_PCR_MUX(3);
-            PORTD_PCR1 =  PORT_PCR_MUX(0);
+            RED_LED_OFF;
+            GREEN_LED_ON;
+            BLUE_LED_OFF;
             break;
       case BLUE:
-            PORTB_PCR18 = PORT_PCR_MUX(0);
-            PORTB_PCR19 = PORT_PCR_MUX(0);
-            PORTD_PCR1 =  PORT_PCR_MUX(4);
+            RED_LED_OFF
+            GREEN_LED_OFF;
+            BLUE_LED_ON;
             break;
       case PURPLE:
-            PORTB_PCR18 = PORT_PCR_MUX(3);
-            PORTB_PCR19 = PORT_PCR_MUX(0);
-            PORTD_PCR1 =  PORT_PCR_MUX(4);
+            RED_LED_ON;
+            GREEN_LED_OFF;
+            BLUE_LED_ON;
             break;
       case YELLOW:
-            PORTB_PCR18 = PORT_PCR_MUX(3);
-            PORTB_PCR19 = PORT_PCR_MUX(3);
-            PORTD_PCR1 =  PORT_PCR_MUX(0);
+            RED_LED_ON;
+            GREEN_LED_ON;
+            BLUE_LED_OFF
             break;
       case CYAN:
-            PORTB_PCR18 = PORT_PCR_MUX(0);
-            PORTB_PCR19 = PORT_PCR_MUX(3);
-            PORTD_PCR1 =  PORT_PCR_MUX(4);
-            break;
+            RED_LED_OFF;
+            GREEN_LED_ON;
+            BLUE_LED_ON;
       case WHITE:
-            PORTB_PCR18 = PORT_PCR_MUX(3);
-            PORTB_PCR19 = PORT_PCR_MUX(3);
-            PORTD_PCR1 =  PORT_PCR_MUX(4);
+            RED_LED_ON;
+            GREEN_LED_ON;
+            BLUE_LED_ON;
             break;
       case OFF:
-            PORTB_PCR18 = PORT_PCR_MUX(0);
-            PORTB_PCR19 = PORT_PCR_MUX(0);
-            PORTD_PCR1 =  PORT_PCR_MUX(0);
+            RED_LED_OFF;
+            GREEN_LED_OFF;
+            BLUE_LED_OFF;
             break;
       case NONE:
       default:
