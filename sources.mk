@@ -9,6 +9,7 @@ INCLUDES = \
 	-I ./FRDM_INCLUDES/ \
 	-I ./Modules \
 	-I ./FRDM_Startup_Code/ \
+	-I ./Logging/
 
 SRCS = \
 	./Main/main.c   \
@@ -23,6 +24,7 @@ SRCS = \
 	./Modules/timers.c \
 	./Modules/diags.c \
 	./FRDM_Startup_Code/system_MKL25Z4.c \
+	./Logging/uartlogging.c \
 
 STARTUP = \
 	./FRDM_Startup_Code/startup_MKL25Z4.S \

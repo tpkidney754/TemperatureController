@@ -12,7 +12,6 @@ bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
 frdm:  CFLAGS = -Werror -g3 -O0 -std=c99 -Arch=ARM --specs=nosys.specs \
 		 -mcpu=cortex-m0plus -mthumb -fmessage-length=0 -fsigned-char \
 		 -ffunction-sections -fdata-sections  -MMD -MP
-override DEFINES += -DPROJECT1
 frdm: override DEFINES += -DFRDM
 LDFLAGS = -Xlinker -Map=main.map -T "MKL25Z128xxx4_flash.ld"
 OBJS = $(SRCS:.c=.o)
@@ -76,12 +75,12 @@ frdm-startup: $(OBJSS)
 	mv FRDM_Startup_Code/*.o ./ObjectFiles/
 
 %.i: %.c
-	$(CC) -E -o $*.i $*.c $(INCLUDES)
+	$(CC) -E -o $*.i $*.c $(INCLUDES) $(DEFINES)
 	if [ ! -d Preprocess ]; then mkdir Preprocess; fi
 	mv $*.i ./Preprocess/
 
 %.S: %.c
-	$(CC) $(CFLAGS) -S -o $*.S $*.c $(INCLUDES)
+	$(CC) $(CFLAGS) -S -o $*.S $*.c $(INCLUDES) $(DEFINES)
 	if [ ! -d "./Assembly" ]; then mkdir Assembly; fi
 	mv $*.S ./Assembly/
 
