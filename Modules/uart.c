@@ -1,5 +1,10 @@
 #include "uart.h"
 
+/* GLOBAL Variable */
+uint8_t parseDiag;
+uint8_t * RXBuffer;
+uint8_t * RXBufferHead;
+
 //*************************************************************************
 // Function:  Uart0Setup                                                  *
 //                                                                        *
@@ -17,7 +22,11 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    uint32_t mcgClk = 0;
    uint32_t prdiv = 0;
    uint32_t vdiv = 0;
-   uint8_t osr = 0;
+   
+   RXBuffer = malloc( sizeof( uint8_t ) * 100 );
+   RXBufferHead = RXBuffer;
+   parseDiag = 0;
+
    
    // Determining msgCLK
    prdiv = ((MCG_C5 & MCG_C5_PRDIV0_MASK) + 1);
@@ -51,6 +60,15 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    // Inputting the calculated baud rate mod into registers
    SET_BIT_IN_REG( UART0_BDH, UART0_BDH_SBR( ( calcBaudRate & 0x1F00 ) >> 8 ) );
    SET_BIT_IN_REG( UART0_BDL, UART0_BDL_SBR( (uint8_t) ( calcBaudRate & 0xFF ) ) );
+
+   // Enable RX Interrupt
+   //asm(" CPSIE i");
+   SET_BIT_IN_REG( UART0_C2, UART0_C2_RIE_MASK );
+   //INTVEC_UART0 = (uint32_t ) UART0_IRQHandler;
+   NVIC_EnableIRQ( UART0_IRQn );
+   //NVIC_ClearPendingIRQ( UART0_IRQn );
+   NVIC_SetPriority( UART0_IRQn, 2 );
+
    // Enables the TX/RX pins.
    SET_BIT_IN_REG( UART0_C2, ( UART0_C2_TE_MASK | UART0_C2_RE_MASK ) );
 }
@@ -106,4 +124,36 @@ void PutChar( uint8_t data )
 {
    WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
    UART0_D = data;
+}
+
+//*************************************************************************
+// Function:  UART0_IRQHandler                                            *
+//                                                                        *
+// Description: Interrupt Handler for UART0 for RX operations.            *
+//              The handler checks the RDRF flag to verify it's a RX      *
+//              then adds the character to buffer, then the character     *
+//              is printed out to UART0TX. Once a CR is identified, a LF  *
+//              and \0 character is added to buffer to terminate the      *
+//              string and a boolean is set for main to start parsing the *
+//              diag command.                                             *
+//                                                                        *
+// Parameters: uint8_t data: character to be sent.                        *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void UART0_IRQHandler( void )
+{
+   if( UART0_S1 & UART0_S1_RDRF_MASK )
+   {
+      *RXBuffer = UART0_D;
+      PutChar( *RXBuffer++ );
+      if( *( RXBuffer - 1) == CR )
+      {
+         *RXBuffer = LF;
+         PutChar( *RXBuffer++ );
+         *RXBuffer = '\0';
+         RXBuffer = RXBufferHead;
+         parseDiag = 1;
+      }
+   } 
 }

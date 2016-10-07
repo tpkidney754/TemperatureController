@@ -4,7 +4,6 @@ int main()
 {
 
 #ifdef FRDM
-   SystemInit();
    Uart0Setup( 57600, 0 );
    LEDSetup();
 #endif
@@ -23,21 +22,14 @@ int main()
 
 while( 1 )
 {
-   
-   do
+   if( parseDiag )
    {
-      *buffer = Uart0RX();
-      PutChar( *buffer++ );
-   } while( *( buffer - 1 ) != 13 );
-   *buffer = 10;
-   PutChar( *buffer++ );
-   *buffer = '\0';
-   buffer = head;
-   if( strstr( buffer, "set" ) )
-   {
-      ParseDiag( buffer );
+      if( strstr( RXBuffer, "set") )
+      {
+         ParseDiag( RXBuffer );
+      }
+      parseDiag = 0;
    }
-   
 }
 #endif
 
