@@ -1,3 +1,5 @@
+
+#ifdef FRDM
 #ifndef __IO__
 #define __IO__
 
@@ -21,6 +23,7 @@
 // bits without disturbing any of the other bits in the register.
 #define SET_REG_VALUE( REG, MASK, VALUE )  CLEAR_BITS_IN_REG( ( REG ), ( MASK ) ); \
                                            SET_BIT_IN_REG( ( REG ), ( VALUE ) )
-#define READ_BITS_FROM_REG( REG, BIT_MASK, BIT_SHIFT ) ( ( ( REG ) & ( BIT_MASK ) ) >> ( BIT_SHIFT ) ) 
+#define READ_BITS_FROM_REG( REG, BIT_MASK, BIT_SHIFT ) ( ( ( REG ) & ( BIT_MASK ) ) >> ( BIT_SHIFT ) )
 
 #endif // __IO__
+#endif

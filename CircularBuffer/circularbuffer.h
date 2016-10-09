@@ -1,13 +1,18 @@
+#ifndef __CIRCBUFF__
+#define __CIRCBUFF__
+
 #include "includeall.h"
 
-typedef struct circularBuffer
+typedef struct CircularBuffer_t
 {
-   uint8_t * buffer;
-   uint32_t head;
-   uint32_t tail;
+   void * bufferStart;
+   void * head;
+   void * tail;
+   void * bufferEnd;
    uint32_t size;
    uint32_t numItems;
-} CircularBuffer; 
+   uint32_t itemSize;
+} CircularBuffer_t;
 
 typedef enum BufferState
 {
@@ -17,7 +22,10 @@ typedef enum BufferState
    BUFFER_EMPTY = 1
 } BufferState;
 
-enum BufferState BufferFull( CircularBuffer * cb );
-enum BufferState BufferEmpty( CircularBuffer * cb );
-enum BufferState CBufferWrite( CircularBuffer * cb, uint8_t * data );
-enum BufferState CBufferRead( CircularBuffer * cb, uint8_t * data );
+uint32_t CBufferInit( CircularBuffer_t * cb, uint32_t itemSize, uint32_t maxItems );
+enum BufferState IsBufferFull( CircularBuffer_t * cb );
+enum BufferState IsBufferEmpty( CircularBuffer_t * cb );
+enum BufferState CBufferAdd( CircularBuffer_t * cb, void * data );
+enum BufferState CBufferRemove( CircularBuffer_t * cb, void * data );
+
+#endif //__CIRCBUFF__

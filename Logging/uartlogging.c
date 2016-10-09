@@ -15,16 +15,7 @@
 void LOG0( uint8_t * data )
 {
 #ifdef FRDM
-   uint32_t length = MyStrLen( data );
-   
-   if( *( data + length - 1 ) == '\n' )
-   {
-      *( data + length - 1 ) = CR;
-      *( data + length++ ) = LF;
-      *( data + length++ ) = '\0';
-   }
-
-   Uart0TX( data, length );
+   Uart0TX( data, MyStrLen( data ) );
 #else
    printf( "%s", data );
 #endif
@@ -48,9 +39,9 @@ void LOG1( uint8_t * data, uint32_t length, DataType_t dataType, uint32_t numPar
 {
    va_list valist;
    va_start( valist, numParams );
-   
+
    uint8_t * dataHead = data;
-   
+
    // Increment data to the end of the string and replace the null character
    // with a space.
    data += length;

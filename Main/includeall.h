@@ -5,13 +5,12 @@
 #include <stdarg.h>
 #include "memory.h"
 #include "data.h"
-#include "project1.h"
 #include "diags.h"
-//#include "circularbuffer.h"
+#include "circularbuffer.h"
 
 #ifdef TESTING
 #define UART_LOGGING
-#include "testing.h"
+#include "uartlogging.h"
 #endif
 
 #ifdef FRDM
@@ -22,5 +21,11 @@
 #include "uart.h"
 #include "led.h"
 #include "timers.h"
-#include "uartlogging.h"
+#endif
+
+#ifdef TESTING
+#include "testing.h"
+#include "datatesting.h"
+#include "memorytesting.h"
+#include "circularbuffertesting.h"
 #endif

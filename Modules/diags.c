@@ -1,3 +1,4 @@
+#ifdef FRDM
 #include "diags.h"
 
 //*************************************************************************
@@ -37,7 +38,7 @@ void ParseDiag( uint8_t * buffer )
       }
       else if( strstr( buffer, "cyan") )
       {
-         color = CYAN;  
+         color = CYAN;
       }
       else if( strstr( buffer, "white" ) )
       {
@@ -57,3 +58,5 @@ void ParseDiag( uint8_t * buffer )
       ChangeLEDPW( pulseWidth );
    }
 }
+
+#endif

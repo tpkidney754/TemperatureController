@@ -1,3 +1,4 @@
+#ifdef FRDM
 #include "led.h"
 
 //*************************************************************************
@@ -42,12 +43,12 @@ void SwitchLEDs( Color_t color )
 {
    switch( color )
    {
-      case RED: 
+      case RED:
             RED_LED_ON;
             GREEN_LED_OFF;
             BLUE_LED_OFF;
             break;
-      case GREEN: 
+      case GREEN:
             RED_LED_OFF;
             GREEN_LED_ON;
             BLUE_LED_OFF;
@@ -71,6 +72,7 @@ void SwitchLEDs( Color_t color )
             RED_LED_OFF;
             GREEN_LED_ON;
             BLUE_LED_ON;
+            break;
       case WHITE:
             RED_LED_ON;
             GREEN_LED_ON;
@@ -87,3 +89,4 @@ void SwitchLEDs( Color_t color )
 
    }
 }
+#endif

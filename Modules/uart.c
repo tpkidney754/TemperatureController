@@ -1,3 +1,4 @@
+#ifdef FRDM
 #include "uart.h"
 
 /* GLOBAL Variable */
@@ -22,12 +23,12 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    uint32_t mcgClk = 0;
    uint32_t prdiv = 0;
    uint32_t vdiv = 0;
-   
+
    RXBuffer = malloc( sizeof( uint8_t ) * 100 );
    RXBufferHead = RXBuffer;
    parseDiag = 0;
 
-   
+
    // Determining msgCLK
    prdiv = ((MCG_C5 & MCG_C5_PRDIV0_MASK) + 1);
    vdiv = ((MCG_C6 & MCG_C6_VDIV0_MASK) + 24);
@@ -155,5 +156,6 @@ void UART0_IRQHandler( void )
          RXBuffer = RXBufferHead;
          parseDiag = 1;
       }
-   } 
+   }
 }
+#endif

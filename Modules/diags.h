@@ -1,3 +1,4 @@
+#ifdef FRDM
 #ifndef __DIAGS__
 #define __DIAGS__
 
@@ -6,3 +7,4 @@
 void ParseDiag( uint8_t * buffer );
 
 #endif // __DIAGS__
+#endif

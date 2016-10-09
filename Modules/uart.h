@@ -1,3 +1,4 @@
+#ifdef FRDM
 #ifndef __UART__
 #define __UART__
 
@@ -18,4 +19,5 @@ void PutChar( uint8_t data );
 void ParseSetString( uint8_t * buffer );
 void UART0_IRQHandler( void );
 
+#endif
 #endif

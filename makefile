@@ -13,7 +13,7 @@ frdm:  CFLAGS = -Werror -g3 -O0 -std=c99 -Arch=ARM --specs=nosys.specs \
 		 -mcpu=cortex-m0plus -mthumb -fmessage-length=0 -fsigned-char \
 		 -ffunction-sections -fdata-sections  -MMD -MP
 frdm: override DEFINES += -DFRDM
-LDFLAGS = -Xlinker -Map=main.map -T "MKL25Z128xxx4_flash.ld"
+frdm: LDFLAGS = -Xlinker -Map=main.map -T "MKL25Z128xxx4_flash.ld"
 OBJS = $(SRCS:.c=.o)
 OBJSS = $(STARTUP:.S=.o)
 LIBOBJS = $(LIBS:.c=.o)
@@ -21,14 +21,14 @@ PREOBJS = $(SRCS:.c=.i)
 ASMOBJS = $(SRCS:.c=.S)
 OUTPUT = proj
 
-#arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char 
+#arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char
 #-ffunction-sections -fdata-sections  -g3 -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)"
 # -MT"$@" -c -o "$@" "$<"
 
-#arm-none-eabi-g++ -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char 
-#-ffunction-sections -fdata-sections  -g3 -T "MKL25Z128xxx4_flash.ld" -Xlinker 
-#--gc-sections -L"/home/tyler/workspace.kds/HelloWorld/Project_Settings/Linker_Files" 
-#-Wl,-Map,"HelloWorld.map" -specs=nano.specs -specs=nosys.specs -o "HelloWorld.elf" 
+#arm-none-eabi-g++ -mcpu=cortex-m0plus -mthumb -O0 -fmessage-length=0 -fsigned-char
+#-ffunction-sections -fdata-sections  -g3 -T "MKL25Z128xxx4_flash.ld" -Xlinker
+#--gc-sections -L"/home/tyler/workspace.kds/HelloWorld/Project_Settings/Linker_Files"
+#-Wl,-Map,"HelloWorld.map" -specs=nano.specs -specs=nosys.specs -o "HelloWorld.elf"
 #$(OBJS) $(USER_OBJS) $(LIBS)
 
 
@@ -44,7 +44,7 @@ bbb: $(OBJS)
 	$(SZ) $(OUTPUT)bbb
 
 
-frdm: $(OBJS) frdm-startup
+frdm:
 	$(CC) $(CFLAGS) $(SRCS) $(STARTUP) $(INCLUDES) -o $(OUTPUT)frdm.elf $(LDFLAGS) $(DEFINES) -DFRDM
 	$(SZ) $(OUTPUT)frdm.elf
 
@@ -85,4 +85,4 @@ frdm-startup: $(OBJSS)
 	mv $*.S ./Assembly/
 
 clean:
-	-rm -f $(OUTPUT)*  main.map *.a ./Preprocess/* ./ObjectFiles/* ./Assembly/* ./*.d ./*/*.d
+	-rm -f $(OUTPUT)*  main.map *.a ./Preprocess/* ./ObjectFiles/* ./Assembly/* ./*.d ./*/*.d ./*/*.o

@@ -1,3 +1,4 @@
+#ifdef FRDM
 #include "timers.h"
 
 //*************************************************************************
@@ -72,3 +73,4 @@ void ChangeLEDPW( uint16_t pulseWidth )
    TPM2_C1V = valueToTPM2CnV;
    TPM0_C1V = valueToTPM0CnV;
 }
+#endif

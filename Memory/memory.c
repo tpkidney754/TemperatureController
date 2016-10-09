@@ -21,9 +21,9 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t length )
 
    if( ( dst > src ) && ( dst <= ( src + length ) ) )
    {
-      dst += length-1;
-      src += length-1;
-      for( int32_t i = 0; i >= 0; i-- )
+      dst += length;
+      src += length;
+      for( int32_t i = length; i >= 0; i-- )
       {
          *dst-- = *src--;
       }
@@ -85,7 +85,7 @@ int8_t MyReverse( uint8_t * src, uint32_t length )
    }
 
    int32_t loopLength = length--/2;
-   
+
    for( int32_t i = 0; i < loopLength; i++ )
    {
       // A XOR B XOR A = B
@@ -122,7 +122,7 @@ int32_t MyStrLen( uint8_t * str )
    }
 
    int32_t length = 0;
-   
+
    while( *str++ != '\0' )
    {
       length++;
