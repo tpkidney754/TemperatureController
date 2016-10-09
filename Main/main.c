@@ -1,5 +1,8 @@
 #include "includeall.h"
 
+extern CircularBuffer_t RXBuffer;
+extern CircularBuffer_t TXBuffer;
+
 int main()
 {
 
@@ -14,17 +17,23 @@ int main()
 #endif
 
 #ifdef FRDM
-   uint8_t character;
-   uint8_t * buffer = malloc( sizeof( uint8_t ) * 100 );
+   uint8_t buffer[ 100 ];
    uint8_t * head = buffer;
 while( 1 )
 {
    if( parseDiag )
    {
-      if( strstr( RXBuffer, "set") )
+      uint32_t length = RXBuffer.numItems;
+      for( uint32_t i = 0; i < length; i++ )
       {
-         ParseDiag( RXBuffer );
+         CBufferRemove( &RXBuffer, &buffer[ i ] );
       }
+
+      if( strstr( buffer, "set") )
+      {
+         ParseDiag( buffer );
+      }
+
       parseDiag = 0;
    }
 }

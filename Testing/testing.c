@@ -14,16 +14,17 @@ void PrintHeader( uint8_t * header, HeaderType_t headerType )
 {
    if( headerType == pass_e )
    {
-      strcat( header, "Passed Successfully!" );
+      strcat( header, " Passed Successfully!" );
    }
    else if( headerType == fail_e )
    {
-      strcat( header, "Failed!" );
+      strcat( header, " Failed!" );
    }
 
    uint8_t fillerLength = HEADER_LENGTH - MyStrLen( header ) - 2;
    fillerLength /= 2;
    uint8_t * filler = malloc( sizeof( uint8_t ) * fillerLength + 1 );
+   MyMemZero( filler, fillerLength + 1 );
 
    for( uint32_t i = 0; i < fillerLength; i++ )
    {

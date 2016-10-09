@@ -1,5 +1,7 @@
 #include "data.h"
 
+CircularBuffer_t TXBuffer;
+
 //*************************************************************************
 // Function:  MyItoa                                                      *
 //                                                                        *
@@ -34,7 +36,7 @@ int8_t MyItoa( uint8_t * str, int32_t data, int32_t base )
       //loop iteration.
       data /= base;
    }while( data > 0 );
-   
+
    if( negative )
    {
       *( str + i++ ) = '-';
@@ -43,7 +45,7 @@ int8_t MyItoa( uint8_t * str, int32_t data, int32_t base )
    MyReverse( str, i );
    //Cap it with a NULL value.
    *(str + i ) = '\0';
-   //If the str pointer is valid return success else failure.     
+   //If the str pointer is valid return success else failure.
    return str ? 0 : -1;
 }
 
@@ -64,7 +66,7 @@ int32_t MyAtoi( uint8_t * str )
    uint32_t length = 0;
    uint32_t i = 0;
    uint32_t temp = 0;
-   
+
    if( *str == '-' )
    {
       negative = 1;
@@ -125,7 +127,7 @@ int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
 
    integral = ( uint32_t ) data;
    fractal = data - integral;
-   
+
    MyItoa( str, integral, 10 );
 
    while( *str++ != '\0' );
@@ -137,7 +139,7 @@ int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
       fractal *= 10;
       temp = ( uint8_t ) fractal;
       fractal -= temp;
-      *str++ = temp + ASCIINUMBASE; 
+      *str++ = temp + ASCIINUMBASE;
    }
 
    *str = '\0';
@@ -158,18 +160,20 @@ int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
 //*************************************************************************
 void DumpMemory( uint8_t * start, uint32_t length )
 {
-#ifdef FRDM
-   uint8_t TXbuffer[256];
-#endif
+   uint8_t buffer[ 4 ];
    for(uint32_t i = 0; i < length; i ++ )
    {
+      sprintf( buffer, "%02X ", *( start + i ) );
    #ifdef FRDM
-      sprintf( TXbuffer, "%02X ", *(start + i ) );
-      Uart0TX( TXbuffer, MyStrLen( TXbuffer ) );
-   #else
-      printf( "%02X ", *(start + i ) );
-   #endif
+      CBufferAdd( &TXBuffer, buffer );
+      CBufferAdd( &TXBuffer, buffer + 1 );
+      CBufferAdd( &TXBuffer, buffer + 2 );
    }
+      Uart0TX( length );
+   #else
+      printf( "%s", buffer );
+   }
+   #endif
 
    printf("\n");
 }
@@ -193,7 +197,7 @@ int32_t BigToLittle( int32_t data )
    uint8_t byte2 = ( uint8_t ) ( ( data & BYTE1_MASK ) >> BYTE1_SHIFT );
    uint8_t byte3 = ( uint8_t ) ( ( data & BYTE0_MASK ) >> BYTE0_SHIFT );
 
-   uint32_t returnData = byte0 << BYTE0_SHIFT | byte1 << BYTE1_SHIFT | 
+   uint32_t returnData = byte0 << BYTE0_SHIFT | byte1 << BYTE1_SHIFT |
                     byte2 << BYTE2_SHIFT | byte3 << BYTE3_SHIFT;
 
    return returnData;
@@ -220,7 +224,7 @@ int32_t LittleToBig( int32_t data )
    uint8_t byte1 = ( uint8_t ) ( ( data & BYTE1_MASK ) >> BYTE1_SHIFT );
    uint8_t byte0 = ( uint8_t ) ( ( data & BYTE0_MASK ) >> BYTE0_SHIFT );
 
-   uint32_t returnData = byte0 << BYTE3_SHIFT | byte1 << BYTE2_SHIFT | 
+   uint32_t returnData = byte0 << BYTE3_SHIFT | byte1 << BYTE2_SHIFT |
                     byte2 << BYTE1_SHIFT | byte3 << BYTE0_SHIFT;
 
    return returnData;

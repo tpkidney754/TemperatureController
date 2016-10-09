@@ -3,16 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-#include "memory.h"
-#include "data.h"
-#include "diags.h"
-#include "circularbuffer.h"
 
-#ifdef TESTING
+#include "circularbuffer.h"
 #define UART_LOGGING
 #include "uartlogging.h"
-#endif
-
 #ifdef FRDM
 #define printf( ... ) (0)
 #include "MKL25Z4.h"
@@ -23,9 +17,13 @@
 #include "timers.h"
 #endif
 
+#include "memory.h"
+#include "data.h"
+#include "diags.h"
 #ifdef TESTING
 #include "testing.h"
 #include "datatesting.h"
 #include "memorytesting.h"
 #include "circularbuffertesting.h"
 #endif
+

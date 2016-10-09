@@ -15,7 +15,6 @@ void CircularBufferTesting( )
    RemoveItemUnitTestBuffHalfFull( );
    RemoveItemUnitTestBuffEmpty( );
    BufferTestFromTheMidPoint( );
-   //DestructBufferUnitTest( );
 }
 
 void InitBufferUnitTest( )
@@ -77,6 +76,7 @@ void AddItemsUnitTestBuffHalfFull( )
    }
    LOG0( "Buffer should be full now verify: " );
    sprintf( testPrintBuffer, "Expecting: 1, Observed: %d\n", IsBufferFull( &cb ) );
+   LOG0( testPrintBuffer );
    if( IsBufferFull( &cb ) != BUFFER_FULL)
    {
       fail = 1;
@@ -139,7 +139,7 @@ void RemoveItemUnitTestBuffFull( )
 
 void RemoveItemUnitTestBuffHalfFull( )
 {
-   sprintf( headerBuffer, "RemoveItems Buff Half Full Unit Test" );
+   sprintf( headerBuffer, "Remove Items Buff Half Full Unit Test" );
    PrintHeader( headerBuffer, main_e );
    uint8_t fail = 0;
 
@@ -159,6 +159,7 @@ void RemoveItemUnitTestBuffHalfFull( )
    }
 
    sprintf( testPrintBuffer, "Verify the buffer is now empty: Expected 1, Observed: %d\n", IsBufferEmpty( &cb ) );
+   LOG0( testPrintBuffer );
    if( IsBufferEmpty( &cb ) != BUFFER_EMPTY )
    {
       LOG0( "The Buffer Was Not Empty!\n" );
@@ -195,6 +196,13 @@ void BufferTestFromTheMidPoint( )
 {
    sprintf( headerBuffer, "Midpoint Buffer Test");
    PrintHeader( headerBuffer, main_e );
+   LOG0( "Zero out buffer\n" );
+   MyMemZero( cb.bufferStart, cb.size );
+   DumpMemory( cb.bufferStart, cb.size );
+   LOG0("\n");
+   cb.head = cb.bufferStart;
+   cb.tail = cb.bufferStart;
+   cb.numItems = 0;
    LOG0("Adding items to fill half the buffer\n" );
    AddItemsUnitTestBuffEmpty( );
    LOG0("Removing items to empty the buffer, but place now the head is pointing to the midpoint\n" );

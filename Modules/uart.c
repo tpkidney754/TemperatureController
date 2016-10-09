@@ -3,9 +3,8 @@
 
 /* GLOBAL Variable */
 uint8_t parseDiag;
-uint8_t * RXBuffer;
-uint8_t * RXBufferHead;
-
+CircularBuffer_t RXBuffer;
+CircularBuffer_t TXBuffer;
 //*************************************************************************
 // Function:  Uart0Setup                                                  *
 //                                                                        *
@@ -23,11 +22,9 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    uint32_t mcgClk = 0;
    uint32_t prdiv = 0;
    uint32_t vdiv = 0;
-
-   RXBuffer = malloc( sizeof( uint8_t ) * 100 );
-   RXBufferHead = RXBuffer;
    parseDiag = 0;
-
+   CBufferInit( &RXBuffer, sizeof( uint8_t ), RXBUFFER_SIZE );
+   CBufferInit( &TXBuffer, sizeof( uint8_t ), TXBUFFER_SIZE );
 
    // Determining msgCLK
    prdiv = ((MCG_C5 & MCG_C5_PRDIV0_MASK) + 1);
@@ -63,8 +60,7 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    SET_BIT_IN_REG( UART0_BDL, UART0_BDL_SBR( (uint8_t) ( calcBaudRate & 0xFF ) ) );
 
    // Enable RX Interrupt
-   //asm(" CPSIE i");
-   SET_BIT_IN_REG( UART0_C2, UART0_C2_RIE_MASK );
+   SET_BIT_IN_REG( UART0_C2, UART0_C2_RIE_MASK );// | UART0_C2_TIE_MASK );
    //INTVEC_UART0 = (uint32_t ) UART0_IRQHandler;
    NVIC_EnableIRQ( UART0_IRQn );
    //NVIC_ClearPendingIRQ( UART0_IRQn );
@@ -85,15 +81,17 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void Uart0TX( uint8_t * data, uint32_t length )
+void Uart0TX( uint32_t length )
 {
    //The transmitter then remains idle until data is available in the xmit data buffer.
    //The S1[TDRE] status flag is set to indicate when the next character may be
    //   wrtitten to the data buffer.
+   uint8_t data;
    for( uint32_t i = 0; i < length; i++ )
    {
       WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
-      UART0_D = *( data + i );
+      CBufferRemove( &TXBuffer, &data );
+      UART0_D = data;
    }
 }
 
@@ -144,18 +142,29 @@ void PutChar( uint8_t data )
 //*************************************************************************
 void UART0_IRQHandler( void )
 {
+   uint8_t data;
    if( UART0_S1 & UART0_S1_RDRF_MASK )
    {
-      *RXBuffer = UART0_D;
-      PutChar( *RXBuffer++ );
-      if( *( RXBuffer - 1) == CR )
+      data = UART0_D;
+      if( CBufferAdd( &RXBuffer, &data ) == BUFFER_FULL )
       {
-         *RXBuffer = LF;
-         PutChar( *RXBuffer++ );
-         *RXBuffer = '\0';
-         RXBuffer = RXBufferHead;
+         LOG0( "Buffer Is FULL during RX\n" );
+      }
+      PutChar( data );
+      if( data == CR )
+      {
+         data = '\0';
+         if( CBufferAdd( &RXBuffer, &data ) == BUFFER_FULL )
+         {
+            LOG0( "Buffer Is FULL during RX\n" );
+         }
          parseDiag = 1;
       }
    }
+   /*else if( UART0_S1 & UART0_S1_TDRE_MASK )
+   {
+      data = UART0_D;
+      CBufferRemove( &TXBuffer, &data );
+   }*/
 }
 #endif

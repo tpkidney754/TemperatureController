@@ -1,6 +1,10 @@
 #include "uartlogging.h"
 
 #ifdef UART_LOGGING
+
+CircularBuffer_t RXBuffer;
+CircularBuffer_t TXBuffer;
+
 //*************************************************************************
 // Function:  LOG0                                                        *
 //                                                                        *
@@ -15,7 +19,13 @@
 void LOG0( uint8_t * data )
 {
 #ifdef FRDM
-   Uart0TX( data, MyStrLen( data ) );
+   uint32_t length = MyStrLen( data );
+   for( uint32_t i = 0; i < length; i++ )
+   {
+      CBufferAdd( &TXBuffer, ( data + i ) );
+   }
+   //NVIC_SetPendingIRQ( UART0_IRQn );*/
+   Uart0TX( MyStrLen( data ) );
 #else
    printf( "%s", data );
 #endif

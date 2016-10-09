@@ -10,7 +10,7 @@
 void Testing();
 
 uint8_t testPrintBuffer[ 256 ];
-uint8_t headerBuffer[ 50 ];
+uint8_t headerBuffer[ HEADER_LENGTH ];
 
 typedef enum HeaderType
 {

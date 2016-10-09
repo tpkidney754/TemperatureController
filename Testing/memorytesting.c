@@ -1,3 +1,4 @@
+#ifdef TESTING
 #include "memorytesting.h"
 
 void MemoryTesting( )
@@ -140,3 +141,5 @@ void MyStrLenUnitTest( void )
 
    PrintHeader( headerBuffer, fail );
 }
+
+#endif // TESTING
