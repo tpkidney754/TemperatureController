@@ -2,8 +2,7 @@
 
 #ifdef UART_LOGGING
 
-CircularBuffer_t RXBuffer;
-CircularBuffer_t TXBuffer;
+CircularBuffer_t * TXBuffer;
 
 //*************************************************************************
 // Function:  LOG0                                                        *
@@ -22,7 +21,7 @@ void LOG0( uint8_t * data )
    uint32_t length = MyStrLen( data );
    for( uint32_t i = 0; i < length; i++ )
    {
-      CBufferAdd( &TXBuffer, ( data + i ) );
+      CBufferAdd( TXBuffer, ( data + i ) );
    }
    //NVIC_SetPendingIRQ( UART0_IRQn );*/
    Uart0TX( MyStrLen( data ) );
@@ -55,7 +54,10 @@ void LOG1( uint8_t * data, uint32_t length, DataType_t dataType, uint32_t numPar
    // Increment data to the end of the string and replace the null character
    // with a space.
    data += length;
-   *data++ = ' ';
+   if( length != 0 )
+   {
+      *data++ = ' ';
+   }
    // Then loop throug the number of parameters passed to add to the string.
    for( uint32_t i = 0; i < numParams; i++ )
    {

@@ -1,16 +1,26 @@
 #include "circularbuffer.h"
 
-uint32_t CBufferInit( CircularBuffer_t * cb, uint32_t itemSize, uint32_t maxItems )
+CircularBuffer_t * CBufferInit( uint32_t itemSize, uint32_t maxItems )
 {
-   cb->bufferStart = malloc( itemSize * maxItems );
-   cb->head = cb->bufferStart;
-   cb->tail = cb->bufferStart;
-   cb->bufferEnd = cb->bufferStart + ( maxItems * itemSize ) - 1;
-   cb->numItems = 0;
-   cb->itemSize = itemSize;
-   cb->size = maxItems;
+   CircularBuffer_t cb;
+   cb.bufferStart = malloc( itemSize * maxItems );
+   cb.head = cb.bufferStart;
+   cb.tail = cb.bufferStart;
+   cb.bufferEnd = cb.bufferStart + ( maxItems * itemSize ) - 1;
+   cb.numItems = 0;
+   cb.itemSize = itemSize;
+   cb.size = maxItems;
+   CircularBuffer_t * pcb = malloc( sizeof( cb ) );
 
-   return cb == NULL ? 0 : -1;
+   pcb->bufferStart = malloc( itemSize * maxItems );
+   pcb->head = pcb->bufferStart;
+   pcb->tail = pcb->bufferStart;
+   pcb->bufferEnd = pcb->bufferStart + ( maxItems * itemSize ) - 1;
+   pcb->numItems = 0;
+   pcb->itemSize = itemSize;
+   pcb->size = maxItems;
+
+   return pcb;
 }
 
 inline enum BufferState IsBufferFull( CircularBuffer_t * cb )
@@ -49,4 +59,13 @@ inline enum BufferState CBufferRemove( CircularBuffer_t * cb, void * data )
    MyMemMove( ( uint8_t *) cb->tail, ( uint8_t *) data, cb->itemSize );
    cb->tail = ( cb->tail == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart : ( uint8_t * ) cb->tail + cb->itemSize;
    cb->numItems--;
+}
+
+void CBufferDestruct( CircularBuffer_t ** pcb )
+{
+   CircularBuffer_t * cb = *pcb;
+   free( cb->bufferStart );
+   free( *pcb );
+   *pcb = NULL;
+
 }

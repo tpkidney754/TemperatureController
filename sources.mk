@@ -26,6 +26,7 @@ SRCS = \
 	./Testing/datatesting.c \
 	./Testing/memorytesting.c \
 	./Testing/circularbuffertesting.c \
+	./Testing/performancetesting.c \
 
 
 STARTUP = \

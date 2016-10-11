@@ -3,13 +3,34 @@
 
 static uint8_t fillerChar[ 3 ] = { '*', '@', '~' };
 
+//*************************************************************************
+// Function:  Testing                                                     *
+//                                                                        *
+// Description: Main function that calls all individual test suite.       *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void Testing()
 {
    DataTesting();
    MemoryTesting();
    CircularBufferTesting();
+   PerformanceTesting( );
 }
 
+//*************************************************************************
+// Function:  PrintHeader                                                 *
+//                                                                        *
+// Description: A string is passed in and a header type. The type will    *
+//              dictate the filler characters surrounding the header      *
+//              sting.                                                    *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void PrintHeader( uint8_t * header, HeaderType_t headerType )
 {
    if( headerType == pass_e )
@@ -33,6 +54,7 @@ void PrintHeader( uint8_t * header, HeaderType_t headerType )
 
    sprintf( testPrintBuffer, "\n%s %s %s\n", filler, header, filler );
    LOG0( testPrintBuffer );
+   free( filler );
 }
 
 #endif

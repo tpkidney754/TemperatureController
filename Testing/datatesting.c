@@ -1,6 +1,15 @@
 #ifdef TESTING
 #include "datatesting.h"
 
+//*************************************************************************
+// Function:  DataTesting                                                 *
+//                                                                        *
+// Description: Main function that calls all individual unit tests.        *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void DataTesting( )
 {
    MyItoaUnitTest( );
@@ -10,6 +19,18 @@ void DataTesting( )
    LittleToBigUnitTest( );
 }
 
+//*************************************************************************
+// Function:  MyItoaUnitTest                                              *
+//                                                                        *
+// Description: Sends a known input to MyItoa and then compares it's      *
+//              output with a known output. The test will fail if the     *
+//              output of the function does not match a predefined        *
+//              expected output.                                          *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void MyItoaUnitTest( )
 {
    sprintf( headerBuffer, "MyItoa Unit Test" );
@@ -87,6 +108,18 @@ void MyItoaUnitTest( )
   PrintHeader( headerBuffer, fail );
 }
 
+//*************************************************************************
+// Function:  MyAtoiUnitTest                                              *
+//                                                                        *
+// Description: Sends a known input to MyAtoi and then compares it's      *
+//              output with a known output. The test will fail if the     *
+//              output of the function does not match a predefined        *
+//              expected output.                                          *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void MyAtoiUnitTest( )
 {
    sprintf( headerBuffer, "MyAtoi Unit Test" );
@@ -124,6 +157,18 @@ void MyAtoiUnitTest( )
    PrintHeader( headerBuffer, fail );
 }
 
+//*************************************************************************
+// Function:  MyFtoaUnitTest                                              *
+//                                                                        *
+// Description: Sends a known input to MyFtoa and then compares it's      *
+//              output with a known output. The test will fail if the     *
+//              output of the function does not match a predefined        *
+//              expected output.                                          *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void MyFtoaUnitTest( )
 {
    uint8_t fail = 0;
@@ -165,38 +210,54 @@ void MyFtoaUnitTest( )
    PrintHeader( headerBuffer, fail );
 }
 
+//*************************************************************************
+// Function:  BigToLittleUnitTest                                         *
+//                                                                        *
+// Description: Defines a 32 bit value and the sends to BigToLittle       *
+//              A predefined value that is opposite endianess is checked  *
+//              against the ouput. The test will fail if the output does  *
+//              not equal the predefined expected output.                 *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void BigToLittleUnitTest( )
 {
    sprintf( headerBuffer, "MyBigToLittle Unit Test" );
    PrintHeader( headerBuffer, main_e );
+
    uint32_t data = 0xDEADBEEF;
    uint32_t reverse = 0xEFBEADDE;
    uint32_t result = 0;
    uint8_t * pData = ( uint8_t * ) &data;
 
-   LOG0( "Original Data\n");
-   DumpMemory( pData, 4 );
    result = BigToLittle( data );
-   pData = (uint8_t *) &result;
-   LOG0( "After BigToLittle\n" );
-   DumpMemory( pData, 4 );
    PrintHeader( headerBuffer, result == reverse ? 0 : 1 );
 }
 
+//*************************************************************************
+// Function:  LittleToBigUnitTest                                         *
+//                                                                        *
+// Description: Defines a 32 bit value and the sends to LittleToBig       *
+//              A predefined value that is opposite endianess is checked  *
+//              against the ouput. The test will fail if the output does  *
+//              not equal the predefined expected output.                 *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void LittleToBigUnitTest( )
 {
    sprintf( headerBuffer, "MyLittleToBig Unit Test" );
    PrintHeader( headerBuffer, main_e );
+
    uint32_t data = 0xDEADBEEF;
    uint32_t reverse = 0xEFBEADDE;
    uint32_t result = 0;
-   uint8_t * pData = ( uint8_t * ) &data;
-   LOG0( "Original Data\n");
-   DumpMemory( pData, 4 );
+
    result = LittleToBig( data );
-   LOG0( "After LittleToBig\n" );
-   pData = (uint8_t *) &result;
-   DumpMemory( pData, 4 );
    PrintHeader( headerBuffer, result == reverse ? 0 : 1 );
 }
 

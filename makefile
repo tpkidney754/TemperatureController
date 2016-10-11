@@ -12,6 +12,7 @@ bbb:  CFLAGS = -Werror -g -O0 -std=c99 -Arch=ARM
 frdm:  CFLAGS = -Werror -g3 -O0 -std=c99 -Arch=ARM --specs=nosys.specs \
 		 -mcpu=cortex-m0plus -mthumb -fmessage-length=0 -fsigned-char \
 		 -ffunction-sections -fdata-sections  -MMD -MP
+bbb: override DEFINES += -DBBB
 frdm: override DEFINES += -DFRDM
 frdm: LDFLAGS = -Xlinker -Map=main.map -T "MKL25Z128xxx4_flash.ld"
 OBJS = $(SRCS:.c=.o)

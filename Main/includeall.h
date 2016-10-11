@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#ifndef FRDM
+#include <time.h>
+#include <math.h>
+#endif
 
 #include "circularbuffer.h"
 #define UART_LOGGING
@@ -14,6 +18,9 @@
 #include "io.h"
 #include "uart.h"
 #include "led.h"
+#endif
+
+#if ( defined( FRDM ) || defined( TESTING ) )
 #include "timers.h"
 #endif
 
@@ -25,5 +32,6 @@
 #include "datatesting.h"
 #include "memorytesting.h"
 #include "circularbuffertesting.h"
+#include "performancetesting.h"
 #endif
 

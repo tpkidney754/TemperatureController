@@ -1,7 +1,7 @@
 #include "includeall.h"
 
-extern CircularBuffer_t RXBuffer;
-extern CircularBuffer_t TXBuffer;
+extern CircularBuffer_t * RXBuffer;
+extern CircularBuffer_t * TXBuffer;
 
 int main()
 {
@@ -23,10 +23,10 @@ while( 1 )
 {
    if( parseDiag )
    {
-      uint32_t length = RXBuffer.numItems;
+      uint32_t length = RXBuffer->numItems;
       for( uint32_t i = 0; i < length; i++ )
       {
-         CBufferRemove( &RXBuffer, &buffer[ i ] );
+         CBufferRemove( RXBuffer, &buffer[ i ] );
       }
 
       if( strstr( buffer, "set") )

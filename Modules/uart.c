@@ -3,8 +3,8 @@
 
 /* GLOBAL Variable */
 uint8_t parseDiag;
-CircularBuffer_t RXBuffer;
-CircularBuffer_t TXBuffer;
+CircularBuffer_t * RXBuffer;
+CircularBuffer_t * TXBuffer;
 //*************************************************************************
 // Function:  Uart0Setup                                                  *
 //                                                                        *
@@ -23,8 +23,8 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    uint32_t prdiv = 0;
    uint32_t vdiv = 0;
    parseDiag = 0;
-   CBufferInit( &RXBuffer, sizeof( uint8_t ), RXBUFFER_SIZE );
-   CBufferInit( &TXBuffer, sizeof( uint8_t ), TXBUFFER_SIZE );
+   RXBuffer = CBufferInit( sizeof( uint8_t ), RXBUFFER_SIZE );
+   TXBuffer = CBufferInit( sizeof( uint8_t ), TXBUFFER_SIZE );
 
    // Determining msgCLK
    prdiv = ((MCG_C5 & MCG_C5_PRDIV0_MASK) + 1);
@@ -90,7 +90,7 @@ void Uart0TX( uint32_t length )
    for( uint32_t i = 0; i < length; i++ )
    {
       WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
-      CBufferRemove( &TXBuffer, &data );
+      CBufferRemove( TXBuffer, &data );
       UART0_D = data;
    }
 }
@@ -140,13 +140,13 @@ void PutChar( uint8_t data )
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void UART0_IRQHandler( void )
+void UART0_IRQHandler( )
 {
    uint8_t data;
    if( UART0_S1 & UART0_S1_RDRF_MASK )
    {
       data = UART0_D;
-      if( CBufferAdd( &RXBuffer, &data ) == BUFFER_FULL )
+      if( CBufferAdd( RXBuffer, &data ) == BUFFER_FULL )
       {
          LOG0( "Buffer Is FULL during RX\n" );
       }
@@ -154,7 +154,7 @@ void UART0_IRQHandler( void )
       if( data == CR )
       {
          data = '\0';
-         if( CBufferAdd( &RXBuffer, &data ) == BUFFER_FULL )
+         if( CBufferAdd( RXBuffer, &data ) == BUFFER_FULL )
          {
             LOG0( "Buffer Is FULL during RX\n" );
          }

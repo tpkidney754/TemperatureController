@@ -22,10 +22,11 @@ typedef enum BufferState
    BUFFER_EMPTY = 1
 } BufferState;
 
-uint32_t CBufferInit( CircularBuffer_t * cb, uint32_t itemSize, uint32_t maxItems );
+CircularBuffer_t * CBufferInit( uint32_t itemSize, uint32_t maxItems );
 enum BufferState IsBufferFull( CircularBuffer_t * cb );
 enum BufferState IsBufferEmpty( CircularBuffer_t * cb );
 enum BufferState CBufferAdd( CircularBuffer_t * cb, void * data );
 enum BufferState CBufferRemove( CircularBuffer_t * cb, void * data );
+void CBufferDestruct( CircularBuffer_t ** cb );
 
 #endif //__CIRCBUFF__

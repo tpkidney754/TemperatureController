@@ -1,6 +1,7 @@
-#ifdef FRDM
 #include "timers.h"
 
+#ifdef FRDM
+static uint32_t timerCount = 0;
 //*************************************************************************
 // Function:  SetupPWM                                                    *
 //                                                                        *
@@ -73,4 +74,101 @@ void ChangeLEDPW( uint16_t pulseWidth )
    TPM2_C1V = valueToTPM2CnV;
    TPM0_C1V = valueToTPM0CnV;
 }
+
+
+void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInUS )
+{
+   uint32_t clockPeriodInNs = NS_PER_SEC / DEFAULT_SYSTEM_CLOCK;
+   uint32_t modulus = (uint32_t ) ( ( intervalInUS * NS_PER_US ) / clockPeriodInNs ) - 1;
+
+   switch( tpm )
+   {
+      case 0:
+         SET_BIT_IN_REG( SIM_SCGC6, SIM_SCGC6_TPM0_MASK );
+         SET_BIT_IN_REG( TPM0_CONF, TPM_CONF_TRGSEL( 0xA ) );
+         SET_BIT_IN_REG( TPM0_CONF, TPM_CONF_CROT_MASK );
+         SET_BIT_IN_REG( TPM0_SC, TPM_SC_CMOD( 1 ) );
+         SET_BIT_IN_REG( TPM0_SC, TPM_SC_TOIE_MASK );
+         NVIC_EnableIRQ( TPM0_IRQn );
+         NVIC_SetPriority( TPM0_IRQn, 2 );
+         TPM0_CNT = TPM_CNT_COUNT_MASK;
+         TPM0_MOD = modulus;
+         SET_BIT_IN_REG( TPM0_CnSC( ch ), TPM_CnSC_MSA_MASK | TPM_CnSC_ELSA_MASK );
+         TPM0_CnV( ch ) = (uint16_t) modulus;
+         break;
+      case 1:
+         SET_BIT_IN_REG( SIM_SCGC6, SIM_SCGC6_TPM1_MASK );
+         SET_BIT_IN_REG( TPM1_CONF, TPM_CONF_TRGSEL( 0xA ) );
+         SET_BIT_IN_REG( TPM1_CONF, TPM_CONF_CROT_MASK );
+         SET_BIT_IN_REG( TPM1_SC, TPM_SC_CMOD( 1 ) );
+         SET_BIT_IN_REG( TPM1_SC, TPM_SC_TOIE_MASK );
+         NVIC_EnableIRQ( TPM1_IRQn );
+         NVIC_SetPriority( TPM1_IRQn, 2 );
+         TPM1_CNT = TPM_CNT_COUNT_MASK;
+         TPM1_MOD = modulus;
+         SET_BIT_IN_REG( TPM1_CnSC( ch ), TPM_CnSC_MSA_MASK | TPM_CnSC_ELSA_MASK );
+         TPM1_CnV( ch ) = (uint16_t) modulus;
+         break;
+      case 2:
+         SET_BIT_IN_REG( SIM_SCGC6, SIM_SCGC6_TPM2_MASK );
+         SET_BIT_IN_REG( TPM2_CONF, TPM_CONF_TRGSEL( 0xA ) );
+         SET_BIT_IN_REG( TPM2_CONF, TPM_CONF_CROT_MASK );
+         SET_BIT_IN_REG( TPM2_SC, TPM_SC_CMOD( 1 ) );
+         SET_BIT_IN_REG( TPM2_SC, TPM_SC_TOIE_MASK );
+         NVIC_EnableIRQ( TPM2_IRQn );
+         NVIC_SetPriority( TPM2_IRQn, 2 );
+         TPM2_CNT = TPM_CNT_COUNT_MASK;
+         TPM2_MOD = modulus;
+         SET_BIT_IN_REG( TPM2_CnSC( ch ), TPM_CnSC_MSA_MASK | TPM_CnSC_ELSA_MASK );
+         TPM2_CnV( ch ) = (uint16_t) modulus;
+         break;
+   }
+}
+
+void TPM0_IRQHandler()
+{
+   if( TPM0_SC & TPM_SC_TOF_MASK )
+   {
+      timerCount++;
+      SET_BIT_IN_REG( TPM0_SC, TPM_SC_TOF_MASK );
+   }
+}
+
+void TPM1_IRQHandler()
+{
+   if( TPM1_SC & TPM_SC_TOF_MASK )
+   {
+      timerCount++;
+      SET_BIT_IN_REG( TPM1_SC, TPM_SC_TOF_MASK );
+   }
+}
+
+void TPM2_IRQHandler()
+{
+   if( TPM2_SC & TPM_SC_TOF_MASK )
+   {
+      timerCount++;
+      SET_BIT_IN_REG( TPM2_SC, TPM_SC_TOF_MASK );
+   }
+}
+
+#endif //FRDM
+
+inline uint32_t GetTime( )
+{
+#ifdef FRDM
+   return timerCount;
+#else
+   return ( uint32_t ) clock( );
 #endif
+}
+
+inline uint32_t GetElapsedTime( uint32_t start, uint32_t end )
+{
+#ifdef FRDM
+   timerCount = 0;
+   return end - start;
+#else
+   return  ( end - start ) * UNITS_US  / CLOCKS_PER_SEC;
+#endif
+}
