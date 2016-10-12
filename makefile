@@ -58,7 +58,7 @@ compile-all:  $(OBJS)
 build: host bbb frdm
 
 upload: bbb
-	scp $(OUTPUT)bbb root@192.168.1.10:/home/debian/bin/
+	scp $(OUTPUT)bbb root@192.168.7.2:/home/debian/bin/
 
 build-lib: $(LIBOBJS)
 	ar rcs libproject1.a $(LIBOBJS)
