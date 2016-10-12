@@ -8,6 +8,7 @@
 
 #define NS_PER_SEC         1000000000
 #define _10US_PER_SEC      10000000
+#define UNITS_US           1000000
 #define NS_PER_US          1000
 
 #define PROFILER_TPM             1
