@@ -21,10 +21,13 @@ void LOG0( uint8_t * data )
    uint32_t length = MyStrLen( data );
    for( uint32_t i = 0; i < length; i++ )
    {
-      CBufferAdd( TXBuffer, ( data + i ) );
+      if( CBufferAdd( TXBuffer, ( data + i ) ) == BUFFER_FULL )
+      {
+         while( IsBufferFull( TXBuffer ) == BUFFER_FULL );
+         CBufferAdd( TXBuffer, ( data + i ) );
+      }
    }
-   //NVIC_SetPendingIRQ( UART0_IRQn );*/
-   Uart0TX( MyStrLen( data ) );
+   SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
 #else
    printf( "%s", data );
 #endif

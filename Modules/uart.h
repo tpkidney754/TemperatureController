@@ -8,8 +8,8 @@
 #define OSR 16
 #define CR  13
 #define LF  10
-#define RXBUFFER_SIZE   512
-#define TXBUFFER_SIZE   512
+#define RXBUFFER_SIZE   128
+#define TXBUFFER_SIZE   1024
 
 extern uint8_t parseDiag;
 

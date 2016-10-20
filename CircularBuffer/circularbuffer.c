@@ -45,7 +45,7 @@ inline enum BufferState CBufferAdd( CircularBuffer_t * cb, void * data )
    }
 
    MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, cb->itemSize );
-   cb->head = ( cb->head == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart : ( uint8_t * ) cb->head + cb->itemSize;
+   cb->head = ( cb->head == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart : ( uint8_t * ) ( cb->head + cb->itemSize );
    cb->numItems++;
 }
 
@@ -57,7 +57,7 @@ inline enum BufferState CBufferRemove( CircularBuffer_t * cb, void * data )
    }
 
    MyMemMove( ( uint8_t *) cb->tail, ( uint8_t *) data, cb->itemSize );
-   cb->tail = ( cb->tail == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart : ( uint8_t * ) cb->tail + cb->itemSize;
+   cb->tail = ( cb->tail == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart : ( uint8_t * ) ( cb->tail + cb->itemSize );
    cb->numItems--;
 }
 

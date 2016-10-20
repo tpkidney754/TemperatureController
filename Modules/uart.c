@@ -5,6 +5,7 @@
 uint8_t parseDiag;
 CircularBuffer_t * RXBuffer;
 CircularBuffer_t * TXBuffer;
+
 //*************************************************************************
 // Function:  Uart0Setup                                                  *
 //                                                                        *
@@ -38,7 +39,7 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    SET_BIT_IN_REG( PORTA_PCR2, PORT_PCR_MUX( 0X2 ) );
    // Selects the PLLFLLClk as the source for UART0
    SET_BIT_IN_REG( SIM_SOPT2, SIM_SOPT2_UART0SRC( 1 ) );
-   //SET_BIT_IN_REG( SIM_SOPT2, SIM_SOPT2_PLLFLLSEL( 1 ) );
+   SET_BIT_IN_REG( SIM_SOPT2, SIM_SOPT2_PLLFLLSEL( 1 ) );
    //Calculates the clk value for UART0.
    uart0Clk = ( mcgClk / 2 );
    // Enables the clock gate for UART0
@@ -60,10 +61,10 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    SET_BIT_IN_REG( UART0_BDL, UART0_BDL_SBR( (uint8_t) ( calcBaudRate & 0xFF ) ) );
 
    // Enable RX Interrupt
-   SET_BIT_IN_REG( UART0_C2, UART0_C2_RIE_MASK );// | UART0_C2_TIE_MASK );
-   //INTVEC_UART0 = (uint32_t ) UART0_IRQHandler;
+   SET_BIT_IN_REG( UART0_C2, UART0_C2_RIE_MASK );
+   //SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
    NVIC_EnableIRQ( UART0_IRQn );
-   //NVIC_ClearPendingIRQ( UART0_IRQn );
+   NVIC_ClearPendingIRQ( UART0_IRQn );
    NVIC_SetPriority( UART0_IRQn, 2 );
 
    // Enables the TX/RX pins.
@@ -143,6 +144,18 @@ void PutChar( uint8_t data )
 void UART0_IRQHandler( )
 {
    uint8_t data;
+   if( ( UART0_S1 & UART0_S1_TDRE_MASK ) )
+   {
+      if( CBufferRemove( TXBuffer, &data ) == BUFFER_EMPTY )
+      {
+         CLEAR_BITS_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
+      }
+      else
+      {
+         UART0_D = data;
+      }
+   }
+
    if( UART0_S1 & UART0_S1_RDRF_MASK )
    {
       data = UART0_D;
@@ -161,10 +174,5 @@ void UART0_IRQHandler( )
          parseDiag = 1;
       }
    }
-   /*else if( UART0_S1 & UART0_S1_TDRE_MASK )
-   {
-      data = UART0_D;
-      CBufferRemove( &TXBuffer, &data );
-   }*/
 }
 #endif
