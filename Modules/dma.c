@@ -1,3 +1,4 @@
+#ifdef FRDM
 #include "dma.h"
 
 extern uint8_t dmaComplete[ 4 ];
@@ -10,15 +11,15 @@ void InitDMA( )
    dmaComplete[ ch ] = 1;
 }
 
-void StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t items )
+DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
-   if( items % 4 != 0 )
+   if( numBytes % 4 != 0 )
    {
       return DMANot32bitTransferSize;
    }
 
    DMA_SAR( ch ) = src;
-   DMA_SAR( ch ) = dst;
+   DMA_DAR( ch ) = dst;
 
    SET_REG_VALUE( DMA_DCR( ch ),
                   // These values are multiple bits and need to be cleared first
@@ -29,14 +30,14 @@ void StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t
                     DMA_DCR_DINC_MASK |
                     DMA_DCR_SINC_MASK ) );
 
-   SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, items );
-
+   SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, numBytes );
+   dmaComplete[ ch ] = 0;
    SET_BITS_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK )
 
    return DMANoError;
 }
 
-DMAErrors_e StartTransfer16bitMoves( uint8_t * src, uint8_t * dst, uint32_t items )
+DMAErrors_e StartTransfer16bitMoves( uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
    if( items % 2 != 0 )
    {
@@ -54,10 +55,15 @@ DMAErrors_e StartTransfer16bitMoves( uint8_t * src, uint8_t * dst, uint32_t item
                     DMA_DCR_DINC_MASK |
                     DMA_DCR_SINC_MASK ) );
 
+   SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, numBytes );
+   dmaComplete[ ch ] = 0;
+   SET_BITS_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK )
+
+   return DMANoError;
    return DMANoError;
 }
 
-void StartTransfer8bitMoves( uint8_t * src, uint8_t * dst, uint32_t items )
+void StartTransfer8bitMoves( uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
    DMA_SAR( ch ) = src;
    DMA_SAR( ch ) = dst;
@@ -70,6 +76,10 @@ void StartTransfer8bitMoves( uint8_t * src, uint8_t * dst, uint32_t items )
                     DMA_DCR_DSIZE( _8bit ) |
                     DMA_DCR_DINC_MASK |
                     DMA_DCR_SINC_MASK ) );
+
+   SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, numBytes );
+   dmaComplete[ ch ] = 0;
+   SET_BITS_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK )
 
    return DMANoError;
 }
@@ -121,3 +131,4 @@ void DMA3_IRQHandler( )
       LOG0( "DMA0 interrupt occured but DONE bit is not set!\n" );
    }
 }
+#endif //FRDM

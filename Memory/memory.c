@@ -12,13 +12,13 @@
 // Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
 //                        values are a failure.                           *
 //*************************************************************************
-int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t length )
+int8_t 6MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch )
 {
    if( src == NULL || dst == NULL )
    {
       return -1;
    }
-
+   // Can use DMA for overlapping regions like this. So using slow method.
    if( ( dst > src ) && ( dst <= ( src + length ) ) )
    {
       dst += length;
@@ -31,12 +31,21 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t length )
       return dst ? 0 : -1;
    }
 
-   for( int32_t i = 0; i < length; i++ )
+   uint8_t remainder = numBytes % 4;
+   if( remainder )
    {
-      *dst++ = *src++;
+      numBytes -= remainder;
+      StartTransfer32bitMoves( DMAch, src, dst, numBytes );
+      // Have to wait until first transfer is complete.
+      while( dmaComplete[ DMAch ] == 0 );
+      StartTransfer8bitMoves( DMAch, src, dst, remainder );
+
+      return 0;
    }
 
-   return dst ? 0 : -1;
+   StartTransfer32bitMoves( DMAch, src, dst, numBytes );
+
+   return 0;
 
 }
 

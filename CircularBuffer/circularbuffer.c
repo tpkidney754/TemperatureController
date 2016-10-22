@@ -52,8 +52,11 @@ inline BufferState_e CBufferAdd( CircularBuffer_t * cb, void * data, uint8_t DMA
    cb->numItems++;
 }
 
-inline BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
-                                      uint32_t numToAdd, uint8_t DMAch )
+// If the numToAdd > cb->numItems + cb->size then this function will not add the total numToAdd.
+// If there is a need to make sure all items get added, then that checking needs to be done outside
+// by the code that is calling this function.
+BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
+                               uint32_t numToAdd, uint8_t DMAch )
 {
    if( IsBufferFull( cb ) )
    {
@@ -61,7 +64,7 @@ inline BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
    }
 
    // If the total items is going to wrap the buffer, first add items to the end of the buffer.
-   if( (cb->head + ( cb->itemSize * numToAdd ) ) => cb->bufferEnd )
+   if( (cb->head + ( cb->itemSize * numToAdd ) ) >= cb->bufferEnd )
    {
       // if the first move is going to fill up the buffer, add items that fill up the buffer.
       // otherwise, fill up the buffer to the end point before wrapping.
@@ -69,14 +72,13 @@ inline BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
                                                           cb->size - cb->numItems :
                                                         ( cb->bufferEnd - cb->head ) / cb->itemSize;
       // Start first transfer
-      MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, firstMove * cb->itemSize );
-      // Wait until transfer is complete.
-      while( dmaComplete[ ch ] == 0 );
+      MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, firstMove * cb->itemSize, DMAch );
+
       // Set the head to current value of the DMA destination pointer.
-      cb->head = DMA_DAR( ch );
+      cb->head += firstMove * cb->itemSize;
       // Wrap if needed.
       cb->head = ( cb->head == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart :
-                                              ( uint8_t * ) ( cb->head + cb->itemSize );
+                                                 ( uint8_t * ) ( cb->head + cb->itemSize );
       // Increment numItems as needed.
       cb->numItems += firstMove;
       // If the first move filled up the buffer then return.
@@ -84,22 +86,48 @@ inline BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
       {
          return BUFFER_FULL;
       }
+      // Wait until first transfer is complete.
+      while( dmaComplete[ DMAch ] == 0 );
+
       numToAdd -= firstMove;
       uint32_t secondMove = ( cb->numItems + numToAdd ) >= cb->size ?
                                                            cb->size - cb->numItems :
                                                            numToAdd;
       // StartSecondTransfer
-      MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, secondMove * cb->itemSize );
-
+      MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, secondMove * cb->itemSize, DMAch );
+      // Increment head to the end of the second transfer.
       cb->head += secondMove * cb->itemSize;
+      // Increment head as needed.
+      cb->head = ( cb->head == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart :
+                                                 ( uint8_t * ) ( cb->head + cb->itemSize );
       cb->numItems += secondMove;
 
+      return IsBufferFull( cb );
+   }
+   // No buffer wrap will take place
+   // Now there is a need to make sure that the numItems wont overfill buffer
+   if( numToAdd + cb->numItems >= cb->size )
+   {
+      numToAdd = cb->size - cb->numItems;
+
+      MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, numToAdd * cb->itemSize, DMAch );
+      // Increment head to the end of the second transfer.
+      cb->head += numToAdd * cb->itemSize;
+      // Increment head as needed.
+      cb->head = ( cb->head == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart :
+                                                 ( uint8_t * ) ( cb->head + cb->itemSize );
+      cb->numItems += numToAdd;
+
+      return IsBufferFull( cb );
    }
 
-   MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, cb->itemSize );
+   MyMemMove( ( uint8_t *) data, ( uint8_t *) cb->head, numToAdd * cb->itemSize, DMAch );
+   cb->head += numToAdd * cb->itemSize;
    cb->head = ( cb->head == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart :
                                               ( uint8_t * ) ( cb->head + cb->itemSize );
-   cb->numItems++;
+   cb->numItems += numToAdd;
+
+   return IsBufferFull( cb );
 }
 
 inline BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data )
