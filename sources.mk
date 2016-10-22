@@ -21,6 +21,7 @@ SRCS = \
 	./Modules/led.c \
 	./Modules/timers.c \
 	./Modules/diags.c \
+	./Modules/dma.c \
 	./Logging/uartlogging.c \
 	./Testing/testing.c \
 	./Testing/datatesting.c \

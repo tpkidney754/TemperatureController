@@ -20,7 +20,7 @@ typedef enum BufferState
    BUFFER_FULL = 1,
    BUFFER_NOT_EMPTY = 0,
    BUFFER_EMPTY = 1
-} BufferState;
+} BufferState_e;
 
 CircularBuffer_t * CBufferInit( uint32_t itemSize, uint32_t maxItems );
 enum BufferState IsBufferFull( CircularBuffer_t * cb );

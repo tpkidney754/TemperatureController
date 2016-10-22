@@ -27,6 +27,9 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    RXBuffer = CBufferInit( sizeof( uint8_t ), RXBUFFER_SIZE );
    TXBuffer = CBufferInit( sizeof( uint8_t ), TXBUFFER_SIZE );
 
+   InitDMA( DMACH_UART0RX, DMA_TRANSFER_SIZE, DMA_RXBUFFER_SIZE );
+   InitDMA( DMACH_UART0TX, DMA_TRANSFER_SIZE, DMA_TXBUFFER_SIZE );
+
    // Determining msgCLK
    prdiv = ((MCG_C5 & MCG_C5_PRDIV0_MASK) + 1);
    vdiv = ((MCG_C6 & MCG_C6_VDIV0_MASK) + 24);
