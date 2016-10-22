@@ -12,7 +12,7 @@ typedef enum DMAErrors
 
 typedef enum TransferSize
 {
-   _32bit = 0
+   _32bit = 0,
    _8bit,
    _16bit,
    Reserved
@@ -39,5 +39,9 @@ typedef enum BufferSize
 } BufferSize_e;
 
 void InitDMA( uint8_t ch );
+DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes );
+DMAErrors_e StartTransfer16bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes );
+DMAErrors_e StartTransfer8bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes );
+
 
 #endif

@@ -1002,7 +1002,9 @@ typedef struct {
 /*!
  * @addtogroup DMA_Register_Accessor_Macros DMA - Register accessor macros
  * @{
- */xUNT                            4
+ */
+#define DMA_SAR_REG(base,index)                  ((base)->DMA[index].SAR)
+#define DMA_SAR_COUNT                            4
 #define DMA_DAR_REG(base,index)                  ((base)->DMA[index].DAR)
 #define DMA_DAR_COUNT                            4
 #define DMA_DSR_BCR_REG(base,index)              ((base)->DMA[index].DSR_BCR)

@@ -1,5 +1,6 @@
 #include "memory.h"
 
+uint8_t dmaComplete[ 4 ];
 //*************************************************************************
 // Function:  MyMemMove                                                   *
 //                                                                        *
@@ -12,18 +13,18 @@
 // Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
 //                        values are a failure.                           *
 //*************************************************************************
-int8_t 6MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch )
+int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch )
 {
    if( src == NULL || dst == NULL )
    {
       return -1;
    }
    // Can use DMA for overlapping regions like this. So using slow method.
-   if( ( dst > src ) && ( dst <= ( src + length ) ) )
+   if( ( dst > src ) && ( dst <= ( src + numBytes ) ) )
    {
-      dst += length;
-      src += length;
-      for( int32_t i = length; i >= 0; i-- )
+      dst += numBytes;
+      src += numBytes;
+      for( int32_t i = numBytes; i >= 0; i-- )
       {
          *dst-- = *src--;
       }

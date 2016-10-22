@@ -5,9 +5,9 @@ extern uint8_t dmaComplete[ 4 ];
 CircularBuffer_t * RXBuffer;
 CircularBuffer_t * TXBuffer;
 
-void InitDMA( )
+void InitDMA( uint8_t ch )
 {
-   SET_BITS_IN_REG( SIM_SCGC7, SIM_SCGC7_DMA_MASK )
+   SET_BIT_IN_REG( SIM_SCGC7, SIM_SCGC7_DMA_MASK );
    dmaComplete[ ch ] = 1;
 }
 
@@ -18,8 +18,8 @@ DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, u
       return DMANot32bitTransferSize;
    }
 
-   DMA_SAR( ch ) = src;
-   DMA_DAR( ch ) = dst;
+   DMA_SAR( ch ) = ( uint32_t ) src;
+   DMA_DAR( ch ) = ( uint32_t ) dst;
 
    SET_REG_VALUE( DMA_DCR( ch ),
                   // These values are multiple bits and need to be cleared first
@@ -32,20 +32,20 @@ DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, u
 
    SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, numBytes );
    dmaComplete[ ch ] = 0;
-   SET_BITS_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK )
+   SET_BIT_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK );
 
    return DMANoError;
 }
 
-DMAErrors_e StartTransfer16bitMoves( uint8_t * src, uint8_t * dst, uint32_t numBytes )
+DMAErrors_e StartTransfer16bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
-   if( items % 2 != 0 )
+   if( numBytes % 2 != 0 )
    {
       return DMANot16bitTransferSize;
    }
 
-   DMA_SAR( ch ) = src;
-   DMA_SAR( ch ) = dst;
+   DMA_SAR( ch ) = ( uint32_t ) src;
+   DMA_SAR( ch ) = ( uint32_t ) dst;
    SET_REG_VALUE( DMA_DCR( ch ),
                   // These values are multiple bits and need to be cleared first
                   ( DMA_DCR_SSIZE_MASK | DMA_DCR_DSIZE_MASK ),
@@ -57,16 +57,16 @@ DMAErrors_e StartTransfer16bitMoves( uint8_t * src, uint8_t * dst, uint32_t numB
 
    SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, numBytes );
    dmaComplete[ ch ] = 0;
-   SET_BITS_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK )
+   SET_BIT_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK );
 
    return DMANoError;
    return DMANoError;
 }
 
-void StartTransfer8bitMoves( uint8_t * src, uint8_t * dst, uint32_t numBytes )
+DMAErrors_e StartTransfer8bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
-   DMA_SAR( ch ) = src;
-   DMA_SAR( ch ) = dst;
+   DMA_SAR( ch ) = ( uint32_t ) src;
+   DMA_SAR( ch ) = ( uint32_t ) dst;
 
    SET_REG_VALUE( DMA_DCR( ch ),
                   // These values are multiple bits and need to be cleared first
@@ -79,14 +79,14 @@ void StartTransfer8bitMoves( uint8_t * src, uint8_t * dst, uint32_t numBytes )
 
    SET_REG_VALUE( DMA_DSR_BCR( ch ), DMA_DSR_BCR_BCR_MASK, numBytes );
    dmaComplete[ ch ] = 0;
-   SET_BITS_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK )
+   SET_BIT_IN_REG( DMA_DCR( ch ), DMA_DCR_START_MASK );
 
    return DMANoError;
 }
 
 void DMA0_IRQHandler( )
 {
-   if( DMA_DSR0 & DMA_DSR_DONE_MASK )
+   if( DMA_DSR0 & DMA_DSR_BCR_DONE_MASK )
    {
       dmaComplete[ 0 ] = 1;
    }
@@ -98,7 +98,7 @@ void DMA0_IRQHandler( )
 
 void DMA1_IRQHandler( )
 {
-   if( DMA_DSR1 & DMA_DSR_DONE_MASK )
+   if( DMA_DSR1 & DMA_DSR_BCR_DONE_MASK )
    {
       dmaComplete[ 1 ] = 1;
    }
@@ -110,7 +110,7 @@ void DMA1_IRQHandler( )
 
 void DMA2_IRQHandler( )
 {
-   if( DMA_DSR2 & DMA_DSR_DONE_MASK )
+   if( DMA_DSR2 & DMA_DSR_BCR_DONE_MASK )
    {
       dmaComplete[ 2 ] = 1;
    }
@@ -122,7 +122,7 @@ void DMA2_IRQHandler( )
 
 void DMA3_IRQHandler( )
 {
-   if( DMA_DSR3 & DMA_DSR_DONE_MASK )
+   if( DMA_DSR3 & DMA_DSR_BCR_DONE_MASK )
    {
       dmaComplete[ 3 ] = 1;
    }
