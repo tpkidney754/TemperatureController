@@ -26,7 +26,7 @@ while( 1 )
       uint32_t length = RXBuffer->numItems;
       for( uint32_t i = 0; i < length; i++ )
       {
-         CBufferRemove( RXBuffer, &buffer[ i ] );
+         CBufferRemove( RXBuffer, &buffer[ i ], DMACH_UART0RX );
       }
 
       if( strstr( buffer, "set") )

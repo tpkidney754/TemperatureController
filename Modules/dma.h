@@ -42,6 +42,7 @@ void InitDMA( uint8_t ch );
 DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes );
 DMAErrors_e StartTransfer16bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes );
 DMAErrors_e StartTransfer8bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes );
+DMAErrors_e MemSet8bit( uint8_t ch, uint8_t data, uint8_t * dst, uint32_t numBytes );
 
 
 #endif

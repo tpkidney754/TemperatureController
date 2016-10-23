@@ -94,7 +94,7 @@ void Uart0TX( uint32_t length )
    for( uint32_t i = 0; i < length; i++ )
    {
       WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
-      CBufferRemove( TXBuffer, &data );
+      CBufferRemove( TXBuffer, &data, DMACH_UART0TX );
       UART0_D = data;
    }
 }
@@ -149,7 +149,7 @@ void UART0_IRQHandler( )
    uint8_t data;
    if( ( UART0_S1 & UART0_S1_TDRE_MASK ) )
    {
-      if( CBufferRemove( TXBuffer, &data ) == BUFFER_EMPTY )
+      if( CBufferRemove( TXBuffer, &data, DMACH_UART0TX ) == BUFFER_EMPTY )
       {
          CLEAR_BITS_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
       }

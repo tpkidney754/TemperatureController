@@ -32,8 +32,9 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
       return dst ? 0 : -1;
    }
 
+
    uint8_t remainder = numBytes % 4;
-   if( remainder )
+   if( remainder && ( numBytes > 3 ) )
    {
       numBytes -= remainder;
       StartTransfer32bitMoves( DMAch, src, dst, numBytes );
@@ -44,7 +45,8 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
       return 0;
    }
 
-   StartTransfer32bitMoves( DMAch, src, dst, numBytes );
+   StartTransfer8bitMoves( DMAch, src, dst, numBytes );
+
 
    return 0;
 
@@ -61,19 +63,16 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
 // Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
 //                        values are a failure.                           *
 //*************************************************************************
-int8_t MyMemZero( uint8_t * src, uint32_t length )
+int8_t MyMemZero( uint8_t * dst, uint32_t length, uint8_t DMAch )
 {
-   if( src == NULL )
+   if( dst == NULL )
    {
       return -1;
    }
 
-   for( int32_t i = 0; i < length; i++ )
-   {
-      *src++ = 0;
-   }
+   MemSet8bit( DMAch, 0, dst, length );
 
-   return src ? 0 : -1;
+   return dst ? 0 : -1;
 }
 
 //*************************************************************************

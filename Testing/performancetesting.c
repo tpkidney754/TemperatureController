@@ -59,7 +59,7 @@ void MemoryPerformanceTesting( )
       LOG0( testPrintBuffer );
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );
-      MyMemMove( src, dst, memoryTestCaseSizes[ i ] );
+      MyMemMove( src, dst, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
       end = GetTime( );
       diff = GetElapsedTime( start, end );
 
@@ -75,7 +75,7 @@ void MemoryPerformanceTesting( )
       LOG0( testPrintBuffer );
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );
-      MyMemZero( src, memoryTestCaseSizes[ i ] );
+      MyMemZero( src, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
       end = GetTime( );
       diff = GetElapsedTime( start, end );
 

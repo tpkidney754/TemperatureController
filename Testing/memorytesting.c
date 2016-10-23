@@ -46,7 +46,7 @@ void MyMemMoveUnitTest(  )
 
    PrintHeader( headerBuffer, main_e );
 
-   MyMemMove( memloc1, memloc2, MEM_MOVE_SIZE );
+   MyMemMove( memloc1, memloc2, MEM_MOVE_SIZE, TESTING_DMA_CH );
    if( strcmp( memloc2, testString ) != PASS )
    {
       sprintf( testPrintBuffer, "Direct copy failed! Expected %s, Copied Loc: %s\n", testString, memloc2 );
@@ -56,7 +56,7 @@ void MyMemMoveUnitTest(  )
 
    // memloc2 overlaps memloc1
    memloc2 = memloc1 + 10;
-   MyMemMove( memloc1, memloc2, MEM_MOVE_SIZE );
+   MyMemMove( memloc1, memloc2, MEM_MOVE_SIZE, TESTING_DMA_CH );
    if( strcmp( memloc2, testString ) != PASS )
    {
       sprintf( testPrintBuffer, "Oeverlap copy failed! Expected %s, Copied Loc: %s\n", testString, memloc2 );
@@ -68,7 +68,7 @@ void MyMemMoveUnitTest(  )
    memloc2 = memloc1;
    memloc1 += 10;
    strcpy( memloc1, testString );
-   MyMemMove( memloc1, memloc2, MEM_MOVE_SIZE );
+   MyMemMove( memloc1, memloc2, MEM_MOVE_SIZE, TESTING_DMA_CH );
    if( strcmp( memloc2, testString ) != PASS )
    {
       sprintf( testPrintBuffer, "Oeverlap copy failed! Expected %s, Copied Loc: %s\n", testString, memloc2 );
@@ -107,13 +107,14 @@ void MyMemZeroUnitTest( void )
       *( memloc + i ) = 0xA5;
    }
 
-   MyMemZero( memloc, MY_MEM_ZERO_SIZE );
+   MyMemZero( memloc, MY_MEM_ZERO_SIZE, TESTING_DMA_CH );
 
    for( uint32_t i = 0; i < MY_MEM_ZERO_SIZE; i++ )
    {
       if( *( memloc + i ) != 0 )
       {
          fail = 1;
+         break;
       }
    }
 

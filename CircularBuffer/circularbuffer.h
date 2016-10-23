@@ -27,7 +27,7 @@ BufferState_e IsBufferFull( CircularBuffer_t * cb );
 BufferState_e IsBufferEmpty( CircularBuffer_t * cb );
 BufferState_e CBufferAdd( CircularBuffer_t * cb, void * data, uint8_t DMAch );
 BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data, uint32_t numToAdd, uint8_t DMAch );
-BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data );
+BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data, uint8_t DMAch );
 void CBufferDestruct( CircularBuffer_t ** cb );
 
 #endif //__CIRCBUFF__

@@ -130,14 +130,14 @@ BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
    return IsBufferFull( cb );
 }
 
-inline BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data )
+inline BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data, uint8_t DMAch )
 {
    if( IsBufferEmpty( cb ) )
    {
       return BUFFER_EMPTY;
    }
 
-   MyMemMove( ( uint8_t *) cb->tail, ( uint8_t *) data, cb->itemSize, 0 );
+   MyMemMove( ( uint8_t *) cb->tail, ( uint8_t *) data, cb->itemSize, DMAch );
    cb->tail = ( cb->tail == cb->bufferEnd ) ? ( uint8_t * ) cb->bufferStart :
                                               ( uint8_t * ) ( cb->tail + cb->itemSize );
    cb->numItems--;
