@@ -31,8 +31,7 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
 
       return dst ? 0 : -1;
    }
-
-
+   /*
    uint8_t remainder = numBytes % 4;
    if( remainder && ( numBytes > 3 ) )
    {
@@ -45,8 +44,9 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
       return 0;
    }
 
+   StartTransfer32bitMoves( DMAch, src, dst, numBytes );
+   */
    StartTransfer8bitMoves( DMAch, src, dst, numBytes );
-
 
    return 0;
 
