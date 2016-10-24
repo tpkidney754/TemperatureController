@@ -1,1 +1,37 @@
 #include "spi.h"
+
+void InitSPI( uint8_t spiCh )
+{
+   // start with SPRF and SPTEF flags and then move to DMA
+   if( spiCh == 0 )
+   {
+      SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTA_MASK );
+      SET_BIT_IN_REG( SIM_SCGC4, SIM_SCGC4_SPI0_MASK );
+      SET_BIT_IN_REG( SPI0_MOSI, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI0_SCK, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI0_MISO, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
+
+   }
+   else
+   {
+      SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTE_MASK );
+      SET_BIT_IN_REG( SIM_SCGC4, SIM_SCGC4_SPI1_MASK );
+      SET_BIT_IN_REG( SPI1_MOSI, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI1_SCK, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI1_MISO, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI1_CS, PORT_PCR_MUX( 0X2 ) );
+      SET_BIT_IN_REG( SPI1_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
+   }
+}
+
+void SPI0_IRQHandler( )
+{
+
+}
+
+void SPI1_IRQHandler( )
+{
+
+}

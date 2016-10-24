@@ -9,6 +9,7 @@
 #endif
 
 #include "circularbuffer.h"
+#include "nRF24L01.h"
 #define UART_LOGGING
 #include "uartlogging.h"
 #ifdef FRDM
