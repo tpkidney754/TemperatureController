@@ -1,6 +1,6 @@
 #include "data.h"
 
-CircularBuffer_t TXBuffer;
+CircularBuffer_t UART0_TXBuffer;
 
 //*************************************************************************
 // Function:  MyItoa                                                      *
@@ -165,9 +165,9 @@ void DumpMemory( uint8_t * start, uint32_t length )
    {
       sprintf( buffer, "%02X ", *( start + i ) );
    #ifdef FRDM
-      CBufferAdd( &TXBuffer, buffer );
-      CBufferAdd( &TXBuffer, buffer + 1 );
-      CBufferAdd( &TXBuffer, buffer + 2 );
+      CBufferAdd( &UART0_TXBuffer, buffer );
+      CBufferAdd( &UART0_TXBuffer, buffer + 1 );
+      CBufferAdd( &UART0_TXBuffer, buffer + 2 );
    }
       Uart0TX( length );
    #else

@@ -1,9 +1,9 @@
 #ifndef __NRF24L01__
 #define __NRF24L01__
 
-// SPI Commands
-#define READ_REG( reg )       ( ( reg ) & 0x1F )
-#define WRITE_REG( reg )      ( 0x20 | ( reg ) & 0x1F )
+// SPI Commands to nRF24L01
+#define READ_REG( reg )       ( uint8_t ) ( ( reg ) & 0x1F )
+#define WRITE_REG( reg )      ( uint8_t ) ( 0x20 | ( reg ) & 0x1F )
 #define R_RX_PAYLOAD            0x61
 #define W_TX_PAYLOAD            0xA0
 #define FLUSH_TX                0xE1

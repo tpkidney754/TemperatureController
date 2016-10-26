@@ -3,8 +3,8 @@
 
 /* GLOBAL Variable */
 uint8_t parseDiag;
-CircularBuffer_t * RXBuffer;
-CircularBuffer_t * TXBuffer;
+CircularBuffer_t * UART0_RXBuffer;
+CircularBuffer_t * UART0_TXBuffer;
 
 //*************************************************************************
 // Function:  Uart0Setup                                                  *
@@ -24,8 +24,8 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    uint32_t prdiv = 0;
    uint32_t vdiv = 0;
    parseDiag = 0;
-   RXBuffer = CBufferInit( sizeof( uint8_t ), RXBUFFER_SIZE );
-   TXBuffer = CBufferInit( sizeof( uint8_t ), TXBUFFER_SIZE );
+   UART0_RXBuffer = CBufferInit( sizeof( uint8_t ), UART0_RXBuffer_SIZE );
+   UART0_TXBuffer = CBufferInit( sizeof( uint8_t ), UART0_TXBuffer_SIZE );
 
    // Determining msgCLK
    prdiv = ((MCG_C5 & MCG_C5_PRDIV0_MASK) + 1);
@@ -91,7 +91,7 @@ void Uart0TX( uint32_t length )
    for( uint32_t i = 0; i < length; i++ )
    {
       WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
-      CBufferRemove( TXBuffer, &data );
+      CBufferRemove( UART0_TXBuffer, &data );
       UART0_D = data;
    }
 }
@@ -146,7 +146,7 @@ void UART0_IRQHandler( )
    uint8_t data;
    if( ( UART0_S1 & UART0_S1_TDRE_MASK ) )
    {
-      if( CBufferRemove( TXBuffer, &data ) == BUFFER_EMPTY )
+      if( CBufferRemove( UART0_TXBuffer, &data ) == BUFFER_EMPTY )
       {
          CLEAR_BITS_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
       }
@@ -159,7 +159,7 @@ void UART0_IRQHandler( )
    if( UART0_S1 & UART0_S1_RDRF_MASK )
    {
       data = UART0_D;
-      if( CBufferAdd( RXBuffer, &data ) == BUFFER_FULL )
+      if( CBufferAdd( UART0_RXBuffer, &data ) == BUFFER_FULL )
       {
          LOG0( "Buffer Is FULL during RX\n" );
       }
@@ -167,7 +167,7 @@ void UART0_IRQHandler( )
       if( data == CR )
       {
          data = '\0';
-         if( CBufferAdd( RXBuffer, &data ) == BUFFER_FULL )
+         if( CBufferAdd( UART0_RXBuffer, &data ) == BUFFER_FULL )
          {
             LOG0( "Buffer Is FULL during RX\n" );
          }
