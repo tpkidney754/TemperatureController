@@ -66,7 +66,7 @@ void ParseDiag( uint8_t * buffer )
       {
          uint8_t registerToRead;
          sscanf( buffer, "read reg %d", &registerToRead );
-         ReadRegisterSPI( 0, registerToRead );
+         nRF24L01_ReadReg( 0, registerToRead );
       }
    }
 }

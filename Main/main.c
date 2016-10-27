@@ -12,6 +12,7 @@ int main()
    Uart0Setup( 57600, 0 );
    LEDSetup();
    InitSPI( 0 );
+   nRF24L01_Config( 0 );
 #endif
 
 

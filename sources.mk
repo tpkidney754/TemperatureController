@@ -22,6 +22,7 @@ SRCS = \
 	./Modules/timers.c \
 	./Modules/diags.c \
 	./Modules/spi.c \
+	./Modules/nRF24L01.c \
 	./Logging/uartlogging.c \
 	./Testing/testing.c \
 	./Testing/datatesting.c \

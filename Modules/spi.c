@@ -20,7 +20,9 @@ void InitSPI( uint8_t SPI_ch )
       SET_BIT_IN_REG( SPI0_CE, PORT_PCR_MUX( PIN_GPIO ) );
       SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
       // Setting up RX interrupt, SPI enable, and SPI master
-      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK | SPI_C1_SSOE_MASK );
+      // Set both the MODFEN and SSOE to use the SS pin as slave select
+      SET_BIT_IN_REG( SPI0_C2, SPI_C2_MODFEN_MASK );
       // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
       SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_1Mbps_PRESCALER ) | SPI_BR_SPR( SPI_1Mbps_BRD ) );
       // Enable CE as a GPIO
@@ -54,16 +56,6 @@ void InitSPI( uint8_t SPI_ch )
       NVIC_ClearPendingIRQ( SPI1_IRQn );
       NVIC_SetPriority( SPI1_IRQn, 2 );
    }
-}
-
-void ReadRegisterSPI( uint8_t SPI_ch, size_t registerToRead )
-{
-   // Command value macro
-   uint8_t data = READ_REG( registerToRead );
-   // Add command to buffer
-   CBufferAdd( SPI_TXBuffer[ SPI_ch ], &data );
-   // Transmit
-   SPI_TransmitData( SPI_ch, 1 );
 }
 
 void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
