@@ -48,6 +48,7 @@ typedef enum
 #define SPI0_SCK        PORTC_PCR5
 #define SPI0_MISO       PORTC_PCR7
 #define SPI0_CS         PORTC_PCR4
+#define SPI0_CS_PIN     1 << 4
 #define SPI0_CE         PORTC_PCR0
 #define SPI0_CE_PIN     1 << 0
 #define SPI0_IRQ        PORTC_PCR3

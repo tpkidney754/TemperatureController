@@ -164,18 +164,8 @@ void DumpMemory( uint8_t * start, uint32_t length )
    for(uint32_t i = 0; i < length; i ++ )
    {
       sprintf( buffer, "%02X ", *( start + i ) );
-   #ifdef FRDM
-      CBufferAdd( &UART0_TXBuffer, buffer );
-      CBufferAdd( &UART0_TXBuffer, buffer + 1 );
-      CBufferAdd( &UART0_TXBuffer, buffer + 2 );
+      LOG0( buffer );
    }
-      Uart0TX( length );
-   #else
-      printf( "%s", buffer );
-   }
-   #endif
-
-   printf("\n");
 }
 
 //*************************************************************************

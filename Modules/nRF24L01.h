@@ -266,6 +266,7 @@ typedef union
 void nRF24L01_Config( uint8_t SPI_ch );
 void nRF24L01_ReadReg( uint8_t SPI_ch, uint8_t registerToRead );
 void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataToWrite );
+void nRF24L01_SendCommand( uint8_t SPI_ch, uint8_t command );
 void nRF24L01_TXData( );
 void nRF24L01_FlushTXFifo( );
 

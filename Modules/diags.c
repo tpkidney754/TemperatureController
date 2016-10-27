@@ -13,60 +13,105 @@
 //*************************************************************************
 void ParseDiag( uint8_t * buffer )
 {
-   if( strstr( buffer, "set" ) )
+   // Support up to four commands with 10 characters each.
+   uint8_t commands[ 4 ][ 10 ];
+   size_t length;
+   size_t i = 0;
+   uint8_t * currentCommand;
+
+   currentCommand = strtok( buffer, "\n " );
+
+   while( currentCommand != NULL )
    {
-      if( strstr( buffer, "color" ) )
+      strcpy( commands[ i++ ], currentCommand );
+      currentCommand = strtok( NULL, "\n " );
+   }
+
+   i = 0;
+
+   if( strstr( commands[ i ], "set" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "color" ) )
       {
+         i++;
          Color_t color = NONE;
-         if( strstr( buffer, "red" ) )
+         if( strstr( commands[ i ], "red" ) )
          {
             color = RED;
          }
-         else if( strstr( buffer, "green" ) )
+         else if( strstr( commands[ i ], "green" ) )
          {
             color = GREEN;
          }
-         else if( strstr( buffer, "blue" ) )
+         else if( strstr( commands[ i ], "blue" ) )
          {
             color = BLUE;
          }
-         else if( strstr( buffer, "purple" ) )
+         else if( strstr( commands[ i ], "purple" ) )
          {
             color = PURPLE;
          }
-         else if( strstr( buffer, "yellow" ) )
+         else if( strstr( commands[ i ], "yellow" ) )
          {
             color = YELLOW;
          }
-         else if( strstr( buffer, "cyan") )
+         else if( strstr( commands[ i ], "cyan") )
          {
             color = CYAN;
          }
-         else if( strstr( buffer, "white" ) )
+         else if( strstr( commands[ i ], "white" ) )
          {
             color = WHITE;
          }
-         else if( strstr( buffer, "off" ) )
+         else if( strstr( commands[ i ], "off" ) )
          {
             color = OFF;
+         }
+         else
+         {
+            LOG0( "Invalid color given\n" );
          }
 
          SwitchLEDs( color );
       }
-      else if ( strstr( buffer, "power" ) )
+      else if ( strstr( commands[ i ], "power" ) )
       {
-         uint16_t pulseWidth;
-         sscanf( buffer, "set power %d", &pulseWidth );
+         i++;
+         uint32_t pulseWidth;
+         pulseWidth = MyAtoi( commands[ i ] );
          ChangeLEDPW( pulseWidth );
       }
-   }
-   else if( strstr( buffer, "read" ) )
-   {
-      if( strstr( buffer, "reg" ) )
+      else
       {
-         uint8_t registerToRead;
-         sscanf( buffer, "read reg %d", &registerToRead );
-         nRF24L01_ReadReg( 0, registerToRead );
+         LOG0( "Invalid subcommand\n" );
+      }
+   }
+   else if( strstr( commands[ i ], "read" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "reg" ) )
+      {
+         i++;
+         uint32_t reg;
+         reg = MyAtoi( commands[ i ] );
+         nRF24L01_ReadReg( 0, reg );
+      }
+      else
+      {
+         LOG0( "Invalid subcommand\n" );
+      }
+   }
+   else if( strstr( commands[ i ], "send" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "nop" ) )
+      {
+         nRF24L01_SendCommand( 0, NOP );
+      }
+      else
+      {
+         LOG0( "Invalid subcommand\n" );
       }
    }
 }

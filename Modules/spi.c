@@ -4,6 +4,8 @@
 CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
 CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
+extern uint8_t readRegComplete;
+
 void InitSPI( uint8_t SPI_ch )
 {
    // start with SPRF and SPTEF flags and then move to DMA
@@ -20,9 +22,10 @@ void InitSPI( uint8_t SPI_ch )
       SET_BIT_IN_REG( SPI0_CE, PORT_PCR_MUX( PIN_GPIO ) );
       SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
       // Setting up RX interrupt, SPI enable, and SPI master
-      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK | SPI_C1_SSOE_MASK );
-      // Set both the MODFEN and SSOE to use the SS pin as slave select
-      SET_BIT_IN_REG( SPI0_C2, SPI_C2_MODFEN_MASK );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
+      // When both the MODFEN and SSOE are clear the SS pin is set to be a GPIO.
+      SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CS_PIN );
+      SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
       // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
       SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_1Mbps_PRESCALER ) | SPI_BR_SPR( SPI_1Mbps_BRD ) );
       // Enable CE as a GPIO
@@ -92,6 +95,11 @@ void SPI0_IRQHandler( )
    if( SPI0_S & SPI_S_SPTEF_MASK )
    {
       // TX buffer empty
+   }
+
+   if( SPI0_S & SPI_S_MODF_MASK )
+   {
+      LOG0( "Master mode fault detected\n" );
    }
 }
 
