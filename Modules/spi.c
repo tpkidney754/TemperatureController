@@ -1,28 +1,35 @@
 #ifdef FRDM
 #include "spi.h"
 
-CircularBuffer_t * SPI0_RXBuffer;
-CircularBuffer_t * SPI0_TXBuffer;
-CircularBuffer_t * SPI1_RXBuffer;
-CircularBuffer_t * SPI1_TXBuffer;
+CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
+CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 void InitSPI( uint8_t SPI_ch )
 {
    // start with SPRF and SPTEF flags and then move to DMA
    if( SPI_ch == 0 )
    {
-      SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTA_MASK );
+      // Enable portc clock for I/O and the SPI0 clock.
+      SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTC_MASK );
       SET_BIT_IN_REG( SIM_SCGC4, SIM_SCGC4_SPI0_MASK );
-      SET_BIT_IN_REG( SPI0_MOSI, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI0_SCK, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI0_MISO, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( 0X2 ) );
+      // Set pins to the needed functionality.
+      SET_BIT_IN_REG( SPI0_MOSI, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI0_SCK, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI0_MISO, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI0_CE, PORT_PCR_MUX( PIN_GPIO ) );
+      SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
+      // Setting up RX interrupt, SPI enable, and SPI master
       SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
       // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
       SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_1Mbps_PRESCALER ) | SPI_BR_SPR( SPI_1Mbps_BRD ) );
+      // Enable CE as a GPIO
+      SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CE_PIN );
+      // Set CE high
+      SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CE_PIN );
 
-      SPI0_RXBuffer = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
-      SPI0_TXBuffer = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
+      SPI_RXBuffer[ 0 ] = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
+      SPI_TXBuffer[ 0 ] = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
 
       NVIC_EnableIRQ( SPI0_IRQn );
       NVIC_ClearPendingIRQ( SPI0_IRQn );
@@ -40,26 +47,26 @@ void InitSPI( uint8_t SPI_ch )
       // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
       SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_1Mbps_PRESCALER ) | SPI_BR_SPR( SPI_1Mbps_BRD ) );
 
-      SPI1_RXBuffer = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
-      SPI1_TXBuffer = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
-      
+      SPI_RXBuffer[ 1 ] = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
+      SPI_TXBuffer[ 1 ] = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
+
       NVIC_EnableIRQ( SPI1_IRQn );
       NVIC_ClearPendingIRQ( SPI1_IRQn );
       NVIC_SetPriority( SPI1_IRQn, 2 );
    }
 }
 
-void ReadRegisterSPI( CircularBuffer_t * cb, size_t registerToRead, uint8_t SPI_ch )
+void ReadRegisterSPI( uint8_t SPI_ch, size_t registerToRead )
 {
    // Command value macro
    uint8_t data = READ_REG( registerToRead );
    // Add command to buffer
-   CBufferAdd( cb, &data );
+   CBufferAdd( SPI_TXBuffer[ SPI_ch ], &data );
    // Transmit
-   SPI_TransmitData( cb, SPI_ch, 1 );
+   SPI_TransmitData( SPI_ch, 1 );
 }
 
-void SPI_TransmitData( CircularBuffer_t * cb, uint8_t SPI_ch, size_t numBytes )
+void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 {
    SPI_Type * SPI_reg;
    uint8_t data;
@@ -72,10 +79,10 @@ void SPI_TransmitData( CircularBuffer_t * cb, uint8_t SPI_ch, size_t numBytes )
    {
       SPI_reg = SPI1;
    }
-   
+
    for( size_t i = 0; i < numBytes; i++ )
    {
-      CBufferRemove( cb, &data );
+      CBufferRemove( SPI_TXBuffer[ SPI_ch ], &data );
       WAIT_FOR_BIT_SET( SPI_S_REG( SPI_reg ) & SPI_S_SPTEF_MASK );
       SPI_D_REG( SPI_reg ) = data;
    }
@@ -87,7 +94,7 @@ void SPI0_IRQHandler( )
    {
       // Data available in the RX data buffer
       uint8_t data = SPI0_D;
-      CBufferAdd( SPI0_RXBuffer, &data );
+      CBufferAdd( SPI_RXBuffer[ 0 ], &data );
    }
 
    if( SPI0_S & SPI_S_SPTEF_MASK )
@@ -102,7 +109,7 @@ void SPI1_IRQHandler( )
    {
       // Data available in the RX data buffer
       uint8_t data = SPI1_D;
-      CBufferAdd( SPI0_RXBuffer, &data );
+      CBufferAdd( SPI_RXBuffer[ 1 ], &data );
    }
 
    if( SPI1_S & SPI_S_SPTEF_MASK )

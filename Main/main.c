@@ -2,10 +2,8 @@
 
 extern CircularBuffer_t * UART0_RXBuffer;
 extern CircularBuffer_t * UART0_TXBuffer;
-extern CircularBuffer_t * SPI0_RXBuffer;
-extern CircularBuffer_t * SPI0_TXBuffer;
-extern CircularBuffer_t * SPI1_RXBuffer;
-extern CircularBuffer_t * SPI1_TXBuffer;
+extern CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
+extern CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 int main()
 {
@@ -13,6 +11,7 @@ int main()
 #ifdef FRDM
    Uart0Setup( 57600, 0 );
    LEDSetup();
+   InitSPI( 0 );
 #endif
 
 
@@ -34,18 +33,17 @@ while( 1 )
          CBufferRemove( UART0_RXBuffer, &buffer[ i ] );
       }
 
-      if( strstr( buffer, "set") )
-      {
-         ParseDiag( buffer );
-      }
+      ParseDiag( buffer );
 
       parseDiag = 0;
    }
 
-   if( SPI0_RXBuffer->numItems )
+   if( SPI_RXBuffer[0]->numItems )
    {
-      CBufferRemove( SPI0_RXBuffer, &data );
+      LOG0( "Receiving data from SPI0: " );
+      CBufferRemove( SPI_RXBuffer[0], &data );
       DumpMemory( &data, 1 );
+      LOG0( "\n" );
    }
 }
 #endif

@@ -13,49 +13,61 @@
 //*************************************************************************
 void ParseDiag( uint8_t * buffer )
 {
-   if( strstr( buffer, "color" ) )
+   if( strstr( buffer, "set" ) )
    {
-      Color_t color = NONE;
-      if( strstr( buffer, "red" ) )
+      if( strstr( buffer, "color" ) )
       {
-         color = RED;
-      }
-      else if( strstr( buffer, "green" ) )
-      {
-         color = GREEN;
-      }
-      else if( strstr( buffer, "blue" ) )
-      {
-         color = BLUE;
-      }
-      else if( strstr( buffer, "purple" ) )
-      {
-         color = PURPLE;
-      }
-      else if( strstr( buffer, "yellow" ) )
-      {
-         color = YELLOW;
-      }
-      else if( strstr( buffer, "cyan") )
-      {
-         color = CYAN;
-      }
-      else if( strstr( buffer, "white" ) )
-      {
-         color = WHITE;
-      }
-      else if( strstr( buffer, "off" ) )
-      {
-         color = OFF;
-      }
+         Color_t color = NONE;
+         if( strstr( buffer, "red" ) )
+         {
+            color = RED;
+         }
+         else if( strstr( buffer, "green" ) )
+         {
+            color = GREEN;
+         }
+         else if( strstr( buffer, "blue" ) )
+         {
+            color = BLUE;
+         }
+         else if( strstr( buffer, "purple" ) )
+         {
+            color = PURPLE;
+         }
+         else if( strstr( buffer, "yellow" ) )
+         {
+            color = YELLOW;
+         }
+         else if( strstr( buffer, "cyan") )
+         {
+            color = CYAN;
+         }
+         else if( strstr( buffer, "white" ) )
+         {
+            color = WHITE;
+         }
+         else if( strstr( buffer, "off" ) )
+         {
+            color = OFF;
+         }
 
-      SwitchLEDs( color );
+         SwitchLEDs( color );
+      }
+      else if ( strstr( buffer, "power" ) )
+      {
+         uint16_t pulseWidth;
+         sscanf( buffer, "set power %d", &pulseWidth );
+         ChangeLEDPW( pulseWidth );
+      }
    }
-   else if ( strstr( buffer, "power" ) )
+   else if( strstr( buffer, "read" ) )
    {
-      uint16_t pulseWidth = 0;
-      sscanf( buffer, "set power %d", &pulseWidth );
-      ChangeLEDPW( pulseWidth );
+      if( strstr( buffer, "reg" ) )
+      {
+         uint8_t registerToRead;
+         sscanf( buffer, "read reg %d", &registerToRead );
+         ReadRegisterSPI( 0, registerToRead );
+      }
    }
 }
 
