@@ -114,6 +114,18 @@ void ParseDiag( uint8_t * buffer )
          LOG0( "Invalid subcommand\n" );
       }
    }
+   else if( strstr( commands[ i ], "write" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "reg" ) )
+      {
+         i++;
+         uint32_t reg = MyAtoi( commands[ i++ ] );
+         uint32_t value = MyAtoi( commands[ i ] );
+         nRF24L01_WriteReg( 0, reg, value );
+
+      }
+   }
 }
 
 #endif

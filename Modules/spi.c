@@ -65,15 +65,7 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 {
    SPI_Type * SPI_reg;
    uint8_t data;
-
-   if( SPI_ch == 0 )
-   {
-      SPI_reg = SPI0;
-   }
-   else
-   {
-      SPI_reg = SPI1;
-   }
+   SPI_reg = SPI_ch == 0 ? SPI0 : SPI1;
 
    for( size_t i = 0; i < numBytes; i++ )
    {
@@ -85,22 +77,25 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 
 void SPI0_IRQHandler( )
 {
+   NVIC_DisableIRQ( SPI0_IRQn );
    if( SPI0_S & SPI_S_SPRF_MASK )
    {
       // Data available in the RX data buffer
       uint8_t data = SPI0_D;
-      CBufferAdd( SPI_RXBuffer[ 0 ], &data );
+      CBufferAdd( SPI_RXBuffer[ 0 ], &data);
    }
-
+   /*
    if( SPI0_S & SPI_S_SPTEF_MASK )
    {
       // TX buffer empty
    }
-
+   */
    if( SPI0_S & SPI_S_MODF_MASK )
    {
       LOG0( "Master mode fault detected\n" );
    }
+
+   NVIC_EnableIRQ( SPI0_IRQn );
 }
 
 void SPI1_IRQHandler( )
