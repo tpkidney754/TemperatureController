@@ -23,11 +23,13 @@ void InitSPI( uint8_t SPI_ch )
       SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
       // Setting up RX interrupt, SPI enable, and SPI master
       SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SSOE_MASK );
+      SET_BIT_IN_REG( SPI0_C2, SPI_C2_MODFEN_MASK );
       // When both the MODFEN and SSOE are clear the SS pin is set to be a GPIO.
-      SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CS_PIN );
-      SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
+      //SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CS_PIN );
+      //SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
       // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
-      SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_1Mbps_PRESCALER ) | SPI_BR_SPR( SPI_1Mbps_BRD ) );
+      SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_0_5Mbps_PRESCALER ) | SPI_BR_SPR( SPI_0_5Mbps_BRD ) );
       // Enable CE as a GPIO
       SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CE_PIN );
       // Set CE high
@@ -84,12 +86,21 @@ void SPI0_IRQHandler( )
       uint8_t data = SPI0_D;
       CBufferAdd( SPI_RXBuffer[ 0 ], &data);
    }
-   /*
+   
    if( SPI0_S & SPI_S_SPTEF_MASK )
    {
-      // TX buffer empty
+      uint8_t data;
+      if( CBufferRemove( SPI_TXBuffer[ 0 ], &data ) == BUFFER_EMPTY )
+      {
+         CLEAR_BITS_IN_REG( SPI0_C1, SPI_C1_SPTIE_MASK );
+         //SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
+      }
+      else
+      {
+         SPI0_D = data;
+      }
    }
-   */
+   
    if( SPI0_S & SPI_S_MODF_MASK )
    {
       LOG0( "Master mode fault detected\n" );

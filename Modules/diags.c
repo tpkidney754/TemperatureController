@@ -80,6 +80,9 @@ void ParseDiag( uint8_t * buffer )
          i++;
          uint32_t pulseWidth;
          pulseWidth = MyAtoi( commands[ i ] );
+         uint8_t buffer[ 40 ];
+         sprintf( buffer, "command: %s, conversion: %d\n", commands[i] , pulseWidth );
+         LOG0( buffer );
          ChangeLEDPW( pulseWidth );
       }
       else
@@ -93,8 +96,11 @@ void ParseDiag( uint8_t * buffer )
       if( strstr( commands[ i ], "reg" ) )
       {
          i++;
-         uint32_t reg;
+         uint32_t reg = 0;
          reg = MyAtoi( commands[ i ] );
+         uint8_t buffer[ 40 ];
+         sprintf( buffer, "command: %s, conversion: 0x%X\n", commands[i] , reg );
+         LOG0( buffer );
          nRF24L01_ReadReg( 0, reg );
       }
       else
