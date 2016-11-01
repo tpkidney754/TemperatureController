@@ -32,12 +32,14 @@ void nRF24L01_ReadReg( uint8_t SPI_ch, uint8_t registerToRead )
 
 void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataToWrite )
 {
+   SPI_Type * SPI_reg;
+   SPI_reg = SPI_ch == 0 ? SPI0 : SPI1;
    uint8_t data = WRITE_REG( reg );
    CBufferAdd( SPI_TXBuffer[ SPI_ch ], &data );
    data = dataToWrite;
    //SET_BIT_IN_REG( GPIOC_PCOR, SPI0_CS_PIN );
    CBufferAdd( SPI_TXBuffer[ SPI_ch ], &data );
-   SPI_TransmitData( SPI_ch, 2 );
+   SET_BIT_IN_REG( SPI_C1_REG( SPI_reg ), SPI_C1_SPTIE_MASK );
    //SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
 }
 
