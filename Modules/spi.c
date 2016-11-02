@@ -6,7 +6,7 @@ CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 extern uint8_t readRegComplete;
 
-void InitSPI( uint8_t SPI_ch )
+void InitSPI( uint8_t SPI_ch, uint8_t master )
 {
    // start with SPRF and SPTEF flags and then move to DMA
    if( SPI_ch == 0 )
@@ -18,22 +18,25 @@ void InitSPI( uint8_t SPI_ch )
       SET_BIT_IN_REG( SPI0_MOSI, PORT_PCR_MUX( ALTERNATIVE_2 ) );
       SET_BIT_IN_REG( SPI0_SCK, PORT_PCR_MUX( ALTERNATIVE_2 ) );
       SET_BIT_IN_REG( SPI0_MISO, PORT_PCR_MUX( ALTERNATIVE_2 ) );
-      SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      master ? SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( PIN_GPIO ) ) :
+               SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( ALTERNATIVE_2 ) );
       SET_BIT_IN_REG( SPI0_CE, PORT_PCR_MUX( PIN_GPIO ) );
       SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
-      // Setting up RX interrupt, SPI enable, and SPI master
-      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
-      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SSOE_MASK );
-      SET_BIT_IN_REG( SPI0_C2, SPI_C2_MODFEN_MASK );
-      // When both the MODFEN and SSOE are clear the SS pin is set to be a GPIO.
-      //SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CS_PIN );
-      //SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
-      // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
-      SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_0_5Mbps_PRESCALER ) | SPI_BR_SPR( SPI_0_5Mbps_BRD ) );
+      // Setting up RX interrupt and SPI enable
+      //SET_BIT_IN_REG( SPI0_C1,SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPE_MASK );
+      if( master )
+      {
+         SET_BIT_IN_REG( SPI0_C1, SPI_C1_MSTR_MASK );
+         // When both the MODFEN and SSOE are clear the SS pin is set to be a GPIO.
+         SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CS_PIN );
+         SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
+         // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
+         SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_2Mbps_PRESCALER ) | SPI_BR_SPR( SPI_2Mbps_BRD ) );
+      }
+
       // Enable CE as a GPIO
-      SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CE_PIN );
-      // Set CE high
-      SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CE_PIN );
+      //SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CE_PIN );
 
       SPI_RXBuffer[ 0 ] = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
       SPI_TXBuffer[ 0 ] = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
@@ -44,15 +47,33 @@ void InitSPI( uint8_t SPI_ch )
    }
    else
    {
+      // Enable portc clock for I/O and the SPI0 clock.
       SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTE_MASK );
       SET_BIT_IN_REG( SIM_SCGC4, SIM_SCGC4_SPI1_MASK );
-      SET_BIT_IN_REG( SPI1_MOSI, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI1_SCK, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI1_MISO, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI1_CS, PORT_PCR_MUX( 0X2 ) );
-      SET_BIT_IN_REG( SPI1_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK | SPI_C1_MSTR_MASK );
-      // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
-      SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_1Mbps_PRESCALER ) | SPI_BR_SPR( SPI_1Mbps_BRD ) );
+      // Set pins to the needed functionality.
+      SET_BIT_IN_REG( SPI1_MOSI, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI1_SCK, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI1_MISO, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      master ? SET_BIT_IN_REG( SPI1_CS, PORT_PCR_MUX( PIN_GPIO ) ) :
+               SET_BIT_IN_REG( SPI1_CS, PORT_PCR_MUX( ALTERNATIVE_2 ) );
+      SET_BIT_IN_REG( SPI1_CE, PORT_PCR_MUX( PIN_GPIO ) );
+      SET_BIT_IN_REG( SPI1_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
+      // Setting up RX interrupt and SPI enable
+      SET_BIT_IN_REG( SPI1_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK );
+
+      if( master )
+      {
+         SET_BIT_IN_REG( SPI0_C1, SPI_C1_MSTR_MASK );
+         // When both the MODFEN and SSOE are clear the SS pin is set to be a GPIO.
+         SET_BIT_IN_REG( GPIOE_PDDR, SPI1_CS_PIN );
+         SET_BIT_IN_REG( GPIOE_PSOR, SPI1_CS_PIN );
+         // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
+         SET_BIT_IN_REG( SPI1_BR, SPI_BR_SPPR( SPI_2Mbps_PRESCALER ) | SPI_BR_SPR( SPI_2Mbps_BRD ) );
+      }
+
+      // CE is a nRF functionality, not SPI, this should move.
+      // Enable CE as a GPIO
+      //SET_BIT_IN_REG( GPIOE_PDDR, SPI0_CE_PIN );
 
       SPI_RXBuffer[ 1 ] = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
       SPI_TXBuffer[ 1 ] = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
@@ -80,30 +101,25 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 void SPI0_IRQHandler( )
 {
    NVIC_DisableIRQ( SPI0_IRQn );
-   if( SPI0_S & SPI_S_SPRF_MASK )
+   /*if( SPI0_S & SPI_S_SPRF_MASK )
    {
       // Data available in the RX data buffer
       uint8_t data = SPI0_D;
       CBufferAdd( SPI_RXBuffer[ 0 ], &data);
    }
-   
-   if( SPI0_S & SPI_S_SPTEF_MASK )
+   */
+   if( ( SPI0_S & SPI_S_SPTEF_MASK ) && ( SPI0_C1 & SPI_C1_SPTIE_MASK ) )
    {
       uint8_t data;
       if( CBufferRemove( SPI_TXBuffer[ 0 ], &data ) == BUFFER_EMPTY )
       {
          CLEAR_BITS_IN_REG( SPI0_C1, SPI_C1_SPTIE_MASK );
-         //SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
+         SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN );
       }
       else
       {
          SPI0_D = data;
       }
-   }
-   
-   if( SPI0_S & SPI_S_MODF_MASK )
-   {
-      LOG0( "Master mode fault detected\n" );
    }
 
    NVIC_EnableIRQ( SPI0_IRQn );
@@ -111,16 +127,28 @@ void SPI0_IRQHandler( )
 
 void SPI1_IRQHandler( )
 {
+   NVIC_DisableIRQ( SPI1_IRQn );
    if( SPI1_S & SPI_S_SPRF_MASK )
    {
       // Data available in the RX data buffer
       uint8_t data = SPI1_D;
-      CBufferAdd( SPI_RXBuffer[ 1 ], &data );
+      CBufferAdd( SPI_RXBuffer[ 1 ], &data);
    }
 
-   if( SPI1_S & SPI_S_SPTEF_MASK )
+   if( ( SPI1_S & SPI_S_SPTEF_MASK ) && ( SPI1_C1 & SPI_C1_SPTIE_MASK ) )
    {
-      // TX buffer empty
+      uint8_t data;
+      if( CBufferRemove( SPI_TXBuffer[ 1 ], &data ) == BUFFER_EMPTY )
+      {
+         CLEAR_BITS_IN_REG( SPI0_C1, SPI_C1_SPTIE_MASK );
+         SET_BIT_IN_REG( GPIOE_PSOR, SPI1_CS_PIN );
+      }
+      else
+      {
+         SPI1_D = data;
+      }
    }
+
+   NVIC_EnableIRQ( SPI1_IRQn );
 }
 #endif // FRDM

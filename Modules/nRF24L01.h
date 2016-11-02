@@ -12,10 +12,19 @@
 #define FLUSH_RX                0xE2
 #define REUSE_TX_PL             0xE3
 #define ACTIVATE                0x50
+#define ACTIVATE_KEY            0x73
 #define R_RX_PL_WID             0x60
 #define W_ACK_PAYLOAD( ppp )  ( 0xA8 | ( ( ppp ) & 0x7 ) )
 #define W_TX_PAYLOAD_NO_ACK     0xB0
 #define NOP                     0xFF
+
+typedef struct
+{
+   uint8_t spiCh;
+   uint8_t command;
+   uint8_t data[ 6 ];
+   uint8_t bytesToSend;
+} nRF24L01_SPIMessage_t;
 
 // Registers
 typedef enum
@@ -263,11 +272,10 @@ typedef union
    uint8_t B;
 } nRF24L01_FEATURE_t;
 
-void nRF24L01_Config( uint8_t SPI_ch );
+void nRF24L01_Activate( uint8_t SPI_ch );
 void nRF24L01_ReadReg( uint8_t SPI_ch, uint8_t registerToRead );
 void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataToWrite );
-void nRF24L01_SendCommand( uint8_t SPI_ch, uint8_t command );
-void nRF24L01_TXData( );
+void nRF24L01_TXData( nRF24L01_SPIMessage_t * msg );
 void nRF24L01_FlushTXFifo( );
 
 #endif // __NRF24L01__

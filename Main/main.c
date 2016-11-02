@@ -11,8 +11,8 @@ int main()
 #ifdef FRDM
    Uart0Setup( 57600, 0 );
    LEDSetup();
-   InitSPI( 0 );
-   //nRF24L01_Config( 0 );
+   InitSPI( 0, 1 );
+   InitSPI( 1, 0 );
 #endif
 
 
@@ -39,10 +39,18 @@ while( 1 )
       parseDiag = 0;
    }
 
-   if( SPI_RXBuffer[0]->numItems )
+   if( SPI_RXBuffer[ 0 ]->numItems )
    {
-      LOG0( "Receiving data from SPI0: " );
-      CBufferRemove( SPI_RXBuffer[0], &data );
+      LOG0( "Received data from SPI0: " );
+      CBufferRemove( SPI_RXBuffer[ 0 ], &data );
+      DumpMemory( &data, 1 );
+      LOG0( "\n" );
+   }
+
+   if( SPI_RXBuffer[ 1 ]->numItems )
+   {
+      LOG0( "Receiving data from SPI1: " );
+      CBufferRemove( SPI_RXBuffer[ 1 ], &data );
       DumpMemory( &data, 1 );
       LOG0( "\n" );
    }

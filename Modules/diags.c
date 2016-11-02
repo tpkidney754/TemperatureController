@@ -96,8 +96,7 @@ void ParseDiag( uint8_t * buffer )
       if( strstr( commands[ i ], "reg" ) )
       {
          i++;
-         uint32_t reg = 0;
-         reg = MyAtoi( commands[ i ] );
+         uint32_t reg = MyAtoi( commands[ i ] );
          nRF24L01_ReadReg( 0, reg );
       }
       else
@@ -110,7 +109,12 @@ void ParseDiag( uint8_t * buffer )
       i++;
       if( strstr( commands[ i ], "nop" ) )
       {
-         nRF24L01_SendCommand( 0, NOP );
+         nRF24L01_SPIMessage_t msg;
+         msg.command = NOP;
+         msg.bytesToSend = 0;
+         msg.spiCh = 0;
+
+         nRF24L01_TXData( &msg );
       }
       else
       {
