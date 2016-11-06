@@ -1,4 +1,3 @@
-#ifdef FRDM
 #ifndef __SPI__
 #define __SPI__
 
@@ -64,9 +63,18 @@ typedef enum
 #define SPI1_IRQ        PORTE_PCR5
 #define SPI1_IRQ_PIN    0x0020
 
+// Beaglebone Black SPI macros
+#define DEVICE_LOC      "/dev/spidev1.0"
+#define MODE            ( SPI_READY | SPI_CS_HIGH )
+#define BPW             8
+#define BBB_SPI_SPEED   500000
+#define ARRAY_SIZE(a) (sizeof( a ) / sizeof( ( a )[0] ) )
+
 void InitSPI( uint8_t SPI_ch, uint8_t master );
 void ReadRegisterSPI( uint8_t SPI_ch, size_t registerToRead );
 void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes );
 
+#ifdef BBB
+void SPI_Test( uint8_t SPI_ch );
+#endif // BBB
 #endif // __SPI__
-#endif // FRDM

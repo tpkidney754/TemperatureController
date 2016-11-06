@@ -273,7 +273,7 @@ typedef union
 } nRF24L01_FEATURE_t;
 
 void nRF24L01_Activate( uint8_t SPI_ch );
-void nRF24L01_ReadReg( uint8_t SPI_ch, uint8_t registerToRead );
+void nRF24L01_ReadReg( uint8_t SPI_ch, nRF24L01_Registers_e reg );
 void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataToWrite );
 void nRF24L01_TXData( nRF24L01_SPIMessage_t * msg );
 void nRF24L01_FlushTXFifo( );

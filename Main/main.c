@@ -11,10 +11,15 @@ int main()
 #ifdef FRDM
    Uart0Setup( 57600, 0 );
    LEDSetup();
-   InitSPI( 0, 1 );
-   InitSPI( 1, 0 );
 #endif
 
+#if ( defined( FRDM ) ||  defined( BBB ) )
+   InitSPI( 0, 1 );
+#endif
+
+#ifdef BBB
+   SPI_Test( 0 );
+#endif
 
 #ifdef TESTING
    Testing();
