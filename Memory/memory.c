@@ -70,7 +70,11 @@ int8_t MyMemZero( uint8_t * dst, uint32_t length, uint8_t DMAch )
       return -1;
    }
 
-   MemSet8bit( DMAch, 0, dst, length );
+   for( size_t i = 0; i < length; i++ )
+   {
+      *( dst + i ) = 0;
+   }
+   //MemSet8bit( DMAch, 0, dst, length );
 
    return dst ? 0 : -1;
 }
