@@ -18,19 +18,23 @@ int main()
 #endif
 
 #ifdef BBB
-   SPI_Test( 0 );
+   //SPI_Test( 0 );
+   for( uint8_t i = 0; i < FIFO_STATUS; i++ )
+   {
+      nRF24L01_ReadReg( 0, i );
+   }
 #endif
 
 #ifdef TESTING
    Testing();
 #endif
 
-#ifdef FRDM
    uint8_t buffer[ 100 ];
    uint8_t * head = buffer;
    uint8_t data;
 while( 1 )
 {
+#ifdef FRDM
    if( parseDiag )
    {
       uint32_t length = UART0_RXBuffer->numItems;
@@ -43,7 +47,7 @@ while( 1 )
 
       parseDiag = 0;
    }
-
+#endif
    if( SPI_RXBuffer[ 0 ]->numItems )
    {
       LOG0( "Received data from SPI0: " );
@@ -51,7 +55,7 @@ while( 1 )
       DumpMemory( &data, 1 );
       LOG0( "\n" );
    }
-
+   /*
    if( SPI_RXBuffer[ 1 ]->numItems )
    {
       LOG0( "Receiving data from SPI1: " );
@@ -59,8 +63,8 @@ while( 1 )
       DumpMemory( &data, 1 );
       LOG0( "\n" );
    }
+   */
 }
-#endif
 
 return 0;
 }

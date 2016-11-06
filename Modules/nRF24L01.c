@@ -77,6 +77,10 @@ void nRF24L01_TXData( nRF24L01_SPIMessage_t * msg )
    SET_BIT_IN_REG( SPI_C1_REG( SPI_reg ), SPI_C1_SPTIE_MASK );
 #endif
 
+#ifdef BBB
+   SPI_TransmitData( msg->spiCh, msg->bytesToSend + 1 );
+#endif
+
 }
 
 void nRF24L01_FlushTXFifo( )

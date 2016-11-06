@@ -3,10 +3,8 @@
 
 #include "includeall.h"
 
-#define SPI0_RXBUFFER_SIZE 128
-#define SPI0_TXBUFFER_SIZE 128
-#define SPI1_RXBUFFER_SIZE 128
-#define SPI1_TXBUFFER_SIZE 128
+#define SPI_RXBUFFER_SIZE 128
+#define SPI_TXBUFFER_SIZE 128
 
 #define SPI_CHANNELS 2
 
@@ -65,7 +63,7 @@ typedef enum
 
 // Beaglebone Black SPI macros
 #define DEVICE_LOC      "/dev/spidev1.0"
-#define MODE            ( SPI_READY | SPI_CS_HIGH )
+#define MODE            1
 #define BPW             8
 #define BBB_SPI_SPEED   500000
 #define ARRAY_SIZE(a) (sizeof( a ) / sizeof( ( a )[0] ) )

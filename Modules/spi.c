@@ -8,6 +8,8 @@ static int spiDeviceLocation[ 2 ];
 
 void InitSPI( uint8_t SPI_ch, uint8_t master )
 {
+   SPI_RXBuffer[ SPI_ch ] = CBufferInit( sizeof( uint8_t ), SPI_RXBUFFER_SIZE );
+   SPI_TXBuffer[ SPI_ch ] = CBufferInit( sizeof( uint8_t ), SPI_TXBUFFER_SIZE );
 #ifdef FRDM
    // start with SPRF and SPTEF flags and then move to DMA
    if( SPI_ch == 0 )
@@ -38,9 +40,6 @@ void InitSPI( uint8_t SPI_ch, uint8_t master )
 
       // Enable CE as a GPIO
       //SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CE_PIN );
-
-      SPI_RXBuffer[ 0 ] = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
-      SPI_TXBuffer[ 0 ] = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
 
       NVIC_EnableIRQ( SPI0_IRQn );
       NVIC_ClearPendingIRQ( SPI0_IRQn );
@@ -75,9 +74,6 @@ void InitSPI( uint8_t SPI_ch, uint8_t master )
       // CE is a nRF functionality, not SPI, this should move.
       // Enable CE as a GPIO
       //SET_BIT_IN_REG( GPIOE_PDDR, SPI0_CE_PIN );
-
-      SPI_RXBuffer[ 1 ] = CBufferInit( sizeof( uint8_t ), SPI0_RXBUFFER_SIZE );
-      SPI_TXBuffer[ 1 ] = CBufferInit( sizeof( uint8_t ), SPI0_TXBUFFER_SIZE );
 
       NVIC_EnableIRQ( SPI1_IRQn );
       NVIC_ClearPendingIRQ( SPI1_IRQn );
@@ -134,12 +130,12 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 
 #ifdef BBB
    uint8_t * tx = malloc( sizeof( uint8_t ) * numBytes );
-   uint8_t * rx;
-   int ret;
+   uint8_t * rx = malloc( sizeof( uint8_t ) * numBytes );
+   size_t ret;
 
    for( size_t i = 0; i < numBytes; i++ )
    {
-      CBufferRemove( SPI_TXBuffer[ SPI_ch ], tx++ );
+      CBufferRemove( SPI_TXBuffer[ SPI_ch ], ( tx + i ) );
    }
 
    struct spi_ioc_transfer tr =
@@ -156,6 +152,11 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
    if( ret < 1 )
    {
       LOG0( "Unable to send SPI message\n" );
+   }
+
+   for ( size_t i = 0; i < ARRAY_SIZE( tx ); i++ )
+   {
+      CBufferAdd( SPI_RXBuffer[ SPI_ch ], ( rx + i ) );
    }
 #endif // BBB
 }
