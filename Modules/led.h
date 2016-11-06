@@ -40,6 +40,7 @@ typedef enum Color_t
 
 void LEDSetup( void );
 void SwitchLEDs( Color_t color );
+void CycleLEDs( );
 
 #endif // __LED__
 #endif
