@@ -24,8 +24,7 @@ void InitSPI( uint8_t SPI_ch, uint8_t master )
       SET_BIT_IN_REG( SPI0_CE, PORT_PCR_MUX( PIN_GPIO ) );
       SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
       // Setting up RX interrupt and SPI enable
-      //SET_BIT_IN_REG( SPI0_C1,SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK );
-      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPE_MASK );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK );
 
       if( master )
       {

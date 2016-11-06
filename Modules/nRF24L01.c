@@ -59,8 +59,6 @@ void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataTo
 
 void nRF24L01_TXData( nRF24L01_SPIMessage_t * msg )
 {
-#ifdef FRDM
-   SPI_Type * SPI_reg = msg->spiCh == 0 ? SPI0 : SPI1;
    uint8_t data;
 
    data = msg->command;
@@ -72,16 +70,13 @@ void nRF24L01_TXData( nRF24L01_SPIMessage_t * msg )
       CBufferAdd( SPI_TXBuffer[ msg->spiCh ], &data );
    }
 
+#ifdef FRDM
+   SPI_Type * SPI_reg = msg->spiCh == 0 ? SPI0 : SPI1;
    msg->spiCh == 0 ? SET_BIT_IN_REG( GPIOC_PCOR, SPI0_CS_PIN ) :
                      SET_BIT_IN_REG( GPIOE_PCOR, SPI1_CS_PIN );
-
-   //SET_BIT_IN_REG( SPI_C1_REG( SPI_reg ), SPI_C1_SPTIE_MASK );
-
-   SPI_TransmitData( msg->spiCh, msg->bytesToSend + 1 );
-
-   msg->spiCh == 0 ? SET_BIT_IN_REG( GPIOC_PSOR, SPI0_CS_PIN ) :
-                     SET_BIT_IN_REG( GPIOE_PSOR, SPI1_CS_PIN );
+   SET_BIT_IN_REG( SPI_C1_REG( SPI_reg ), SPI_C1_SPTIE_MASK );
 #endif
+
 }
 
 void nRF24L01_FlushTXFifo( )
