@@ -148,27 +148,39 @@ void DMA1_IRQHandler( )
 
 void DMA2_IRQHandler( )
 {
-   if( DMA_DSR2 & DMA_DSR_BCR_DONE_MASK )
+   NVIC_DisableIRQ( 2 );
+   uint32_t statusRegister = DMA_DSR_BCR2;
+   if( DMA_DSR_BCR2 & DMA_DSR_BCR_DONE_MASK )
    {
       SET_BIT_IN_REG( DMA_DSR_BCR( 2 ), DMA_DSR_BCR_DONE_MASK );
       dmaComplete[ 2 ] = 1;
    }
+   else if( statusRegister & 0xFF000000 )
+   {
+      while( 1 );
+   }
    else
    {
-      LOG0( "DMA0 interrupt occured but DONE bit is not set!\n" );
+      NVIC_EnableIRQ( 2 );
    }
 }
 
 void DMA3_IRQHandler( )
 {
-   if( DMA_DSR3 & DMA_DSR_BCR_DONE_MASK )
+   NVIC_DisableIRQ( 3 );
+   uint32_t statusRegister = DMA_DSR_BCR3;
+   if( DMA_DSR_BCR3 & DMA_DSR_BCR_DONE_MASK )
    {
       SET_BIT_IN_REG( DMA_DSR_BCR( 3 ), DMA_DSR_BCR_DONE_MASK );
       dmaComplete[ 3 ] = 1;
    }
+   else if( statusRegister & 0xFF000000 )
+   {
+      while( 1 );
+   }
    else
    {
-      LOG0( "DMA0 interrupt occured but DONE bit is not set!\n" );
+      NVIC_EnableIRQ( 3 );
    }
 }
 #endif //FRDM

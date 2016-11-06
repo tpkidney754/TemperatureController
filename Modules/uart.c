@@ -164,7 +164,7 @@ void UART0_IRQHandler( )
       data = UART0_D;
       if( CBufferAdd( RXBuffer, &data, DMACH_UART0RX ) == BUFFER_FULL )
       {
-         LOG0( "Buffer Is FULL during RX\n" );
+         //LOG0( "Buffer Is FULL during RX\n" );
       }
       PutChar( data );
       if( data == CR )
@@ -172,7 +172,7 @@ void UART0_IRQHandler( )
          data = '\0';
          if( CBufferAdd( RXBuffer, &data, DMACH_UART0RX ) == BUFFER_FULL )
          {
-            LOG0( "Buffer Is FULL during RX\n" );
+            //LOG0( "Buffer Is FULL during RX\n" );
          }
          parseDiag = 1;
       }
