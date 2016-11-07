@@ -13,7 +13,7 @@
 void MemoryTesting( )
 {
    MyMemMoveUnitTest( );
-   MyMemZeroUnitTest( );
+   MyMemSetUnitTest( );
    MyReverseUnitTest( );
    MyStrLenUnitTest( );
 }
@@ -84,19 +84,19 @@ void MyMemMoveUnitTest(  )
 }
 
 //*************************************************************************
-// Function:  MyMemZeroUnitTest                                           *
+// Function:  MyMemSetUnitTest                                            *
 //                                                                        *
 // Description: An array of data is allocated and then initialized to a   *
-//              a nonzero value. Then the array is passed to MyMemZero    *
+//              a nonzero value. Then the array is passed to MyMemSet     *
 //              and verified to be zero.                                  *
 //                                                                        *
 // Parameters: NONE                                                       *
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void MyMemZeroUnitTest( void )
+void MyMemSetUnitTest( void )
 {
-   sprintf( headerBuffer, "MyMemZero Unit Test");
+   sprintf( headerBuffer, "MyMemSet Unit Test");
    PrintHeader( headerBuffer, main_e );
 
    uint8_t * memloc = malloc( sizeof( uint8_t ) * MY_MEM_ZERO_SIZE );
@@ -107,7 +107,7 @@ void MyMemZeroUnitTest( void )
       *( memloc + i ) = 0xA5;
    }
 
-   MyMemZero( memloc, MY_MEM_ZERO_SIZE, TESTING_DMA_CH );
+   MyMemSet( memloc, 0, MY_MEM_ZERO_SIZE, TESTING_DMA_CH );
 
    for( uint32_t i = 0; i < MY_MEM_ZERO_SIZE; i++ )
    {

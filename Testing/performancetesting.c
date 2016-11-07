@@ -1,6 +1,7 @@
 #ifdef TESTING
 #include "performancetesting.h"
 
+uint8_t dmaComplete[ 4 ];
 //*************************************************************************
 // Function:  PerformanceTesting                                          *
 //                                                                        *
@@ -60,6 +61,7 @@ void MemoryPerformanceTesting( )
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );
       MyMemMove( src, dst, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
+      while( dmaComplete[ TESTING_DMA_CH ] == 0 );
       end = GetTime( );
       diff = GetElapsedTime( start, end );
 
@@ -75,11 +77,12 @@ void MemoryPerformanceTesting( )
       LOG0( testPrintBuffer );
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );
-      MyMemZero( src, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
+      MyMemSet( src, 0, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
+      while( dmaComplete[ TESTING_DMA_CH ] == 0 );
       end = GetTime( );
       diff = GetElapsedTime( start, end );
 
-      sprintf( testPrintBuffer, "MyMemZero with %d bytes took, %u\n", memoryTestCaseSizes[ i ], diff );
+      sprintf( testPrintBuffer, "MyMemSet with %d bytes took, %u\n", memoryTestCaseSizes[ i ], diff );
       LOG0( testPrintBuffer );
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );

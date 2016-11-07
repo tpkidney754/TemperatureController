@@ -14,7 +14,7 @@
 
 void MemoryTesting( void );
 void MyMemMoveUnitTest( void );
-void MyMemZeroUnitTest( void );
+void MyMemSetUnitTest( void );
 void MyReverseUnitTest( void );
 void MyStrLenUnitTest( void );
 

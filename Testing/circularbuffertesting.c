@@ -355,7 +355,7 @@ void BufferTestFromTheMidPoint( )
    sprintf( headerBuffer, "Midpoint Buffer Test");
    PrintHeader( headerBuffer, main_e );
    LOG0( "Zero out buffer\n" );
-   MyMemZero( cb->bufferStart, cb->size, TESTING_DMA_CH );
+   MyMemSet( cb->bufferStart, 0, cb->size, TESTING_DMA_CH );
    DumpMemory( cb->bufferStart, cb->size );
    LOG0("\n");
    cb->head = cb->bufferStart;

@@ -15,7 +15,7 @@ void Project1Report( void )
 
    DumpMemory( array, ARRAY_SIZE );
 
-   MyMemZero( pArray3, ARRAY_SIZE-16);
+   MyMemSet( pArray3, 0, ARRAY_SIZE-16);
 
    DumpMemory( array, ARRAY_SIZE );
 
