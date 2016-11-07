@@ -44,6 +44,8 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
          src += remainder;
          dst += remainder;
          numBytes -= remainder;
+         // wait until the 8bit move is done before moving the rest
+         // becuase the channel is tied up.
          while( dmaComplete[ DMAch ] == 0 );
       }
       // Transfer remaining bytes, numBytes will be divisible by four now.
