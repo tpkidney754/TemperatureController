@@ -136,14 +136,16 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
    for( size_t i = 0; i < numBytes; i++ )
    {
       CBufferRemove( SPI_TXBuffer[ SPI_ch ], ( tx + i ) );
+      printf( "Removing: 0x%X\n", *( tx + i ) );
    }
 
    struct spi_ioc_transfer tr =
    {
     .tx_buf = (unsigned long)tx,
     .rx_buf = (unsigned long)rx,
-    .len = numBytes,
+    .len = ARRAY_SIZE( tx ),
     .delay_usecs = 0,
+    .cs_change = 1,
     .speed_hz = BBB_SPI_SPEED,
     .bits_per_word = BPW,
   };
@@ -158,6 +160,9 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
    {
       CBufferAdd( SPI_RXBuffer[ SPI_ch ], ( rx + i ) );
    }
+
+   free( tx );
+   free( rx );
 #endif // BBB
 }
 
@@ -182,6 +187,7 @@ void SPI_Test( uint8_t SPI_ch )
     .rx_buf = (unsigned long)rx,
     .len = ARRAY_SIZE(tx),
     .delay_usecs = 0,
+    .cs_change = 1,
     .speed_hz = BBB_SPI_SPEED,
     .bits_per_word = BPW,
    };
