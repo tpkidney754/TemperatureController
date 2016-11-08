@@ -7,7 +7,8 @@ INCLUDES = \
 	-I ./FRDM_INCLUDES/ \
 	-I ./Modules \
 	-I ./FRDM_Startup_Code/ \
-	-I ./Logging/
+	-I ./Logging/ \
+	-I ./Messaging/ \
 
 
 SRCS = \
@@ -26,6 +27,7 @@ SRCS = \
 	./Testing/memorytesting.c \
 	./Testing/circularbuffertesting.c \
 	./Testing/performancetesting.c \
+	./Messaging/messaging.c \
 
 
 STARTUP = \
