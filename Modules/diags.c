@@ -57,6 +57,10 @@ void ParseDiag( uint8_t * buffer )
       sscanf( buffer, "set power %d", &pulseWidth );
       ChangeLEDPW( pulseWidth );
    }
+   else if( strstr( buffer, "cycle" ) )
+   {
+      CycleLEDs( );
+   }
 }
 
 #endif

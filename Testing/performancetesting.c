@@ -14,7 +14,7 @@ uint8_t dmaComplete[ 4 ];
 void PerformanceTesting( )
 {
 #ifdef FRDM
-   InitProfilerTimer( PROFILER_TPM, PROFILER_CH, PROFILER_PERIOD_IN_US );
+   InitProfilerTimer( PROFILER_TPM, PROFILER_CH, PROFILER_PERIOD_IN_NS );
 #endif
    MemoryPerformanceTesting( );
    DataPerformanceTesting( );
