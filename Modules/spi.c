@@ -3,10 +3,22 @@
 CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
 CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
-extern uint8_t readRegComplete;
-static int spiDeviceLocation[ 2 ];
+static int32_t spiDeviceLocation[ SPI_CHANNELS ];
 
-void InitSPI( uint8_t SPI_ch, uint8_t master )
+//*************************************************************************
+// Function:  SPI_Init                                                    *
+//                                                                        *
+// Description: Initializes a SPI channel along with the RX and TX        *
+//              circular buffers.                                         *
+//                                                                        *
+// Parameters: uint8_t SPI_ch: SPI channel being initialized.             *
+//             uint8_t master: Is this channel going to be a master or a  *
+//                             slave. A value of 0 will set up the channel*
+//                             as a slave and anything else will be master*
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void SPI_Init( uint8_t SPI_ch, uint8_t master )
 {
    SPI_RXBuffer[ SPI_ch ] = CBufferInit( sizeof( uint8_t ), SPI_RXBUFFER_SIZE );
    SPI_TXBuffer[ SPI_ch ] = CBufferInit( sizeof( uint8_t ), SPI_TXBUFFER_SIZE );
@@ -82,7 +94,7 @@ void InitSPI( uint8_t SPI_ch, uint8_t master )
 #endif // FRDM
 
 #if BBB
-   int ret;
+   int32_t ret;
    uint8_t mode = MODE;
    uint8_t bits = BPW;
    uint32_t speed = BBB_SPI_SPEED;
@@ -113,19 +125,25 @@ void InitSPI( uint8_t SPI_ch, uint8_t master )
 #endif // BBB
 }
 
+//*************************************************************************
+// Function:  SPI_TransmitData                                            *
+//                                                                        *
+// Description: Sets up the signals an necessary and starts sending data  *
+//              out through the SPI channel. This function assumes that   *
+//              the data to be sent is already in the TX buffer.          *
+//                                                                        *
+// Parameters: uint8_t SPI_ch: SPI channel being initialized.             *
+//             size_t numBytes: How many bytes are going to be sent.      *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 {
 #ifdef FRDM
-   SPI_Type * SPI_reg;
-   uint8_t data;
-   SPI_reg = SPI_ch == 0 ? SPI0 : SPI1;
-
-   for( size_t i = 0; i < numBytes; i++ )
-   {
-      CBufferRemove( SPI_TXBuffer[ SPI_ch ], &data );
-      WAIT_FOR_BIT_SET( SPI_S_REG( SPI_reg ) & SPI_S_SPTEF_MASK );
-      SPI_D_REG( SPI_reg ) = data;
-   }
+   SPI_Type * SPI_reg = msg->spiCh == 0 ? SPI0 : SPI1;
+   msg->spiCh == 0 ? SET_BIT_IN_REG( GPIOC_PCOR, SPI0_CS_PIN ) :
+                     SET_BIT_IN_REG( GPIOE_PCOR, SPI1_CS_PIN );
+   SET_BIT_IN_REG( SPI_C1_REG( SPI_reg ), SPI_C1_SPTIE_MASK );
 #endif // FRDM
 
 #ifdef BBB
@@ -165,47 +183,6 @@ void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
    free( rx );
 #endif // BBB
 }
-
-#ifdef BBB
-void SPI_Test( uint8_t SPI_ch )
-{
-   LOG0( "Testing SPI0\n" );
-   int ret;
-   uint8_t tx[] =
-   {
-      0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-      0x40, 0x00, 0x00, 0x00, 0x00, 0x95,
-      0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-      0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-      0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-      0xDE, 0xAD, 0xBE, 0xEF, 0xBA, 0xAD,
-      0xF0, 0x0D,
-   };
-   uint8_t rx[ARRAY_SIZE(tx)] = {0, };
-   struct spi_ioc_transfer tr = {
-    .tx_buf = (unsigned long)tx,
-    .rx_buf = (unsigned long)rx,
-    .len = ARRAY_SIZE(tx),
-    .delay_usecs = 0,
-    .cs_change = 1,
-    .speed_hz = BBB_SPI_SPEED,
-    .bits_per_word = BPW,
-   };
-
-   ret = ioctl( spiDeviceLocation[ SPI_ch ], SPI_IOC_MESSAGE(1), &tr );
-   if (ret < 1)
-      LOG0( "can't send spi message\n" );
-
-   for (ret = 0; ret < ARRAY_SIZE(tx); ret++)
-   {
-      if (!(ret % 6))
-         puts("");
-      printf("%.2X ", rx[ret]);
-   }
-
-   puts("");
-}
-#endif // BBB
 
 #ifdef FRDM
 void SPI0_IRQHandler( )

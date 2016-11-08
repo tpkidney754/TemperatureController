@@ -14,11 +14,10 @@ int main()
 #endif
 
 #if ( defined( FRDM ) ||  defined( BBB ) )
-   InitSPI( 0, 1 );
+   SPI_Init( 0, 1 );
 #endif
 
 #ifdef BBB
-   //SPI_Test( 0 );
    for( uint8_t i = 0; i < FIFO_STATUS; i++ )
    {
       nRF24L01_ReadReg( 0, i );
@@ -55,15 +54,6 @@ while( 1 )
       DumpMemory( &data, 1 );
       LOG0( "\n" );
    }
-   /*
-   if( SPI_RXBuffer[ 1 ]->numItems )
-   {
-      LOG0( "Receiving data from SPI1: " );
-      CBufferRemove( SPI_RXBuffer[ 1 ], &data );
-      DumpMemory( &data, 1 );
-      LOG0( "\n" );
-   }
-   */
 }
 
 return 0;

@@ -68,8 +68,7 @@ typedef enum
 #define BBB_SPI_SPEED   500000
 #define ARRAY_SIZE(a) (sizeof( a ) / sizeof( ( a )[0] ) )
 
-void InitSPI( uint8_t SPI_ch, uint8_t master );
-void ReadRegisterSPI( uint8_t SPI_ch, size_t registerToRead );
+void SPI_Init( uint8_t SPI_ch, uint8_t master );
 void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes );
 
 #ifdef BBB
