@@ -18,6 +18,51 @@
 #define W_TX_PAYLOAD_NO_ACK     0xB0
 #define NOP                     0xFF
 
+// The CE and IRQ pins to/from the nRF24L01
+#define nRF24L01_0_CE         PORTC_PCR0
+#define nRF24L01_0_CE_PIN     0x0001
+#define nRF24L01_0_IRQ        PORTC_PCR3
+#define nRF24L01_0_IRQ_PIN    0x0008
+
+#define nRF24L01_1_CE         PORTE_PCR0
+#define nRF24L01_1_CE_PIN     0x0001
+#define nRF24L01_1_IRQ        PORTE_PCR5
+#define nRF24L01_1_IRQ_PIN    0x0020
+
+typedef enum
+{
+   ADR_1Mbps = 0,
+   ADR_2Mbps,
+} ADR_e;
+
+typedef enum
+{
+   PWR_neg18dBm = 0,
+   PWR_neg12dBm,
+   PWR_neg6dBm,
+   PWR_0dBm,
+} PWR_e;
+
+// Using 10 channels set up at 2.400 GHz, 2.410 GHz, 2.420 GHz and so on.
+typedef enum
+{
+   CHANNEL_0 = 0,
+   CHANNEL_1 = 10,
+   CHANNEL_2 = 20,
+   CHANNEL_3 = 30,
+   CHANNEL_4 = 40,
+   CHANNEL_5 = 50,
+   CHANNEL_6 = 60,
+   CHANNEL_7 = 70,
+   CHANNEL_8 = 80,
+   CHANNEL_9 = 90,
+} CHANNEL_e;
+
+#define nRF24L01_DATA_RATE        ( ADR_1Mbps << 3 )
+#define nRF24L01_PA_CONTROL       ( PWR_neg18dBm << 1 )
+#define nRF24L01_CHANNEL_FREQ     CHANNEL_0
+#define nRF24L01_LNA_GAIN         0
+
 typedef struct
 {
    uint8_t spiCh;
@@ -72,6 +117,14 @@ typedef union
    } b;
    uint8_t B;
 } nRF24L01_CONFIG_t;
+
+#define PRIM_RX_MASK      0x01
+#define PWR_UP_MASK       0x02
+#define CRCO_MASK         0x04
+#define EN_CRC_MASK       0x08
+#define MASK_MAX_RT_MASK  0x10
+#define MASK_TX_DS_MASK   0x20
+#define MASK_RX_DR_MASK   0x40
 
 typedef union
 {
@@ -276,6 +329,11 @@ void nRF24L01_Activate( uint8_t SPI_ch );
 void nRF24L01_ReadReg( uint8_t SPI_ch, nRF24L01_Registers_e reg );
 void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataToWrite );
 void nRF24L01_SendData( nRF24L01_SPIMessage_t * msg );
-void nRF24L01_FlushTXFifo( );
+void nRF24L01_SetTXMode( uint8_t SPI_ch );
+void nRF24L01_SetRXMode( uint8_t SPI_ch );
+void nRF24L01_StandbyMode( uint8_t SPI_ch );
+void nRF24L01_PowerDown( uint8_t SPI_ch );
+void nRF24L01_SetupChannel( uint8_t SPI_ch );
+void nRF24L01_SendNOP( uint8_t SPI_ch );
 
 #endif // __NRF24L01__

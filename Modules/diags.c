@@ -109,12 +109,7 @@ void ParseDiag( uint8_t * buffer )
       i++;
       if( strstr( commands[ i ], "nop" ) )
       {
-         nRF24L01_SPIMessage_t msg;
-         msg.command = NOP;
-         msg.bytesToSend = 0;
-         msg.spiCh = 0;
-
-         nRF24L01_TXData( &msg );
+         nRF24L01_SendNOP( 0 );
       }
       else
       {

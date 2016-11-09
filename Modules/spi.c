@@ -35,8 +35,7 @@ void SPI_Init( uint8_t SPI_ch, uint8_t master )
       SET_BIT_IN_REG( SPI0_MISO, PORT_PCR_MUX( ALTERNATIVE_2 ) );
       master ? SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( PIN_GPIO ) ) :
                SET_BIT_IN_REG( SPI0_CS, PORT_PCR_MUX( ALTERNATIVE_2 ) );
-      SET_BIT_IN_REG( SPI0_CE, PORT_PCR_MUX( PIN_GPIO ) );
-      SET_BIT_IN_REG( SPI0_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
+
       // Setting up RX interrupt and SPI enable
       SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK );
 
@@ -49,9 +48,6 @@ void SPI_Init( uint8_t SPI_ch, uint8_t master )
          // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
          SET_BIT_IN_REG( SPI0_BR, SPI_BR_SPPR( SPI_2Mbps_PRESCALER ) | SPI_BR_SPR( SPI_2Mbps_BRD ) );
       }
-
-      // Enable CE as a GPIO
-      //SET_BIT_IN_REG( GPIOC_PDDR, SPI0_CE_PIN );
 
       NVIC_EnableIRQ( SPI0_IRQn );
       NVIC_ClearPendingIRQ( SPI0_IRQn );
@@ -68,8 +64,7 @@ void SPI_Init( uint8_t SPI_ch, uint8_t master )
       SET_BIT_IN_REG( SPI1_MISO, PORT_PCR_MUX( ALTERNATIVE_2 ) );
       master ? SET_BIT_IN_REG( SPI1_CS, PORT_PCR_MUX( PIN_GPIO ) ) :
                SET_BIT_IN_REG( SPI1_CS, PORT_PCR_MUX( ALTERNATIVE_2 ) );
-      SET_BIT_IN_REG( SPI1_CE, PORT_PCR_MUX( PIN_GPIO ) );
-      SET_BIT_IN_REG( SPI1_IRQ, PORT_PCR_MUX( PIN_GPIO ) );
+
       // Setting up RX interrupt and SPI enable
       SET_BIT_IN_REG( SPI1_C1, SPI_C1_SPIE_MASK | SPI_C1_SPE_MASK );
 
@@ -82,10 +77,6 @@ void SPI_Init( uint8_t SPI_ch, uint8_t master )
          // Starting off with 1Mbps to reduce errors. Max for nRF24L01 is 2 Mbps
          SET_BIT_IN_REG( SPI1_BR, SPI_BR_SPPR( SPI_2Mbps_PRESCALER ) | SPI_BR_SPR( SPI_2Mbps_BRD ) );
       }
-
-      // CE is a nRF functionality, not SPI, this should move.
-      // Enable CE as a GPIO
-      //SET_BIT_IN_REG( GPIOE_PDDR, SPI0_CE_PIN );
 
       NVIC_EnableIRQ( SPI1_IRQn );
       NVIC_ClearPendingIRQ( SPI1_IRQn );
@@ -140,10 +131,16 @@ void SPI_Init( uint8_t SPI_ch, uint8_t master )
 void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 {
 #ifdef FRDM
-   SPI_Type * SPI_reg = msg->spiCh == 0 ? SPI0 : SPI1;
-   msg->spiCh == 0 ? SET_BIT_IN_REG( GPIOC_PCOR, SPI0_CS_PIN ) :
-                     SET_BIT_IN_REG( GPIOE_PCOR, SPI1_CS_PIN );
-   SET_BIT_IN_REG( SPI_C1_REG( SPI_reg ), SPI_C1_SPTIE_MASK );
+   if( SPI_ch == 0 )
+   {
+      SET_BIT_IN_REG( GPIOC_PCOR, SPI0_CS_PIN );
+      SET_BIT_IN_REG( SPI0_C1, SPI_C1_SPTIE_MASK );
+   }
+   else
+   {
+      SET_BIT_IN_REG( GPIOE_PCOR, SPI1_CS_PIN );
+      SET_BIT_IN_REG( SPI1_C1, SPI_C1_SPTIE_MASK );
+   }
 #endif // FRDM
 
 #ifdef BBB

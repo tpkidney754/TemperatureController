@@ -46,20 +46,12 @@ typedef enum
 #define SPI0_MISO       PORTC_PCR7
 #define SPI0_CS         PORTC_PCR4
 #define SPI0_CS_PIN     0x0010
-#define SPI0_CE         PORTC_PCR0
-#define SPI0_CE_PIN     0x0001
-#define SPI0_IRQ        PORTC_PCR3
-#define SPI0_IRQ_PIN    0x0008
 
 #define SPI1_MOSI       PORTE_PCR1
 #define SPI1_SCK        PORTE_PCR2
 #define SPI1_MISO       PORTE_PCR3
 #define SPI1_CS         PORTE_PCR4
 #define SPI1_CS_PIN     0x0010
-#define SPI1_CE         PORTE_PCR0
-#define SPI1_CE_PIN     0x0001
-#define SPI1_IRQ        PORTE_PCR5
-#define SPI1_IRQ_PIN    0x0020
 
 // Beaglebone Black SPI macros
 #define DEVICE_LOC      "/dev/spidev1.0"
