@@ -10,7 +10,7 @@
 #define LF                 10
 
 #define RXBUFFER_SIZE      128
-#define TXBUFFER_SIZE      1024
+#define TXBUFFER_SIZE      128
 #define DMA_RXBUFFER_SIZE  _128Bytes
 #define DMA_TXBUFFER_SIZE  _1kBytes
 #define DMACH_UART0RX      0

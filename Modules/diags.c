@@ -77,7 +77,9 @@ void ParseDiag( uint8_t * buffer )
          }
 
          SwitchLEDs( color );
+      #if ENABLE_MESSAGING
          BuildMessage( changeColor, 1, ( uint8_t * )&color );
+      #endif
       }
       else if ( strstr( commands[ i ], "power" ) )
       {
@@ -85,11 +87,15 @@ void ParseDiag( uint8_t * buffer )
          uint32_t pulseWidth;
          pulseWidth = MyAtoi( commands[ i ] );
          ChangeLEDPW( pulseWidth );
+      #if ENABLE_MESSAGING
          BuildMessage( changePWM, 1, ( uint8_t * )&pulseWidth );
+      #endif
       }
       else if( strstr( buffer, "cycle" ) )
       {
+      #if ENABLE_MESSAGING
          BuildMessage( cycleLEDs, 0, ( uint8_t * ) 0xFFFFFFFF );
+      #endif
          CycleLEDs( );
       }
       else

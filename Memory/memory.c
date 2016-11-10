@@ -39,6 +39,8 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
       {
          *dst++ = *src++;
       }
+
+      return 0;
    }
 
    // Need more than 3 bytes to initiate 32bit transfers.

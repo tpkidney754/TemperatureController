@@ -3,7 +3,9 @@
 
 #include "includeall.h"
 
-#define MAX_LENGTH   128
+#define MAX_LENGTH         128
+
+#define ENABLE_MESSAGING   0
 
 typedef enum
 {

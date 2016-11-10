@@ -164,8 +164,6 @@ void DumpMemory( uint8_t * start, uint32_t length )
       sprintf( buffer, "%02X ", *( start + i ) );
       LOG0( buffer );
    }
-
-   LOG0( "\n" );
 }
 
 //*************************************************************************
