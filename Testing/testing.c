@@ -14,10 +14,11 @@ static uint8_t fillerChar[ 3 ] = { '*', '@', '~' };
 //*************************************************************************
 void Testing()
 {
+   InitDMA( TESTING_DMA_CH );
    DataTesting();
    MemoryTesting();
    CircularBufferTesting();
-   PerformanceTesting( );
+   PerformanceTesting();
 }
 
 //*************************************************************************
@@ -45,7 +46,7 @@ void PrintHeader( uint8_t * header, HeaderType_t headerType )
    uint8_t fillerLength = HEADER_LENGTH - MyStrLen( header ) - 2;
    fillerLength /= 2;
    uint8_t * filler = malloc( sizeof( uint8_t ) * fillerLength + 1 );
-   MyMemZero( filler, fillerLength + 1 );
+   MyMemSet( filler, 0, fillerLength + 1, TESTING_DMA_CH );
 
    for( uint32_t i = 0; i < fillerLength; i++ )
    {

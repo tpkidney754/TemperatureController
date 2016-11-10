@@ -3,6 +3,7 @@
 #ifdef UART_LOGGING
 
 CircularBuffer_t * TXBuffer;
+uint8_t dmaComplete[ 4 ];
 
 //*************************************************************************
 // Function:  LOG0                                                        *
@@ -21,13 +22,17 @@ void LOG0( uint8_t * data )
    uint32_t length = MyStrLen( data );
    for( uint32_t i = 0; i < length; i++ )
    {
-      if( CBufferAdd( TXBuffer, ( data + i ) ) == BUFFER_FULL )
+      if( CBufferAdd( TXBuffer, ( data + i ), DMACH_UART0TX ) == BUFFER_FULL )
       {
          while( IsBufferFull( TXBuffer ) == BUFFER_FULL );
-         CBufferAdd( TXBuffer, ( data + i ) );
+         CBufferAdd( TXBuffer, ( data + i ), DMACH_UART0TX );
       }
    }
    SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
+   /*uint32_t length = MyStrLen( data );
+   while( dmaComplete[ DMACH_UART0TX ] == 0 );
+   CBufferAddItems( TXBuffer, data, length, DMACH_UART0TX );
+   SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );*/
 #else
    printf( "%s", data );
 #endif
