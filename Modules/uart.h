@@ -3,7 +3,7 @@
 #define __UART__
 
 #include "includeall.h"
-#include "circularbuffer.h"
+//#include "circularbuffer.h"
 
 #define OSR                16
 #define CR                 13
@@ -18,7 +18,6 @@
 #define DMA_TRANSFER_SIZE  _8bit
 
 extern uint8_t parseDiag;
-
 
 void Uart0Setup( uint32_t buadRate, uint8_t parity );
 void Uart0TX( uint32_t length );

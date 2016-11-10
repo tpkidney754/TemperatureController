@@ -4,6 +4,8 @@
 
 CircularBuffer_t * TXBuffer;
 uint8_t dmaComplete[ 4 ];
+CircularBuffer_t * UART0_TXBuffer;
+
 
 //*************************************************************************
 // Function:  LOG0                                                        *
@@ -22,10 +24,11 @@ void LOG0( uint8_t * data )
    uint32_t length = MyStrLen( data );
    for( uint32_t i = 0; i < length; i++ )
    {
-      if( CBufferAdd( TXBuffer, ( data + i ), DMACH_UART0TX ) == BUFFER_FULL )
+
+      if( CBufferAdd( UART0_TXBuffer, ( data + i ), DMACH_UART0TX ) == BUFFER_FULL )
       {
-         while( IsBufferFull( TXBuffer ) == BUFFER_FULL );
-         CBufferAdd( TXBuffer, ( data + i ), DMACH_UART0TX );
+         while( IsBufferFull( UART0_TXBuffer ) == BUFFER_FULL );
+         CBufferAdd( UART0_TXBuffer, ( data + i ), DMACH_UART0TX );
       }
    }
    SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );

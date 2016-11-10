@@ -48,4 +48,6 @@ DMAErrors_e MemSet8bit( uint8_t ch, uint8_t data, uint8_t * dst, uint32_t numByt
 #define MASK_32BIT         0xFFFFFFFF
 #define DMA_BCR_SIZE_MASK  0x0FFFFF
 
+#define NO_DMA             0xFF
+
 #endif

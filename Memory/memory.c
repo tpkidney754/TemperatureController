@@ -31,6 +31,16 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
 
       return dst ? 0 : -1;
    }
+
+   // Option to use DMA for memmove
+   if( DMAch == NO_DMA )
+   {
+      for( size_t i = 0; i < numBytes; i++ )
+      {
+         *dst++ = *src++;
+      }
+   }
+
    // Need more than 3 bytes to initiate 32bit transfers.
    if( numBytes > 3 )
    {

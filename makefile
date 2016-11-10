@@ -40,7 +40,7 @@ host: $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT) $(LDFLAGS) $(DEFINES)
 	$(SZ) $(OUTPUT)
 
-bbb: $(OBJS)
+bbb:
 	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)bbb $(LDFLAGS) $(DEFINES)
 	$(SZ) $(OUTPUT)bbb
 

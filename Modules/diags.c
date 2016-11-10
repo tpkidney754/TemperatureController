@@ -13,56 +13,127 @@
 //*************************************************************************
 void ParseDiag( uint8_t * buffer )
 {
-   if( strstr( buffer, "color" ) )
-   {
-      Color_t color = NONE;
-      if( strstr( buffer, "red" ) )
-      {
-         color = RED;
-      }
-      else if( strstr( buffer, "green" ) )
-      {
-         color = GREEN;
-      }
-      else if( strstr( buffer, "blue" ) )
-      {
-         color = BLUE;
-      }
-      else if( strstr( buffer, "purple" ) )
-      {
-         color = PURPLE;
-      }
-      else if( strstr( buffer, "yellow" ) )
-      {
-         color = YELLOW;
-      }
-      else if( strstr( buffer, "cyan") )
-      {
-         color = CYAN;
-      }
-      else if( strstr( buffer, "white" ) )
-      {
-         color = WHITE;
-      }
-      else if( strstr( buffer, "off" ) )
-      {
-         color = OFF;
-      }
+   // Support up to four commands with 10 characters each.
+   uint8_t commands[ 4 ][ 10 ];
+   size_t length;
+   size_t i = 0;
+   uint8_t * currentCommand;
 
-      SwitchLEDs( color );
-      BuildMessage( changeColor, 1, ( uint8_t * )&color );
-   }
-   else if ( strstr( buffer, "power" ) )
+   currentCommand = strtok( buffer, "\n " );
+
+   while( currentCommand != NULL )
    {
-      uint16_t pulseWidth = 0;
-      sscanf( buffer, "set power %d", &pulseWidth );
-      ChangeLEDPW( pulseWidth );
-      BuildMessage( changePWM, 1, ( uint8_t * )&pulseWidth );
+      strcpy( commands[ i++ ], currentCommand );
+      currentCommand = strtok( NULL, "\n " );
    }
-   else if( strstr( buffer, "cycle" ) )
+
+   length = MyStrLen( commands[ i - 1 ] );
+   commands[ i - 1 ][ length - 1 ] = '\0';
+
+   i = 0;
+
+   if( strstr( commands[ i ], "set" ) )
    {
-      BuildMessage( cycleLEDs, 0, ( uint8_t * ) 0xFFFFFFFF );
-      CycleLEDs( );
+      i++;
+      if( strstr( commands[ i ], "color" ) )
+      {
+         i++;
+         Color_t color = NONE;
+         if( strstr( commands[ i ], "red" ) )
+         {
+            color = RED;
+         }
+         else if( strstr( commands[ i ], "green" ) )
+         {
+            color = GREEN;
+         }
+         else if( strstr( commands[ i ], "blue" ) )
+         {
+            color = BLUE;
+         }
+         else if( strstr( commands[ i ], "purple" ) )
+         {
+            color = PURPLE;
+         }
+         else if( strstr( commands[ i ], "yellow" ) )
+         {
+            color = YELLOW;
+         }
+         else if( strstr( commands[ i ], "cyan") )
+         {
+            color = CYAN;
+         }
+         else if( strstr( commands[ i ], "white" ) )
+         {
+            color = WHITE;
+         }
+         else if( strstr( commands[ i ], "off" ) )
+         {
+            color = OFF;
+         }
+         else
+         {
+            LOG0( "Invalid color given\n" );
+         }
+
+         SwitchLEDs( color );
+         BuildMessage( changeColor, 1, ( uint8_t * )&color );
+      }
+      else if ( strstr( commands[ i ], "power" ) )
+      {
+         i++;
+         uint32_t pulseWidth;
+         pulseWidth = MyAtoi( commands[ i ] );
+         ChangeLEDPW( pulseWidth );
+         BuildMessage( changePWM, 1, ( uint8_t * )&pulseWidth );
+      }
+      else if( strstr( buffer, "cycle" ) )
+      {
+         BuildMessage( cycleLEDs, 0, ( uint8_t * ) 0xFFFFFFFF );
+         CycleLEDs( );
+      }
+      else
+      {
+         LOG0( "Invalid subcommand\n" );
+      }
+   }
+   else if( strstr( commands[ i ], "read" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "reg" ) )
+      {
+         i++;
+         uint32_t reg = MyAtoi( commands[ i ] );
+         nRF24L01_ReadReg( 0, reg );
+      }
+      else
+      {
+         LOG0( "Invalid subcommand\n" );
+      }
+   }
+   else if( strstr( commands[ i ], "send" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "nop" ) )
+      {
+         nRF24L01_SendNOP( 0 );
+      }
+      else
+      {
+         LOG0( "Invalid subcommand\n" );
+      }
+   }
+   else if( strstr( commands[ i ], "write" ) )
+   {
+      i++;
+      if( strstr( commands[ i ], "reg" ) )
+      {
+         i++;
+         uint32_t reg = MyAtoi( commands[ i++ ] );
+         uint32_t value = MyAtoi( commands[ i ] );
+         nRF24L01_WriteReg( 0, reg, value );
+
+      }
    }
 }
 

@@ -17,7 +17,7 @@ typedef enum
    changeColor = 0,
    changePWM,
    cycleLEDs,
-   NOP = 0xFF
+   NOPcommand = 0xFF
 } Commands_e;
 
 typedef struct

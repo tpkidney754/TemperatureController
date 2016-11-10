@@ -8,8 +8,18 @@
 #include <math.h>
 #endif
 
+#ifdef BBB
+#include <unistd.h>
+#include <getopt.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/spi/spidev.h>
+#endif
+
 #include "circularbuffer.h"
 #include "messaging.h"
+#include "nRF24L01.h"
 #define UART_LOGGING
 #include "uartlogging.h"
 #ifdef FRDM
@@ -20,6 +30,10 @@
 #include "uart.h"
 #include "led.h"
 #include "dma.h"
+#endif
+
+#if( defined( FRDM ) || defined ( BBB ) )
+#include "spi.h"
 #endif
 
 #if ( defined( FRDM ) || defined( TESTING ) )
