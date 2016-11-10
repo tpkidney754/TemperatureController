@@ -50,15 +50,18 @@ void ParseDiag( uint8_t * buffer )
       }
 
       SwitchLEDs( color );
+      BuildMessage( changeColor, 1, ( uint8_t * )&color );
    }
    else if ( strstr( buffer, "power" ) )
    {
       uint16_t pulseWidth = 0;
       sscanf( buffer, "set power %d", &pulseWidth );
       ChangeLEDPW( pulseWidth );
+      BuildMessage( changePWM, 1, ( uint8_t * )&pulseWidth );
    }
    else if( strstr( buffer, "cycle" ) )
    {
+      BuildMessage( cycleLEDs, 0, ( uint8_t * ) 0xFFFFFFFF );
       CycleLEDs( );
    }
 }
