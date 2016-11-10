@@ -76,11 +76,13 @@ void ChangeLEDPW( uint16_t pulseWidth )
 }
 
 
-void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInUS )
+void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs )
 {
    uint32_t clockPeriodInNs = NS_PER_SEC / DEFAULT_SYSTEM_CLOCK;
-   uint32_t modulus = (uint32_t ) ( ( intervalInUS * NS_PER_US ) / clockPeriodInNs ) - 1;
-
+   uint32_t modulus = (uint32_t ) ( ( intervalInNs ) / clockPeriodInNs ) - 1;
+   uint8_t buffer[100];
+   sprintf( buffer, "clockPeriodInNs: %d, modulus %d\n", clockPeriodInNs, modulus );
+   LOG0( buffer );
    switch( tpm )
    {
       case 0:

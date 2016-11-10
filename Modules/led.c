@@ -90,3 +90,24 @@ void SwitchLEDs( Color_t color )
    }
 }
 #endif
+
+void CycleLEDs( )
+{
+   for( Color_t color = RED; color < 7; color++ )
+   {
+      SwitchLEDs( color );
+      ChangeLEDPW( 0 );
+      for( uint8_t power = 1; power <= 100; power ++ )
+      {
+         ChangeLEDPW( power );
+         for( uint32_t j = 0; j < 100000; j++ );
+      }
+
+      for( int8_t power = 100; power >= 0; power-- )
+      {
+         ChangeLEDPW( power );
+         for( uint32_t j = 0; j < 100000; j++ );
+      }
+   }
+   SwitchLEDs( OFF );
+}
