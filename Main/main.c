@@ -11,6 +11,7 @@ int main()
 #ifdef FRDM
    Uart0Setup( 57600, 0 );
    LEDSetup();
+   InitDisplay( 0 );
 #endif
 
 #if ( defined( FRDM ) ||  defined( BBB ) )

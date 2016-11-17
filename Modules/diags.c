@@ -91,12 +91,19 @@ void ParseDiag( uint8_t * buffer )
          BuildMessage( changePWM, 1, ( uint8_t * )&pulseWidth );
       #endif
       }
-      else if( strstr( buffer, "cycle" ) )
+      else if( strstr( commands[ i ], "cycle" ) )
       {
       #if ENABLE_MESSAGING
          BuildMessage( cycleLEDs, 0, ( uint8_t * ) 0xFFFFFFFF );
       #endif
          CycleLEDs( );
+      }
+      else if( strstr( commands[ i ], "display" ) )
+      {
+         i++;
+         uint32_t value = MyAtoi( commands[ i ] );
+         value %= 10;
+         UpdateDisplay( 0, ( uint8_t ) value );
       }
       else
       {

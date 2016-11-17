@@ -9,6 +9,7 @@ INCLUDES = \
 	-I ./FRDM_Startup_Code/ \
 	-I ./Logging/ \
 	-I ./Messaging/ \
+	-I ./Display/ \
 
 
 SRCS = \
@@ -30,6 +31,7 @@ SRCS = \
 	./Testing/circularbuffertesting.c \
 	./Testing/performancetesting.c \
 	./Messaging/messaging.c \
+	./Display/sevensegment.c \
 
 
 STARTUP = \

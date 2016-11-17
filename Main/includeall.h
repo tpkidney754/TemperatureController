@@ -30,6 +30,7 @@
 #include "uart.h"
 #include "led.h"
 #include "dma.h"
+#include "sevensegment.h"
 #endif
 
 #if( defined( FRDM ) || defined ( BBB ) )
