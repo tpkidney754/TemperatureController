@@ -102,8 +102,8 @@ void ParseDiag( uint8_t * buffer )
       {
          i++;
          uint32_t value = MyAtoi( commands[ i ] );
-         value %= 10;
-         UpdateDisplay( 0, ( uint8_t ) value );
+         UpdateDisplay( 0, ( uint8_t ) ( value % 10 ) );
+         UpdateDisplay( 1, ( uint8_t ) ( value / 10 ) );
       }
       else
       {
