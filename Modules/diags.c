@@ -101,9 +101,21 @@ void ParseDiag( uint8_t * buffer )
       else if( strstr( commands[ i ], "display" ) )
       {
          i++;
-         uint32_t value = MyAtoi( commands[ i ] );
-         UpdateDisplay( 0, ( uint8_t ) ( value % 10 ) );
-         UpdateDisplay( 1, ( uint8_t ) ( value / 10 ) );
+         if( strstr( commands[ i ], "cycle" ) )
+         {
+            for( uint8_t i = 0; i < 100; i++ )
+            {
+               UpdateDisplay( 0, ( uint8_t ) ( i / 10 ) );
+               UpdateDisplay( 1, ( uint8_t ) ( i % 10 ) );
+               for( uint32_t j = 0; j < 1000000; j++ );
+            }
+         }
+         else
+         {
+            uint32_t value = MyAtoi( commands[ i ] );
+            UpdateDisplay( 0, ( uint8_t ) ( value / 10 ) );
+            UpdateDisplay( 1, ( uint8_t ) ( value % 10 ) );
+         }
       }
       else
       {
