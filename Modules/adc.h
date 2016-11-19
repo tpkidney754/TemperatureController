@@ -3,7 +3,12 @@
 
 #include "includeall.h"
 
-#define ADC_PORT        SIM_SCGC5_PORTD_MASK;
+#define ADC_PORT        SIM_SCGC5_PORTC_MASK
+#define ADC_CH_PIN      PORTC_PCR0
+#define ADC_CHANNEL     AD14
+
+#define MAX_VALUE       255.0
+#define MAX_DISPLAY_VAL  99.0
 
 typedef enum
 {
@@ -34,10 +39,15 @@ typedef enum
    RESERVED0,
    RESERVED1,
    TEMP_SENSOR,
-   BANDGAP
+   BANDGAP,
    RESERVED2,
    VREFSH,
    VREFSL,
    DISABLED,
 } ADC_InputChannel;
+
+void ADC_Init( ADC_InputChannel ADC_ch );
+void ADC_StartConversion( ADC_InputChannel ADC_ch );
+uint8_t ADC_GetCurrentValue( );
+
 #endif //__ADC__

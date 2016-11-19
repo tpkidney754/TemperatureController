@@ -24,6 +24,7 @@ SRCS = \
 	./Modules/dma.c \
 	./Modules/spi.c \
 	./Modules/nRF24L01.c \
+	./Modules/adc.c \
 	./Logging/uartlogging.c \
 	./Testing/testing.c \
 	./Testing/datatesting.c \
