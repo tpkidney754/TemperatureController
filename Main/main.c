@@ -52,12 +52,13 @@ while( 1 )
       parseDiag = 0;
    }
 
-   ADC_StartConversion( ADC_CHANNEL );
-   ADC_value = ADC_GetCurrentValue( );
-   //sprintf( buffer, "Current Value: %d\n", ADC_value );
-   //LOG0( buffer );
-   UpdateDisplay( 0, ( uint8_t ) ( ADC_value / 10 ) );
-   UpdateDisplay( 1, ( uint8_t ) ( ADC_value % 10 ) );
+   if( !( ADC0_SC2 & ADC_SC2_ADACT_MASK ) )
+   {
+      ADC_StartConversion( ADC_CHANNEL );
+      ADC_value = ADC_GetCurrentValue( );
+      UpdateDisplay( 0, ( uint8_t ) ( ADC_value / 10 ) );
+      UpdateDisplay( 1, ( uint8_t ) ( ADC_value % 10 ) );
+   }
 
 #endif
    if( SPI_RXBuffer[ 0 ]->numItems )
