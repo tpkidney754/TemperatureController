@@ -1,7 +1,5 @@
 #include "data.h"
 
-CircularBuffer_t TXBuffer;
-
 //*************************************************************************
 // Function:  MyItoa                                                      *
 //                                                                        *
@@ -164,18 +162,8 @@ void DumpMemory( uint8_t * start, uint32_t length )
    for(uint32_t i = 0; i < length; i ++ )
    {
       sprintf( buffer, "%02X ", *( start + i ) );
-   #ifdef FRDM
-      CBufferAdd( &TXBuffer, buffer );
-      CBufferAdd( &TXBuffer, buffer + 1 );
-      CBufferAdd( &TXBuffer, buffer + 2 );
+      LOG0( buffer );
    }
-      Uart0TX( length );
-   #else
-      printf( "%s", buffer );
-   }
-   #endif
-
-   printf("\n");
 }
 
 //*************************************************************************
@@ -193,7 +181,7 @@ void DumpMemory( uint8_t * start, uint32_t length )
 int32_t BigToLittle( int32_t data )
 {
    uint8_t byte0 = ( uint8_t ) ( ( data & BYTE3_MASK ) >> BYTE3_SHIFT );
-   uint8_t  byte1 = ( uint8_t ) ( ( data & BYTE2_MASK ) >> BYTE2_SHIFT );
+   uint8_t byte1 = ( uint8_t ) ( ( data & BYTE2_MASK ) >> BYTE2_SHIFT );
    uint8_t byte2 = ( uint8_t ) ( ( data & BYTE1_MASK ) >> BYTE1_SHIFT );
    uint8_t byte3 = ( uint8_t ) ( ( data & BYTE0_MASK ) >> BYTE0_SHIFT );
 

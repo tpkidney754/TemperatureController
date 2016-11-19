@@ -2,31 +2,36 @@ INCLUDES = \
 	-I ./Main/   \
 	-I ./Data/   \
 	-I ./Memory/ \
-	-I ./Project1/ \
 	-I ./Testing/ \
 	-I ./CircularBuffer/ \
 	-I ./FRDM_INCLUDES/ \
 	-I ./Modules \
 	-I ./FRDM_Startup_Code/ \
-	-I ./Logging/
+	-I ./Logging/ \
+	-I ./Messaging/ \
+	-I ./Display/ \
 
 
 SRCS = \
 	./Main/main.c   \
 	./Memory/memory.c \
 	./Data/data.c \
-	./Project1/project1.c \
 	./CircularBuffer/circularbuffer.c \
 	./Modules/uart.c \
 	./Modules/led.c \
 	./Modules/timers.c \
 	./Modules/diags.c \
+	./Modules/dma.c \
+	./Modules/spi.c \
+	./Modules/nRF24L01.c \
 	./Logging/uartlogging.c \
 	./Testing/testing.c \
 	./Testing/datatesting.c \
 	./Testing/memorytesting.c \
 	./Testing/circularbuffertesting.c \
 	./Testing/performancetesting.c \
+	./Messaging/messaging.c \
+	./Display/sevensegment.c \
 
 
 STARTUP = \

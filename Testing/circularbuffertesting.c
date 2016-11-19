@@ -112,7 +112,7 @@ void AddItemsUnitTestBuffEmpty( )
    for( uint32_t i = 0; i < ADD_ITEMS_LENGTH; i++ )
    {
       addIndex = midpointTest ? i + ADD_ITEMS_LENGTH : i;
-      if( CBufferAdd( cb, &itemsToAdd[ addIndex ] ) == BUFFER_FULL )
+      if( CBufferAdd( cb, &itemsToAdd[ addIndex ], TESTING_DMA_CH ) == BUFFER_FULL )
       {
          LOG0( "Buffer filled up while adding items!\n");
          fail = 1;
@@ -157,7 +157,7 @@ void AddItemsUnitTestBuffHalfFull( )
    for( uint32_t i = 0; i < ADD_ITEMS_LENGTH; i++ )
    {
       addIndex = midpointTest ? i : ADD_ITEMS_LENGTH + i;
-      if( ( CBufferAdd( cb, &itemsToAdd[ addIndex ] ) == BUFFER_FULL ) && ( i != ADD_ITEMS_LENGTH - 1 ) )
+      if( ( CBufferAdd( cb, &itemsToAdd[ addIndex ], TESTING_DMA_CH ) == BUFFER_FULL ) && ( i != ADD_ITEMS_LENGTH - 1 ) )
       {
          LOG0( "Buffer filled up while adding items!\n");
          fail = 1;
@@ -204,7 +204,7 @@ void AddItemsUnitTestBuffFull( )
       fail = 1;
    }
 
-   if( CBufferAdd( cb, &itemsToAdd[ 0 ] ) != BUFFER_FULL )
+   if( CBufferAdd( cb, &itemsToAdd[ 0 ], TESTING_DMA_CH ) != BUFFER_FULL )
    {
       LOG0( "Buffer should be full but CBufferAdd did not return BUFFER_FULL!\n");
       fail = 1;
@@ -242,7 +242,7 @@ void RemoveItemUnitTestBuffFull( )
    {
       removalIndex = midpointTest ? i + REMOVE_ITEMS_LENGTH : i;
 
-      if( CBufferRemove( cb, &itemsRemoved[ removalIndex ] ) == BUFFER_EMPTY )
+      if( CBufferRemove( cb, &itemsRemoved[ removalIndex ], TESTING_DMA_CH ) == BUFFER_EMPTY )
       {
          LOG0( "Buffer emptied while adding items!\n");
          fail = 1;
@@ -285,7 +285,7 @@ void RemoveItemUnitTestBuffHalfFull( )
    for( uint32_t i = 0; i < REMOVE_ITEMS_LENGTH; i++ )
    {
       removalIndex = midpointTest ? i : i + REMOVE_ITEMS_LENGTH;
-      if( ( CBufferRemove( cb, &itemsRemoved[ removalIndex ] ) == BUFFER_EMPTY ) && ( i != REMOVE_ITEMS_LENGTH - 1 ) )
+      if( ( CBufferRemove( cb, &itemsRemoved[ removalIndex ], TESTING_DMA_CH ) == BUFFER_EMPTY ) && ( i != REMOVE_ITEMS_LENGTH - 1 ) )
       {
          LOG0( "Buffer emptied while adding items!\n");
          fail = 1;
@@ -331,7 +331,7 @@ void RemoveItemUnitTestBuffEmpty( )
       fail = 1;
    }
 
-   if( CBufferRemove( cb, &itemsRemoved[ 0 ] ) != BUFFER_EMPTY )
+   if( CBufferRemove( cb, &itemsRemoved[ 0 ], TESTING_DMA_CH ) != BUFFER_EMPTY )
    {
       LOG0( "Buffer should be empty but CBufferAdd did not return BUFFER_EMPTY!\n");
       fail = 1;
@@ -355,7 +355,7 @@ void BufferTestFromTheMidPoint( )
    sprintf( headerBuffer, "Midpoint Buffer Test");
    PrintHeader( headerBuffer, main_e );
    LOG0( "Zero out buffer\n" );
-   MyMemZero( cb->bufferStart, cb->size );
+   MyMemSet( cb->bufferStart, 0, cb->size, TESTING_DMA_CH );
    DumpMemory( cb->bufferStart, cb->size );
    LOG0("\n");
    cb->head = cb->bufferStart;

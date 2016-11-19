@@ -13,12 +13,12 @@
 
 #define PROFILER_TPM             1
 #define PROFILER_CH              1
-#define PROFILER_PERIOD_IN_US    10
+#define PROFILER_PERIOD_IN_NS    10000
 
 #ifdef FRDM
 void SetupPWM( uint8_t tpm, uint8_t ch, uint16_t modulus, uint8_t prescaler, uint16_t pulseWidth );
 void ChangeLEDPW( uint16_t pulseWidth );
-void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInUS );
+void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs );
 #endif
 
 uint32_t GetTime( );

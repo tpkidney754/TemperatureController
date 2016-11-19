@@ -37,7 +37,12 @@ testing code written into the main.c file.
 
 
 Diag commands when using FRDM KL25Z board:
-set color xxx: This will change the color of the LED using the red green blue leds.
+set color x: This will change the color of the LED using the red green blue leds.
                Available colors are: red, green, blue, yellow, purple, cyan, white, and off.
-set power xxx: Adjusts the intensity of the LED. The third parameter is an integer between 0 and 100.
+set power x: Adjusts the intensity of the LED. The third parameter is an integer between 0 and 100.
                100 is full power, 0 is zero power and will turn off the LEDs.
+set cycle:		Starts fading in and fading out the LEDs through each standard color.
+send nop:      Sends a NOP command to the nRF24L01
+read reg x:  Sends a read register command to the nRF24L01. XXX is the register to be read.
+write reg x y: Sends a write register command to the nRF24L01. x is the register to be written and
+					 y is the value to be writen to x register.
