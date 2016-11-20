@@ -32,6 +32,7 @@
 #include "dma.h"
 #include "sevensegment.h"
 #include "adc.h"
+#include "pushbutton.h"
 #endif
 
 #if( defined( FRDM ) || defined ( BBB ) )

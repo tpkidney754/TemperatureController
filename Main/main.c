@@ -15,6 +15,7 @@ int main()
    InitDisplay( 1 );
    ADC_Init( ADC_CHANNEL );
    ADC_StartConversion( ADC_CHANNEL );
+   Button_Init( 0 );
 #endif
 
 #if ( defined( FRDM ) ||  defined( BBB ) )
