@@ -22,22 +22,12 @@ typedef enum
    DMARising,
    DMAFalling,
    DMAEitherEdge,
-   ActiveLowIRQ,
+   ActiveLowIRQ = 8,
    IRQRising,
    IRQFalling,
    IRQEither,
    ActiveHighIRQ,
 } IRQValues;
-/*
-#define PIN_DISABLE        0
-#define PIN_GPIO           1
-#define ALTERNATIVE_2      2
-#define ALTERNATIVE_3      3
-#define ALTERNATIVE_4      4
-#define ALTERNATIVE_5      5
-#define ALTERNATIVE_6      6
-#define ALTERNATIVE_7      7
-*/
 
 #define WAIT_FOR_BIT_SET( BIT ) while( ( BIT ) == 0 )
 #define WAIT_FOR_BIT_CLEAR( BIT ) while( ( BIT ) )
