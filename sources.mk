@@ -10,6 +10,7 @@ INCLUDES = \
 	-I ./Logging/ \
 	-I ./Messaging/ \
 	-I ./Display/ \
+	-I ./TemperatureController/ \
 
 
 SRCS = \
@@ -34,6 +35,7 @@ SRCS = \
 	./Testing/performancetesting.c \
 	./Messaging/messaging.c \
 	./Display/sevensegment.c \
+	./TemperatureController/controller.c \
 
 
 STARTUP = \

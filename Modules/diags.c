@@ -117,6 +117,13 @@ void ParseDiag( uint8_t * buffer )
             UpdateDisplay( 1, ( uint8_t ) ( value % 10 ) );
          }
       }
+      else if( strstr( commands[ i ], "temp" ) )
+      {
+         i++;
+         uint32_t newTemp;
+         newTemp = MyAtoi( commands[ i ] );
+         SetCurrentTemp( newTemp );
+      }
       else
       {
          LOG0( "Invalid subcommand\n" );

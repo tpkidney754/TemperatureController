@@ -14,19 +14,8 @@ int main()
    InitDisplay( 0 );
    InitDisplay( 1 );
    ADC_Init( ADC_CHANNEL );
-   ADC_StartConversion( ADC_CHANNEL );
    Button_Init( 0 );
-#endif
-
-#if ( defined( FRDM ) ||  defined( BBB ) )
-   SPI_Init( 0, 1 );
-#endif
-
-#ifdef BBB
-   for( uint8_t i = 0; i < FIFO_STATUS; i++ )
-   {
-      nRF24L01_ReadReg( 0, i );
-   }
+   ControllerInit( );
 #endif
 
 #ifdef TESTING
@@ -34,12 +23,11 @@ int main()
 #endif
 
    uint8_t buffer[ 100 ];
-   uint8_t * head = buffer;
-   uint8_t data;
-   uint8_t ADC_value;
 while( 1 )
 {
 #ifdef FRDM
+   ControllerState( );
+
    if( parseDiag )
    {
       uint32_t length = UART0_RXBuffer->numItems;
@@ -53,22 +41,7 @@ while( 1 )
       parseDiag = 0;
    }
 
-   if( !( ADC0_SC2 & ADC_SC2_ADACT_MASK ) )
-   {
-      ADC_StartConversion( ADC_CHANNEL );
-      ADC_value = ADC_GetCurrentValue( );
-      UpdateDisplay( 0, ( uint8_t ) ( ADC_value / 10 ) );
-      UpdateDisplay( 1, ( uint8_t ) ( ADC_value % 10 ) );
-   }
-
 #endif
-   if( SPI_RXBuffer[ 0 ]->numItems )
-   {
-      LOG0( "Received data from SPI0: " );
-      CBufferRemove( SPI_RXBuffer[ 0 ], &data, NO_DMA );
-      DumpMemory( &data, 1 );
-      LOG0( "\n" );
-   }
 }
 
 return 0;

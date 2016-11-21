@@ -22,11 +22,12 @@ void PORTA_IRQHandler( )
    if( BUTTON0 & PORT_PCR_ISF_MASK )
    {
       SET_BIT_IN_REG( BUTTON0, PORT_PCR_ISF_MASK );
-      SwitchLEDs( color++ );
+      ChangeState( );
+      /*SwitchLEDs( color++ );
       if( color == OFF )
       {
          color = RED;
-      }
+      }*/
    }
    NVIC_EnableIRQ( PORTA_IRQn );
 }
