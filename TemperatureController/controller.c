@@ -3,19 +3,37 @@
 static uint8_t currentTemp;
 static uint8_t desiredTemp;
 static uint8_t tempRange;
-static ControllerState_e controllerState;
+static ControllerState_e state;
 
-void ControllerInit( )
+//*************************************************************************
+// Function:  Controller_Init                                             *
+//                                                                        *
+// Description: Initializes the the static variables                      *
+//                                                                        *
+// Parameters:  NONE                                                      *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_Init( )
 {
    currentTemp = 75;
    desiredTemp = 75;
    tempRange = 10;
-   controllerState = noChange;
+   state = noChange;
 }
 
-void ControllerState( )
+//*************************************************************************
+// Function:  Controller_StateMachine                                     *
+//                                                                        *
+// Description: Initializes the the static variables                      *
+//                                                                        *
+// Parameters:  NONE                                                      *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_StateMachine( )
 {
-   switch( controllerState )
+   switch( state )
    {
       case noChange:
            currentTemp > desiredTemp ? SwitchLEDs( RED ) :
@@ -26,7 +44,7 @@ void ControllerState( )
            SwitchLEDs( YELLOW );
            if( !( ADC0_SC2 & ADC_SC2_ADACT_MASK ) )
            {
-              desiredTemp = ADC_GetCurrentValue( );
+              desiredTemp = ( uint8_t ) MAX_DISPLAY_VAL * ADC_GetCurrentValue( );
               ChnageDisplay( desiredTemp );
               ADC_StartConversion( ADC_CHANNEL );
            }
@@ -35,7 +53,7 @@ void ControllerState( )
            SwitchLEDs( PURPLE );
            if( !( ADC0_SC2 & ADC_SC2_ADACT_MASK ) )
            {
-              tempRange = ADC_GetCurrentValue( );
+              tempRange = ( uint8_t ) MAX_DISPLAY_VAL * ADC_GetCurrentValue( );
               ChnageDisplay( tempRange );
               ADC_StartConversion( ADC_CHANNEL );
            }
@@ -51,18 +69,45 @@ void ControllerState( )
    }
 }
 
-void ChangeState( )
+//*************************************************************************
+// Function:  Controller_ChangeState                                      *
+//                                                                        *
+// Description: Updates the state the next state or to the start          *
+//                                                                        *
+// Parameters:  NONE                                                      *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_ChangeState( )
 {
-   controllerState == printSettings ? controllerState = noChange : controllerState++;
+   state == printSettings ? state = noChange : state++;
 }
 
-void SetCurrentTemp( uint8_t newTemp )
+//*************************************************************************
+// Function:  Controller_SetCurrentTemp                                   *
+//                                                                        *
+// Description: Updates the curernt temperature value to a new value      *
+//                                                                        *
+// Parameters:  uint8_t newTemp: New value of the current temperature.    *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_SetCurrentTemp( uint8_t newTemp )
 {
    currentTemp = newTemp;
 }
 
-void ChnageDisplay( uint8_t value )
+//*************************************************************************
+// Function:  Controller_ChangeDisplay                                    *
+//                                                                        *
+// Description: Updates the displays with the input value                 *
+//                                                                        *
+// Parameters:  uint8_t value: New value sent to the diplays              *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_ChnageDisplay( uint8_t value )
 {
-   UpdateDisplay( 0, value / 10 );
-   UpdateDisplay( 1, value % 10 );
+   UpdateDisplay( Display_Tens, value / 10 );
+   UpdateDisplay( Display_Ones, value % 10 );
 }

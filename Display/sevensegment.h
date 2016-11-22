@@ -54,8 +54,14 @@ typedef enum
    Display_NotSingleDigit,
 } Display_Errors;
 
-void InitDisplay( uint8_t Display_num );
-void UpdateDisplay( uint8_t Display_num, uint8_t value );
-void Display_ClearAll( uint32_t displayNum );
+typedef enum
+{
+   Display_Tens = 0,
+   Display_Ones,
+} Display_place;
+
+void InitDisplay( Display_place place );
+void UpdateDisplay( Display_place place, uint8_t value );
+void Display_ClearAll( Display_place place );
 
 #endif // __SEVENSEGMENT__
