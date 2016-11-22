@@ -15,7 +15,7 @@ int main()
    InitDisplay( 1 );
    ADC_Init( ADC_CHANNEL );
    Button_Init( 0 );
-   ControllerInit( );
+   Controller_Init( );
 #endif
 
 #ifdef TESTING
@@ -26,7 +26,7 @@ int main()
 while( 1 )
 {
 #ifdef FRDM
-   ControllerState( );
+   Controller_StateMachine( );
 
    if( parseDiag )
    {

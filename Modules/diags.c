@@ -122,7 +122,7 @@ void ParseDiag( uint8_t * buffer )
          i++;
          uint32_t newTemp;
          newTemp = MyAtoi( commands[ i ] );
-         SetCurrentTemp( newTemp );
+         Controller_SetCurrentTemp( newTemp );
       }
       else
       {

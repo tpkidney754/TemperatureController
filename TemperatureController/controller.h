@@ -18,6 +18,6 @@ void Controller_Init( );
 void Controller_StateMachine( );
 void Controller_ChangeState( );
 void Controller_SetCurrentTemp( uint8_t newTemp );
-void Controller_ChnageDisplay( uint8_t value );
+void Controller_ChangeDisplay( uint8_t value );
 
 #endif //__CONTROLLER__

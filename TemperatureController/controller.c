@@ -38,14 +38,14 @@ void Controller_StateMachine( )
       case noChange:
            currentTemp > desiredTemp ? SwitchLEDs( RED ) :
                                        SwitchLEDs( BLUE );
-           ChnageDisplay( currentTemp );
+           Controller_ChangeDisplay( currentTemp );
            break;
       case changeDesiredTemp:
            SwitchLEDs( YELLOW );
            if( !( ADC0_SC2 & ADC_SC2_ADACT_MASK ) )
            {
               desiredTemp = ( uint8_t ) MAX_DISPLAY_VAL * ADC_GetCurrentValue( );
-              ChnageDisplay( desiredTemp );
+              Controller_ChangeDisplay( desiredTemp );
               ADC_StartConversion( ADC_CHANNEL );
            }
            break;
@@ -54,7 +54,7 @@ void Controller_StateMachine( )
            if( !( ADC0_SC2 & ADC_SC2_ADACT_MASK ) )
            {
               tempRange = ( uint8_t ) MAX_DISPLAY_VAL * ADC_GetCurrentValue( );
-              ChnageDisplay( tempRange );
+              Controller_ChangeDisplay( tempRange );
               ADC_StartConversion( ADC_CHANNEL );
            }
            break;
@@ -64,7 +64,7 @@ void Controller_StateMachine( )
            sprintf( buffer, "Desired Temp: %d, Temp Range: %d\n", desiredTemp, tempRange );
            LOG0( buffer );
            for( uint32_t i = 0; i < 1000000; i++ );
-           controllerState = noChange;
+           state = noChange;
            break;
    }
 }
@@ -106,7 +106,7 @@ void Controller_SetCurrentTemp( uint8_t newTemp )
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void Controller_ChnageDisplay( uint8_t value )
+void Controller_ChangeDisplay( uint8_t value )
 {
    UpdateDisplay( Display_Tens, value / 10 );
    UpdateDisplay( Display_Ones, value % 10 );
