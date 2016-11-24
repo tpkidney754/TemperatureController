@@ -16,6 +16,7 @@ int main()
    ADC_Init( ADC_CHANNEL );
    Button_Init( 0 );
    Controller_Init( );
+   InitWaitTimer( );
 #endif
 
 #ifdef TESTING
@@ -26,8 +27,15 @@ int main()
 while( 1 )
 {
 #ifdef FRDM
-   Controller_StateMachine( );
+   //Controller_StateMachine( );
 
+   LOG0( "Waiting 5 second\n" );
+   for( uint16_t i = 0; i < 5000; i++ )
+   {
+      WaitInUs( 1000 );
+   }
+   LOG0( "Wait Over\n" );
+   /*
    if( parseDiag )
    {
       uint32_t length = UART0_RXBuffer->numItems;
@@ -40,7 +48,7 @@ while( 1 )
 
       parseDiag = 0;
    }
-
+   */
 #endif
 }
 

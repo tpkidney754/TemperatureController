@@ -75,14 +75,21 @@ void ChangeLEDPW( uint16_t pulseWidth )
    TPM0_C1V = valueToTPM0CnV;
 }
 
-
+//*************************************************************************
+// Function:  InitProfilerTimer                                           *
+//                                                                        *
+// Description: Starts a profiler timer based on the tpm, ch, and the     *
+//              interval in NS.                                           *
+//                                                                        *
+// Parameters: uint16_t pulseWidth: The new desired PW percentage.        *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs )
 {
    uint32_t clockPeriodInNs = NS_PER_SEC / DEFAULT_SYSTEM_CLOCK;
    uint32_t modulus = (uint32_t ) ( ( intervalInNs ) / clockPeriodInNs ) - 1;
-   uint8_t buffer[100];
-   sprintf( buffer, "clockPeriodInNs: %d, modulus %d\n", clockPeriodInNs, modulus );
-   LOG0( buffer );
+
    switch( tpm )
    {
       case 0:
@@ -124,6 +131,27 @@ void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs )
          SET_BIT_IN_REG( TPM2_CnSC( ch ), TPM_CnSC_MSA_MASK | TPM_CnSC_ELSA_MASK );
          TPM2_CnV( ch ) = (uint16_t) modulus;
          break;
+   }
+}
+
+void InitWaitTimer( )
+{
+   SET_BIT_IN_REG( SIM_SCGC6, SIM_SCGC6_TPM1_MASK );
+   SET_BIT_IN_REG( TPM_SC_REG( WAIT_TPM ), TPM_SC_CMOD( 1 ) );
+   TPM_CNT_REG( WAIT_TPM ) = TPM_CNT_COUNT_MASK;
+}
+
+void WaitInUs( uint16_t waitTime )
+{
+   // Each clock is 21ns
+   // Therefore 1 us is roughly 48 counts.
+   waitTime *= COUNTS_PER_US;
+   uint16_t countValue;
+   TPM_CNT_REG( WAIT_TPM ) = TPM_CNT_COUNT_MASK;
+   countValue = TPM_CNT_REG( WAIT_TPM );
+   while( countValue < waitTime )
+   {
+      countValue = TPM_CNT_REG( WAIT_TPM );
    }
 }
 
