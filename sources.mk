@@ -27,6 +27,8 @@ SRCS = \
 	./Modules/nRF24L01.c \
 	./Modules/adc.c \
 	./Modules/pushbutton.c \
+	./Modules/singlewirecomms.c \
+	./Modules/ds18b20.c \
 	./Logging/uartlogging.c \
 	./Testing/testing.c \
 	./Testing/datatesting.c \

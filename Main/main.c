@@ -17,6 +17,7 @@ int main()
    Button_Init( 0 );
    Controller_Init( );
    InitWaitTimer( );
+   SWC_Init( );
 #endif
 
 #ifdef TESTING
@@ -24,18 +25,15 @@ int main()
 #endif
 
    uint8_t buffer[ 100 ];
+   float temperature = 0;
+   temperature = ReadTemp( );
+   sprintf( buffer, "Current temperature = %f\n", temperature );
+   LOG0( buffer );
 while( 1 )
 {
 #ifdef FRDM
-   //Controller_StateMachine( );
+   Controller_StateMachine( );
 
-   LOG0( "Waiting 5 second\n" );
-   for( uint16_t i = 0; i < 5000; i++ )
-   {
-      WaitInUs( 1000 );
-   }
-   LOG0( "Wait Over\n" );
-   /*
    if( parseDiag )
    {
       uint32_t length = UART0_RXBuffer->numItems;
@@ -48,7 +46,8 @@ while( 1 )
 
       parseDiag = 0;
    }
-   */
+
+
 #endif
 }
 

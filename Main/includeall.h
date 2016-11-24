@@ -33,8 +33,8 @@
 #include "sevensegment.h"
 #include "adc.h"
 #include "pushbutton.h"
-//#include "singlewirecomms.h"
-//#include "ds18b20.h"
+#include "singlewirecomms.h"
+#include "ds18b20.h"
 #include "controller.h"
 #endif
 

@@ -16,6 +16,14 @@ void TransactionStepTwo( )
    DS8B20_ROMCode romCode;
    SWC_SendByte( READ_ROM );
    SWC_ReadData( ROM_BYTES, ( uint8_t * ) &romCode );
+   uint8_t buffer[ 50 ];
+   sprintf( buffer, "ROM Data\n" );
+   LOG0( buffer );
+   for( uint8_t i = 0; i < ROM_BYTES; i++ )
+   {
+      sprintf( buffer, "Byte %d: 0x%X\n", i, romCode.romBytes[ i ] );
+      LOG0( buffer );
+   }
 }
 
 float ReadTemp( )
@@ -23,10 +31,10 @@ float ReadTemp( )
    DS8B20_Scratchpad scratchpadData;
    uint8_t devicePresent = TransactionStepOne( );
 
-   if( devicePresent == 0 )
-   {
-      return 0xFF;
-   }
+   //if( devicePresent == 0 )
+   //{
+   //   return 0x0;
+   //}
 
    TransactionStepTwo ( );
    // Send the CONVERT_T command byte
@@ -42,9 +50,20 @@ float ReadTemp( )
    SWC_SendByte( READ_SCRATCHPAD );
    SWC_ReadData( SCRATCPAD_BYTES, ( uint8_t * ) &scratchpadData );
 
-   uint16_t rawTemperatureData = scratchpadData.temperatureRawLSB;
-   rawTemperatureData |= scratchpadData.temperatureRawLSB << 8;
+   uint8_t buffer[ 50 ];
+   sprintf( buffer, "Scratch Pad Data\n" );
+   LOG0( buffer );
+   for( uint8_t i = 0; i < SCRATCPAD_BYTES; i++ )
+   {
+      sprintf( buffer, "Byte %d: 0x%X\n", i, scratchpadData.scratchpadBytes[ i ] );
+      LOG0( buffer );
+   }
 
+   uint16_t rawTemperatureData = scratchpadData.temperatureRawLSB;
+   rawTemperatureData |= scratchpadData.temperatureRawMSB << 8;
+
+   sprintf( buffer, "rawTemperatureData = 0x%X\n", rawTemperatureData );
+   LOG0( buffer );
    return ConvertRawTemperatureData( rawTemperatureData );
 }
 

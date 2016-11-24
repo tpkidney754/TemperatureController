@@ -7,24 +7,32 @@
 #define SERIAL_NUM_BYTES         6
 #define SCRATCPAD_BYTES          9
 
-typedef struct __attribute__((__packed__))
+typedef union
 {
-   uint8_t familyCode;
-   uint8_t serialNum[ SERIAL_NUM_BYTES ];
-   uint8_t crc;
+   uint8_t romBytes[ ROM_BYTES ];
+   struct __attribute__((__packed__))
+   {
+      uint8_t familyCode;
+      uint8_t serialNum[ SERIAL_NUM_BYTES ];
+      uint8_t crc;
+   } ;
 } DS8B20_ROMCode;
 
-typedef struct __attribute__((__packed__))
+typedef union
 {
-   uint8_t temperatureRawLSB;
-   uint8_t temperatureRawMSB;
-   uint8_t thRegister;
-   uint8_t tlRegister;
-   uint8_t configurationRegister;
-   uint8_t reserved0;
-   uint8_t reserved1;
-   uint8_t reserved2;
-   uint8_t crc;
+   uint8_t scratchpadBytes[ SCRATCPAD_BYTES ];
+   struct __attribute__((__packed__))
+   {
+      uint8_t temperatureRawLSB;
+      uint8_t temperatureRawMSB;
+      uint8_t thRegister;
+      uint8_t tlRegister;
+      uint8_t configurationRegister;
+      uint8_t reserved0;
+      uint8_t reserved1;
+      uint8_t reserved2;
+      uint8_t crc;
+   };
 } DS8B20_Scratchpad;
 
 // ROM COMMANDS
@@ -41,6 +49,10 @@ typedef struct __attribute__((__packed__))
 #define RECALL_E2                0xB8
 #define READ_POWER_SUPPLY        0xB4
 
-uint8_t ReadTemp( );
+uint8_t TransactionStepOne( );
+void TransactionStepTwo( );
+float ReadTemp( );
+float ConvertRawTemperatureData( uint16_t rawTemperatureData );
+
 
 #endif // __DS18B20__

@@ -138,6 +138,10 @@ void ParseDiag( uint8_t * buffer )
          uint32_t reg = MyAtoi( commands[ i ] );
          nRF24L01_ReadReg( 0, reg );
       }
+      else if( "temp" )
+      {
+         ReadTemp();
+      }
       else
       {
          LOG0( "Invalid subcommand\n" );
