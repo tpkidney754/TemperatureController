@@ -26,12 +26,13 @@ int main()
 
    uint8_t buffer[ 100 ];
    float temperature = 0;
-   temperature = ReadTemp( );
-   sprintf( buffer, "Current temperature = %f\n", temperature );
-   LOG0( buffer );
+
 while( 1 )
 {
 #ifdef FRDM
+   temperature = ReadTemp( );
+   sprintf( buffer, "Current temperature = %f\n", temperature );
+   LOG0( buffer );
    Controller_StateMachine( );
 
    if( parseDiag )
@@ -46,8 +47,6 @@ while( 1 )
 
       parseDiag = 0;
    }
-
-
 #endif
 }
 

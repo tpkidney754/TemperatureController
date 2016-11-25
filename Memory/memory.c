@@ -33,14 +33,17 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
    }
 
    // Option to use DMA for memmove
+#ifdef FRDM
    if( DMAch == NO_DMA )
    {
+#endif
       for( size_t i = 0; i < numBytes; i++ )
       {
          *dst++ = *src++;
       }
 
       return 0;
+#ifdef FRDM
    }
 
    // Need more than 3 bytes to initiate 32bit transfers.
@@ -69,7 +72,7 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
    StartTransfer8bitMoves( DMAch, src, dst, numBytes );
 
    return 0;
-
+#endif
 }
 
 //*************************************************************************
@@ -91,6 +94,7 @@ int8_t MyMemSet( uint8_t * dst, uint32_t value, size_t numBytes, uint8_t DMAch )
       return -1;
    }
 
+#ifdef FRDM
    if( numBytes > 3 )
    {
       uint8_t remainder = numBytes % 4;
@@ -108,7 +112,12 @@ int8_t MyMemSet( uint8_t * dst, uint32_t value, size_t numBytes, uint8_t DMAch )
    }
    // Not enough bytes to do 32bit transfers.
    MemSet8bit( DMAch, ( uint8_t ) value, dst, numBytes );
-
+#else
+   for( size_t i = 0; i < numBytes; i++ )
+   {
+      *dst++ = ( uint8_t ) value;
+   }
+#endif
    return dst ? 0 : -1;
 }
 

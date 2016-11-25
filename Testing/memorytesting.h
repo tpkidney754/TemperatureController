@@ -10,7 +10,12 @@
 #define MY_STR_LEN_INPUTS  2
 #define MAIN_HEADER        2
 
+#ifdef FRDM
 #define TESTING_DMA_CH     3
+#else
+#define TESTING_DMA_CH     NO_DMA
+#endif
+
 
 void MemoryTesting( void );
 void MyMemMoveUnitTest( void );

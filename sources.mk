@@ -12,8 +12,25 @@ INCLUDES = \
 	-I ./Display/ \
 	-I ./TemperatureController/ \
 
+BBBSRCS = \
+	./Main/main.c   \
+	./Memory/memory.c \
+	./Data/data.c \
+	./CircularBuffer/circularbuffer.c \
+	./Modules/uart.c \
+	./Modules/diags.c \
+	./Modules/spi.c \
+	./Modules/nRF24L01.c \
+	./Modules/timers.c \
+	./Logging/uartlogging.c \
+	./Testing/testing.c \
+	./Testing/datatesting.c \
+	./Testing/memorytesting.c \
+	./Testing/circularbuffertesting.c \
+	./Testing/performancetesting.c \
+	./Messaging/messaging.c \
 
-SRCS = \
+FRDMSRCS = \
 	./Main/main.c   \
 	./Memory/memory.c \
 	./Data/data.c \

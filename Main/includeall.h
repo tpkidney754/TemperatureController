@@ -6,6 +6,7 @@
 #ifndef FRDM
 #include <time.h>
 #include <math.h>
+#define NO_DMA       0xFF
 #endif
 
 #ifdef BBB
@@ -18,6 +19,7 @@
 #endif
 
 #include "circularbuffer.h"
+#include "uart.h"
 #include "messaging.h"
 #include "nRF24L01.h"
 #define UART_LOGGING
@@ -27,7 +29,6 @@
 #include "MKL25Z4.h"
 #include "core_cm0plus.h"
 #include "io.h"
-#include "uart.h"
 #include "led.h"
 #include "dma.h"
 #include "sevensegment.h"

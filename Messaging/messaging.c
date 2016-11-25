@@ -74,12 +74,13 @@ MessagingErrors_e DecodeRxMessage( Message_t * msg )
 {
    // This is an excellent oppurtunity for implementing function pointers
    // when I get the time.
+#ifdef FRDM
    switch( msg->cmd )
    {
       case changeColor: SwitchLEDs( msg->data[ 0 ] ); break;
       case changePWM: ChangeLEDPW( msg->data[ 0 ] ); break;
       case cycleLEDs: CycleLEDs( ); break;
    }
-
+#endif
    return noError;
 }

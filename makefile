@@ -41,12 +41,12 @@ host: $(OBJS)
 	$(SZ) $(OUTPUT)
 
 bbb:
-	$(CC) $(CFLAGS) $(SRCS) $(INCLUDES) -o $(OUTPUT)bbb $(LDFLAGS) $(DEFINES)
+	$(CC) $(CFLAGS) $(BBBSRCS) $(INCLUDES) -o $(OUTPUT)bbb $(LDFLAGS) $(DEFINES)
 	$(SZ) $(OUTPUT)bbb
 
 
 frdm:
-	$(CC) $(CFLAGS) $(SRCS) $(STARTUP) $(INCLUDES) -o $(OUTPUT)frdm.elf $(LDFLAGS) $(DEFINES) -DFRDM
+	$(CC) $(CFLAGS) $(FRDMSRCS) $(STARTUP) $(INCLUDES) -o $(OUTPUT)frdm.elf $(LDFLAGS) $(DEFINES) -DFRDM
 	$(SZ) $(OUTPUT)frdm.elf
 
 preprocess: $(PREOBJS)

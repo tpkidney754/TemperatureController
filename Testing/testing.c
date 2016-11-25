@@ -14,7 +14,9 @@ static uint8_t fillerChar[ 3 ] = { '*', '@', '~' };
 //*************************************************************************
 void Testing()
 {
+#ifdef FRDM
    InitDMA( TESTING_DMA_CH );
+#endif
    DataTesting();
    MemoryTesting();
    CircularBufferTesting();

@@ -46,6 +46,7 @@ void MemoryPerformanceTesting( )
       start = GetTime( );
       uint8_t * src = malloc( sizeof( uint8_t ) * memoryTestCaseSizes[ i ] );
       end = GetTime( );
+      printf( "\n\nStart: %d, End: %d\n\n", start, end );
       diff = GetElapsedTime( start, end );
 
       sprintf( testPrintBuffer, "Allocating %d bytes with empty heap took, %u\n", memoryTestCaseSizes[ i ], diff );
@@ -61,7 +62,9 @@ void MemoryPerformanceTesting( )
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );
       MyMemMove( src, dst, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
+   #ifdef FRDM
       while( dmaComplete[ TESTING_DMA_CH ] == 0 );
+   #endif
       end = GetTime( );
       diff = GetElapsedTime( start, end );
 
@@ -78,7 +81,9 @@ void MemoryPerformanceTesting( )
 //-------------------------------------------------------------------------------------------------------
       start = GetTime( );
       MyMemSet( src, 0, memoryTestCaseSizes[ i ], TESTING_DMA_CH );
+   #ifdef FRDM
       while( dmaComplete[ TESTING_DMA_CH ] == 0 );
+   #endif
       end = GetTime( );
       diff = GetElapsedTime( start, end );
 

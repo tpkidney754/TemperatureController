@@ -199,6 +199,7 @@ inline uint32_t GetElapsedTime( uint32_t start, uint32_t end )
    timerCount = 0;
    return end - start;
 #else
-   return  ( end - start ) * UNITS_US  / CLOCKS_PER_SEC;
+   //printf( "CLOCKS_PER_SEC: %ld\n", CLOCKS_PER_SEC );
+   return  ( end - start );
 #endif
 }
