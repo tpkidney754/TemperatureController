@@ -1,10 +1,16 @@
-#ifdef FRDM
 #include "uart.h"
 
 /* GLOBAL Variable */
 uint8_t parseDiag;
 CircularBuffer_t * UART0_RXBuffer;
 CircularBuffer_t * UART0_TXBuffer;
+
+#ifdef BBB
+static int fd, c, res;
+static struct termios uart1, old;
+static char buffer[ 255 ];
+static FILE * uart;
+#endif
 
 //*************************************************************************
 // Function:  Uart0Setup                                                  *
@@ -18,6 +24,7 @@ CircularBuffer_t * UART0_TXBuffer;
 //*************************************************************************
 void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 {
+#ifdef FRDM
    uint32_t uart0Clk = 0;
    uint32_t calcBaudRate = 0;
    uint32_t mcgClk = 0;
@@ -72,6 +79,36 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 
    // Enables the TX/RX pins.
    SET_BIT_IN_REG( UART0_C2, ( UART0_C2_TE_MASK | UART0_C2_RE_MASK ) );
+#endif // FRDM
+
+#if BBB
+   uart = fopen( BONEPATH, "w" );
+   fseek( uart, 0, SEEK_SET );
+   fprintf( uart, "BB-UART1" );
+   fflush( uart );
+   fclose( uart );
+
+   //open uart1 for rx/tx
+   fd = open( MODEMDEVICE, O_RDWR | O_NOCTTY );
+   if( fd < 0 )
+   {
+      LOG0( "Port failed to open\n" );
+   }
+
+   tcgetattr( fd, &old );
+   MyMemSet( ( uint8_t * ) &uart1, 0, sizeof( uart1 ), NO_DMA );
+
+   uart1.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
+   uart1.c_iflag = IGNPAR | ICRNL;
+   uart1.c_oflag = 0;
+   uart1.c_lflag = 0;
+
+   uart1.c_cc[ VTIME ] = 0;
+   uart1.c_cc[ VMIN ] = 1;
+
+   tcflush( fd, TCIFLUSH );
+   tcsetattr( fd, TCSANOW, &uart1 );
+#endif
 }
 
 //*************************************************************************
@@ -87,15 +124,19 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 //*************************************************************************
 void Uart0TX( uint32_t length )
 {
+   uint8_t data;
    //The transmitter then remains idle until data is available in the xmit data buffer.
    //The S1[TDRE] status flag is set to indicate when the next character may be
    //   wrtitten to the data buffer.
-   uint8_t data;
    for( uint32_t i = 0; i < length; i++ )
    {
-      WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
       CBufferRemove( UART0_TXBuffer, &data, DMACH_UART0TX );
+   #ifdef FRDM
+      WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
       UART0_D = data;
+   #else
+      write( fd, &data, 1 );
+   #endif
    }
 }
 
@@ -108,10 +149,18 @@ void Uart0TX( uint32_t length )
 //                                                                        *
 // Return Value:  uint8_t: byte received from UART0                       *
 //*************************************************************************
-uint8_t Uart0RX( void )
+uint8_t UartRX( void )
 {
+#ifdef FRDM
    WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_RDRF_MASK );
    return UART0_D;
+#else
+   uint8_t data;
+   if( read( fd, &data, 1 ) > 0 )
+   {
+      printf( "%c", data );
+   }
+#endif
 }
 
 //*************************************************************************
@@ -125,8 +174,12 @@ uint8_t Uart0RX( void )
 //*************************************************************************
 void PutChar( uint8_t data )
 {
+#ifdef FRDM
    WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
    UART0_D = data;
+#else
+   write( fd, &data, 1 );
+#endif
 }
 
 //*************************************************************************
@@ -144,6 +197,7 @@ void PutChar( uint8_t data )
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
+#ifdef FRDM
 void UART0_IRQHandler( )
 {
    uint8_t data;

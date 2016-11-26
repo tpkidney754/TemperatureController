@@ -14,6 +14,9 @@
 #include <getopt.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <termios.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 #endif

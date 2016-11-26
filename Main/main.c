@@ -25,6 +25,7 @@ int main()
 #endif
 
    uint8_t buffer[ 100 ];
+   uint8_t newline;
    float temperature = 0;
 
 while( 1 )
@@ -47,6 +48,10 @@ while( 1 )
 
       parseDiag = 0;
    }
+#else
+   printf( "Enter command: " );
+   fgets( buffer, 100, stdin );
+   printf( "%s", buffer );
 #endif
 }
 
