@@ -27,12 +27,9 @@
 
 extern uint8_t parseDiag;
 
-#ifdef FRDM
 void Uart0Setup( uint32_t buadRate, uint8_t parity );
-void Uart0TX( uint32_t length );
+void UartTX( uint8_t * buffer, uint32_t length );
 uint8_t UartRX( void );
 void PutChar( uint8_t data );
-void ParseSetString( uint8_t * buffer );
-void UART0_IRQHandler( void );
-#endif
-#endif
+
+#endif //__UART__

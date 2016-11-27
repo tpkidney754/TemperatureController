@@ -2,6 +2,12 @@
 
 CircularBuffer_t * TXBuffer;
 
+static void (*commands[ NUM_COMMANDS ] )( uint8_t input ) =
+             { SwitchLEDs,
+               ChangeLEDPW,
+               Controller_SetCurrentTemp,
+               Controller_ChangeDisplay };
+
 MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data )
 {
    Message_t msg;
@@ -15,7 +21,7 @@ MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data
 
    CalculateChecksum( &msg );
 
-   return SendMessage( &msg );
+   return DecodeRxMessage( &msg );
 }
 
 MessagingErrors_e CalculateChecksum( Message_t * msg )
@@ -75,11 +81,18 @@ MessagingErrors_e DecodeRxMessage( Message_t * msg )
    // This is an excellent oppurtunity for implementing function pointers
    // when I get the time.
 #ifdef FRDM
+   /*
    switch( msg->cmd )
    {
       case changeColor: SwitchLEDs( msg->data[ 0 ] ); break;
       case changePWM: ChangeLEDPW( msg->data[ 0 ] ); break;
-      case cycleLEDs: CycleLEDs( ); break;
+      case setTemp: Controller_SetCurrentTemp( msg->data[ 0 ] ); break;
+      case setDisplay: Controller_ChangeDisplay( msg->data[ 0 ] ); break;
+   }
+   */
+   if( msg->cmd < NUM_COMMANDS )
+   {
+      commands[ msg->cmd ]( msg->data[ 0 ] );
    }
 #endif
    return noError;

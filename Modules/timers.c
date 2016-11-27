@@ -66,7 +66,7 @@ void SetupPWM( uint8_t tpm, uint8_t ch, uint16_t modulus, uint8_t prescaler, uin
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void ChangeLEDPW( uint16_t pulseWidth )
+void ChangeLEDPW( uint8_t pulseWidth )
 {
    uint16_t valueToTPM0CnV = (uint16_t) TPM0_MOD * ( pulseWidth / 100.0 );
    uint16_t valueToTPM2CnV = (uint16_t) TPM2_MOD * ( pulseWidth / 100.0 );

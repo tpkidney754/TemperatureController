@@ -5,7 +5,7 @@
 
 #define MAX_LENGTH         128
 
-#define ENABLE_MESSAGING   0
+#define ENABLE_MESSAGING   1
 
 typedef enum
 {
@@ -18,7 +18,8 @@ typedef enum
 {
    changeColor = 0,
    changePWM,
-   cycleLEDs,
+   setTemp,
+   setDisplay,
    NOPcommand = 0xFF
 } Commands_e;
 
@@ -29,6 +30,8 @@ typedef struct
    uint8_t data[ MAX_LENGTH ];
    uint8_t checksum;
 } Message_t;
+
+#define NUM_COMMANDS       4
 
 MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data );
 MessagingErrors_e CalculateChecksum( Message_t * msg );

@@ -7,9 +7,8 @@ extern CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 int main()
 {
-
-#ifdef FRDM
    Uart0Setup( 57600, 0 );
+#ifdef FRDM
    LEDSetup();
    InitDisplay( 0 );
    InitDisplay( 1 );
@@ -27,13 +26,11 @@ int main()
    uint8_t buffer[ 100 ];
    uint8_t newline;
    float temperature = 0;
-
+   uint32_t length = 0;
 while( 1 )
 {
 #ifdef FRDM
-   temperature = ReadTemp( );
-   sprintf( buffer, "Current temperature = %f\n", temperature );
-   LOG0( buffer );
+
    Controller_StateMachine( );
 
    if( parseDiag )
@@ -51,7 +48,9 @@ while( 1 )
 #else
    printf( "Enter command: " );
    fgets( buffer, 100, stdin );
-   printf( "%s", buffer );
+   length = MyStrLen( buffer );
+   UartTX( buffer, length );
+   //UartRX( );
 #endif
 }
 

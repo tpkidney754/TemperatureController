@@ -6,10 +6,7 @@ CircularBuffer_t * UART0_RXBuffer;
 CircularBuffer_t * UART0_TXBuffer;
 
 #ifdef BBB
-static int fd, c, res;
-static struct termios uart1, old;
-static char buffer[ 255 ];
-static FILE * uart;
+static int fd;
 #endif
 
 //*************************************************************************
@@ -82,11 +79,8 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 #endif // FRDM
 
 #if BBB
-   uart = fopen( BONEPATH, "w" );
-   fseek( uart, 0, SEEK_SET );
-   fprintf( uart, "BB-UART1" );
-   fflush( uart );
-   fclose( uart );
+   struct termios uart1, old;
+   //int ret = system( BONEPATH );
 
    //open uart1 for rx/tx
    fd = open( MODEMDEVICE, O_RDWR | O_NOCTTY );
@@ -99,12 +93,12 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    MyMemSet( ( uint8_t * ) &uart1, 0, sizeof( uart1 ), NO_DMA );
 
    uart1.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
-   uart1.c_iflag = IGNPAR | ICRNL;
+   uart1.c_iflag = IGNPAR;
    uart1.c_oflag = 0;
-   uart1.c_lflag = 0;
+   uart1.c_lflag = ICANON;
 
-   uart1.c_cc[ VTIME ] = 0;
-   uart1.c_cc[ VMIN ] = 1;
+   //uart1.c_cc[ VTIME ] = 0;
+   //uart1.c_cc[ VMIN ] = 1;
 
    tcflush( fd, TCIFLUSH );
    tcsetattr( fd, TCSANOW, &uart1 );
@@ -122,22 +116,11 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void Uart0TX( uint32_t length )
+void UartTX( uint8_t * buffer, uint32_t length )
 {
-   uint8_t data;
-   //The transmitter then remains idle until data is available in the xmit data buffer.
-   //The S1[TDRE] status flag is set to indicate when the next character may be
-   //   wrtitten to the data buffer.
-   for( uint32_t i = 0; i < length; i++ )
-   {
-      CBufferRemove( UART0_TXBuffer, &data, DMACH_UART0TX );
-   #ifdef FRDM
-      WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_TDRE_MASK );
-      UART0_D = data;
-   #else
-      write( fd, &data, 1 );
-   #endif
-   }
+#ifdef BBB
+   write( fd, buffer, length );
+#endif
 }
 
 //*************************************************************************
@@ -149,16 +132,20 @@ void Uart0TX( uint32_t length )
 //                                                                        *
 // Return Value:  uint8_t: byte received from UART0                       *
 //*************************************************************************
-uint8_t UartRX( void )
+uint8_t UartRX(  )
 {
 #ifdef FRDM
    WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_RDRF_MASK );
    return UART0_D;
 #else
    uint8_t data;
-   if( read( fd, &data, 1 ) > 0 )
+   while( read( fd, &data, 1 ) > 0 )
    {
       printf( "%c", data );
+      if( data == '\n' )
+      {
+         break;
+      }
    }
 #endif
 }

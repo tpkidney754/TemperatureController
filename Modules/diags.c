@@ -76,9 +76,10 @@ void ParseDiag( uint8_t * buffer )
             LOG0( "Invalid color given\n" );
          }
 
-         SwitchLEDs( color );
       #if ENABLE_MESSAGING
          BuildMessage( changeColor, 1, ( uint8_t * )&color );
+      #else
+         SwitchLEDs( ( uint8_t ) color );
       #endif
       }
       else if ( strstr( commands[ i ], "power" ) )
@@ -86,17 +87,11 @@ void ParseDiag( uint8_t * buffer )
          i++;
          uint32_t pulseWidth;
          pulseWidth = MyAtoi( commands[ i ] );
-         ChangeLEDPW( pulseWidth );
       #if ENABLE_MESSAGING
          BuildMessage( changePWM, 1, ( uint8_t * )&pulseWidth );
+      #else
+         ChangeLEDPW( ( uint8_t ) pulseWidth );
       #endif
-      }
-      else if( strstr( commands[ i ], "cycle" ) )
-      {
-      #if ENABLE_MESSAGING
-         BuildMessage( cycleLEDs, 0, ( uint8_t * ) 0xFFFFFFFF );
-      #endif
-         CycleLEDs( );
       }
       else if( strstr( commands[ i ], "display" ) )
       {
@@ -113,8 +108,12 @@ void ParseDiag( uint8_t * buffer )
          else
          {
             uint32_t value = MyAtoi( commands[ i ] );
+         #if ENABLE_MESSAGING
+            BuildMessage( setDisplay, 1, ( uint8_t * )&value );
+         #else
             UpdateDisplay( 0, ( uint8_t ) ( value / 10 ) );
             UpdateDisplay( 1, ( uint8_t ) ( value % 10 ) );
+         #endif
          }
       }
       else if( strstr( commands[ i ], "temp" ) )
@@ -122,7 +121,11 @@ void ParseDiag( uint8_t * buffer )
          i++;
          uint32_t newTemp;
          newTemp = MyAtoi( commands[ i ] );
+      #if ENABLE_MESSAGING
+         BuildMessage( setTemp, 1, ( uint8_t * )&newTemp );
+      #else
          Controller_SetCurrentTemp( newTemp );
+      #endif
       }
       else
       {

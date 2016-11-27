@@ -39,9 +39,9 @@ void LEDSetup( void )
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
-void SwitchLEDs( Color_t color )
+void SwitchLEDs( uint8_t color )
 {
-   switch( color )
+   switch( ( Color_t ) color )
    {
       case RED:
             RED_LED_ON;

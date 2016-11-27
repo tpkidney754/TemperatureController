@@ -42,7 +42,7 @@ typedef enum
 
 #ifdef FRDM
 void SetupPWM( uint8_t tpm, uint8_t ch, uint16_t modulus, uint8_t prescaler, uint16_t pulseWidth );
-void ChangeLEDPW( uint16_t pulseWidth );
+void ChangeLEDPW( uint8_t pulseWidth );
 void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs );
 void InitWaitTimer( );
 void WaitInUs( uint16_t waitTime );
