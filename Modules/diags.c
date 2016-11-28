@@ -140,7 +140,10 @@ void ParseDiag( uint8_t * buffer )
       }
       else if( "temp" )
       {
-         ReadTemp();
+         float temperature = 0;
+         temperature = ReadTemp( );
+         temperature = ( temperature * 9 / 5 ) + 32;
+         Controller_SetCurrentTemp( ( uint8_t ) temperature );
       }
       else
       {

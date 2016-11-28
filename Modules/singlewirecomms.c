@@ -10,7 +10,7 @@ void SWC_Init( )
 uint8_t SWC_ResetAndPresencePulses( )
 {
    SWITCH_TO_TX;
-   RELEASE_LINE;
+   PULL_LOW;
    //Wait 480 us
    WaitInUs( 480 );
    RELEASE_LINE;
@@ -24,6 +24,7 @@ uint8_t SWC_ResetAndPresencePulses( )
    {
       if( READ_LINE == 0 )
       {
+         while( READ_LINE == 0 );
          return 1;
       }
       else
@@ -43,24 +44,24 @@ void SWC_SendByte( uint8_t data )
 
    for( uint8_t i = 0; i < 8; i++ )
    {
-      data >>= i;
       if( data & 0x1 )
       {
          PULL_LOW;
          // Wait15us
-         WaitInUs( 15 );
+         WaitInUs( 13 );
          RELEASE_LINE;
          // Wait45us
-         WaitInUs( 45 );
+         WaitInUs( 41 );
       }
       else
       {
          PULL_LOW;
          // Wait60us
-         WaitInUs( 60 );
+         WaitInUs( 57 );
+         RELEASE_LINE;
       }
-
       // wait 1us
+      data >>= 1;
       WaitInUs( 1 );
    }
 }
@@ -68,25 +69,28 @@ void SWC_SendByte( uint8_t data )
 void SWC_ReadData( uint8_t bytesToRead, uint8_t * data )
 {
    uint8_t tempData;
-   SWITCH_TO_TX;
-   PULL_LOW;
-   // wait 1us
-   WaitInUs( 480 );
-   RELEASE_LINE;
-   SWITCH_TO_RX;
-
    //wait for 10 us
-   WaitInUs( 10 );
+   //WaitInUs( 12 );
    for( uint8_t i = 0; i < bytesToRead; i++ )
    {
       for( uint8_t j = 0; j < 8; j++ )
       {
+         SWITCH_TO_TX;
+         PULL_LOW;
+         // wait 1us
+         WaitInUs( 1 );
+         RELEASE_LINE;
+         SWITCH_TO_RX;
+         // Wait 15us
+         WaitInUs( 13 );
+
          if( READ_LINE )
          {
-            tempData |= 1 << j;
+            tempData |= ( 1 << j );
          }
-         //wait 60us
-         WaitInUs( 60 );
+         
+         //wait 45us
+         WaitInUs( 41 );
       }
       data[ i ] = tempData;
       tempData = 0;

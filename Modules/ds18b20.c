@@ -15,15 +15,16 @@ void TransactionStepTwo( )
 {
    DS8B20_ROMCode romCode;
    SWC_SendByte( READ_ROM );
+   WaitInUs( 200 );
    SWC_ReadData( ROM_BYTES, ( uint8_t * ) &romCode );
-   uint8_t buffer[ 50 ];
+   /*uint8_t buffer[ 50 ];
    sprintf( buffer, "ROM Data\n" );
    LOG0( buffer );
    for( uint8_t i = 0; i < ROM_BYTES; i++ )
    {
       sprintf( buffer, "Byte %d: 0x%X\n", i, romCode.romBytes[ i ] );
       LOG0( buffer );
-   }
+   }*/
 }
 
 float ReadTemp( )
@@ -31,11 +32,11 @@ float ReadTemp( )
    DS8B20_Scratchpad scratchpadData;
    uint8_t devicePresent = TransactionStepOne( );
 
-   //if( devicePresent == 0 )
-   //{
-   //   return 0x0;
-   //}
-
+   if( devicePresent == 0 )
+   {
+      return 0x0;
+   }
+   WaitInUs( 20 );
    TransactionStepTwo ( );
    // Send the CONVERT_T command byte
    SWC_SendByte( CONVERT_T );
@@ -43,13 +44,16 @@ float ReadTemp( )
    // is in progress and a 1 when the conversion is complete.
    // The master can issue a read time slot to read the status
    // of the conversion.
-   SWC_ReadStatusAndWait( );
-
+   //SWC_ReadStatusAndWait( );
+   WaitInUs( 200 );
    TransactionStepOne( );
+   WaitInUs( 20 );
    TransactionStepTwo( );
+   WaitInUs( 20 );
    SWC_SendByte( READ_SCRATCHPAD );
+   WaitInUs( 200 );
    SWC_ReadData( SCRATCPAD_BYTES, ( uint8_t * ) &scratchpadData );
-
+   /*
    uint8_t buffer[ 50 ];
    sprintf( buffer, "Scratch Pad Data\n" );
    LOG0( buffer );
@@ -58,12 +62,12 @@ float ReadTemp( )
       sprintf( buffer, "Byte %d: 0x%X\n", i, scratchpadData.scratchpadBytes[ i ] );
       LOG0( buffer );
    }
-
+   */
    uint16_t rawTemperatureData = scratchpadData.temperatureRawLSB;
    rawTemperatureData |= scratchpadData.temperatureRawMSB << 8;
 
-   sprintf( buffer, "rawTemperatureData = 0x%X\n", rawTemperatureData );
-   LOG0( buffer );
+   //sprintf( buffer, "rawTemperatureData = 0x%X\n", rawTemperatureData );
+   //LOG0( buffer );
    return ConvertRawTemperatureData( rawTemperatureData );
 }
 
