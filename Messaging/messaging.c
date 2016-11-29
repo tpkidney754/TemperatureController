@@ -2,6 +2,7 @@
 
 CircularBuffer_t * TXBuffer;
 
+#ifdef FRDM
 static void (*commands[ NUM_COMMANDS ] )( uint8_t input ) =
              { SwitchLEDs,
                ChangeLEDPW,
@@ -9,6 +10,7 @@ static void (*commands[ NUM_COMMANDS ] )( uint8_t input ) =
                Controller_ChangeDisplay,
                Controller_SetDesiredTemp,
                Controller_SetTempRange };
+#endif
 
 MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data )
 {
@@ -23,7 +25,7 @@ MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data
 
    CalculateChecksum( &msg );
 
-   return DecodeRxMessage( &msg );
+   return SendMessage( &msg );
 }
 
 MessagingErrors_e CalculateChecksum( Message_t * msg )

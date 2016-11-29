@@ -80,7 +80,7 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
 
 #if BBB
    struct termios uart1, old;
-   //int ret = system( BONEPATH );
+   int ret = system("echo BB-UART1 > /sys/devices/bone_capemgr.9/slots");
 
    //open uart1 for rx/tx
    fd = open( MODEMDEVICE, O_RDWR | O_NOCTTY );
