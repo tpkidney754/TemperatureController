@@ -127,6 +127,18 @@ void ParseDiag( uint8_t * buffer )
          Controller_SetCurrentTemp( newTemp );
       #endif
       }
+      else if( strstr( commands[ i ], "desired" ) )
+      {
+         i++;
+         uint32_t newDesTemp = MyAtoi( commands[ i ] );
+         Controller_SetDesiredTemp( ( uint8_t ) newDesTemp );
+      }
+      else if( strstr( commands[ i ], "range" ) )
+      {
+         i++;
+         uint32_t newRange = MyAtoi( commands[ i ] );
+         Controller_SetTempRange( ( uint8_t ) newRange );
+      }
       else
       {
          LOG0( "Invalid subcommand\n" );
@@ -143,7 +155,9 @@ void ParseDiag( uint8_t * buffer )
       }
       else if( "temp" )
       {
-         ReadTemp();
+         float temperature = 0;
+         temperature = ReadTemp( );
+         Controller_SetCurrentTemp( ( uint8_t ) temperature );
       }
       else
       {

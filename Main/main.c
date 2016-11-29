@@ -26,13 +26,14 @@ int main()
    uint8_t buffer[ 100 ];
    uint8_t newline;
    float temperature = 0;
-   uint32_t length = 0;
+   temperature = ReadTemp( );
+   Controller_SetCurrentTemp( temperature );
 while( 1 )
 {
 #ifdef FRDM
 
    Controller_StateMachine( );
-
+   Controller_SetCurrentTemp( ReadTemp( ) );
    if( parseDiag )
    {
       uint32_t length = UART0_RXBuffer->numItems;
@@ -45,12 +46,14 @@ while( 1 )
 
       parseDiag = 0;
    }
+
 #else
    printf( "Enter command: " );
    fgets( buffer, 100, stdin );
    length = MyStrLen( buffer );
    UartTX( buffer, length );
    //UartRX( );
+
 #endif
 }
 
