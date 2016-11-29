@@ -20,6 +20,10 @@ void Controller_Init( )
    desiredTemp = 75;
    tempRange = 10;
    state = noChange;
+   // Enable relay
+   SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTC_MASK );
+   SET_BIT_IN_REG( RELAY, PORT_PCR_MUX( PIN_GPIO ) );
+   SET_BIT_IN_REG( GPIOC_PDDR, RELAY_PIN );
 }
 
 //*************************************************************************
@@ -94,8 +98,21 @@ void Controller_SetCurrentTemp( uint8_t newTemp )
 {
    currentTemp = newTemp;
    CONVERT_C_TO_F( currentTemp );
-   currentTemp > ( desiredTemp + tempRange ) ? SwitchLEDs( RED ) :
-                                               SwitchLEDs( BLUE );
+
+   if( currentTemp > ( desiredTemp + tempRange ) )
+   {
+      SwitchLEDs( RED );
+      RELAY_ON;
+   }
+   else
+   {
+      SwitchLEDs( BLUE );
+      if( currentTemp <= ( desiredTemp - tempRange ) )
+      {
+         RELAY_OFF;
+      }
+   }
+
    Controller_ChangeDisplay( currentTemp );
 }
 
