@@ -6,7 +6,9 @@ static void (*commands[ NUM_COMMANDS ] )( uint8_t input ) =
              { SwitchLEDs,
                ChangeLEDPW,
                Controller_SetCurrentTemp,
-               Controller_ChangeDisplay };
+               Controller_ChangeDisplay,
+               Controller_SetDesiredTemp,
+               Controller_SetTempRange };
 
 MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data )
 {

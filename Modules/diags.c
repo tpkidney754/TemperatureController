@@ -131,13 +131,21 @@ void ParseDiag( uint8_t * buffer )
       {
          i++;
          uint32_t newDesTemp = MyAtoi( commands[ i ] );
+      #if ENABLE_MESSAGING
+         BuildMessage( setDesired, 1, ( uint8_t * )&newDesTemp );
+      #else
          Controller_SetDesiredTemp( ( uint8_t ) newDesTemp );
+      #endif
       }
       else if( strstr( commands[ i ], "range" ) )
       {
          i++;
          uint32_t newRange = MyAtoi( commands[ i ] );
+      #if ENABLE_MESSAGING
+         BuildMessage( setRange, 1, ( uint8_t * )&newRange );
+      #else
          Controller_SetTempRange( ( uint8_t ) newRange );
+      #endif
       }
       else
       {

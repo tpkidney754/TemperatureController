@@ -20,6 +20,8 @@ typedef enum
    changePWM,
    setTemp,
    setDisplay,
+   setDesired,
+   setRange,
    NOPcommand = 0xFF
 } Commands_e;
 
@@ -31,7 +33,7 @@ typedef struct
    uint8_t checksum;
 } Message_t;
 
-#define NUM_COMMANDS       4
+#define NUM_COMMANDS       6
 
 MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data );
 MessagingErrors_e CalculateChecksum( Message_t * msg );
