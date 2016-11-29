@@ -27,13 +27,12 @@ int main()
    uint8_t buffer[ 100 ];
    float temperature = 0;
    temperature = ReadTemp( );
-   sprintf( buffer, "Current temperature = %f\n", temperature );
-   LOG0( buffer );
+   Controller_SetCurrentTemp( temperature );
 while( 1 )
 {
 #ifdef FRDM
    Controller_StateMachine( );
-
+   Controller_SetCurrentTemp( ReadTemp( ) );
    if( parseDiag )
    {
       uint32_t length = UART0_RXBuffer->numItems;
@@ -46,7 +45,6 @@ while( 1 )
 
       parseDiag = 0;
    }
-
 
 #endif
 }

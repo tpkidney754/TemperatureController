@@ -36,9 +36,6 @@ void Controller_StateMachine( )
    switch( state )
    {
       case noChange:
-           currentTemp > desiredTemp ? SwitchLEDs( RED ) :
-                                       SwitchLEDs( BLUE );
-           Controller_ChangeDisplay( currentTemp );
            break;
       case changeDesiredTemp:
            SwitchLEDs( YELLOW );
@@ -64,6 +61,7 @@ void Controller_StateMachine( )
            sprintf( buffer, "Desired Temp: %d, Temp Range: %d\n", desiredTemp, tempRange );
            LOG0( buffer );
            for( uint32_t i = 0; i < 1000000; i++ );
+           Controller_SetCurrentTemp( ReadTemp( ) );
            state = noChange;
            break;
    }
@@ -95,6 +93,40 @@ void Controller_ChangeState( )
 void Controller_SetCurrentTemp( uint8_t newTemp )
 {
    currentTemp = newTemp;
+   CONVERT_C_TO_F( currentTemp );
+   currentTemp > ( desiredTemp + tempRange ) ? SwitchLEDs( RED ) :
+                                               SwitchLEDs( BLUE );
+   Controller_ChangeDisplay( currentTemp );
+}
+
+//*************************************************************************
+// Function:  Controller_SetDesiredTemp                                   *
+//                                                                        *
+// Description: Updates the desired temperature value to a new value      *
+//                                                                        *
+// Parameters:  uint8_t newTemp: New value of the desired temperature.    *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_SetDesiredTemp( uint8_t newTemp )
+{
+   desiredTemp = newTemp;
+   Controller_SetCurrentTemp( ReadTemp( ) );
+}
+
+//*************************************************************************
+// Function:  Controller_SetTempRange                                     *
+//                                                                        *
+// Description: Updates the temperature range value to a new value        *
+//                                                                        *
+// Parameters:  uint8_t newRange: New value of the new temperature range. *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
+void Controller_SetTempRange( uint8_t newRange )
+{
+   tempRange = newRange;
+   Controller_SetCurrentTemp( ReadTemp( ) );
 }
 
 //*************************************************************************
