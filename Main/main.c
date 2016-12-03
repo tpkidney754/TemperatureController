@@ -2,13 +2,16 @@
 
 extern CircularBuffer_t * UART0_RXBuffer;
 extern CircularBuffer_t * UART0_TXBuffer;
+extern CircularBuffer_t * UART1_RXBuffer;
+extern CircularBuffer_t * UART1_TXBuffer;
 extern CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
 extern CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 int main()
 {
-   Uart0Setup( 57600, 0 );
+   UartSetup( 0, 57600, 0 );
 #ifdef FRDM
+   UartSetup( 1, 115200, 0 );
    LEDSetup();
    InitDisplay( 0 );
    InitDisplay( 1 );
@@ -35,11 +38,11 @@ while( 1 )
 
    Controller_StateMachine( );
    Controller_SetCurrentTemp( ReadTemp( ) );
-   if( UART0_RXBuffer->numItems == 3 )
+   if( UART1_RXBuffer->numItems == 3 )
    {
-      CBufferRemove( UART0_RXBuffer, &msg.cmd, DMACH_UART0RX  );
-      CBufferRemove( UART0_RXBuffer, &msg.data, DMACH_UART0RX );
-      CBufferRemove( UART0_RXBuffer, &msg.checksum, DMACH_UART0RX );
+      CBufferRemove( UART1_RXBuffer, &msg.cmd, DMACH_UART1RX  );
+      CBufferRemove( UART1_RXBuffer, &msg.data, DMACH_UART1RX );
+      CBufferRemove( UART1_RXBuffer, &msg.checksum, DMACH_UART1RX );
 
       DecodeRxMessage( &msg );
 

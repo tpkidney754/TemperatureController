@@ -15,11 +15,13 @@
 #ifdef FRDM
 #define DMACH_UART0RX      NO_DMA
 #define DMACH_UART0TX      NO_DMA
+#define DMACH_UART1RX      NO_DMA
+#define DMACH_UART1TX      NO_DMA
 #define DMA_TRANSFER_SIZE  _8bit
 #else
 #define DMACH_UART0RX      NO_DMA
 #define DMACH_UART0TX      NO_DMA
-#define MODEMDEVICE        "/dev/ttyACM0" // Beaglebone Black serial port
+#define MODEMDEVICE        "/dev/ttyO1" // Beaglebone Black serial port
 #define BONEPATH           "/sys/devices/bone_capemgr.9/slots"
 #define POSIX_SOURCE       1
 #define BAUDRATE           B57600
@@ -27,7 +29,7 @@
 
 extern uint8_t parseDiag;
 
-void Uart0Setup( uint32_t buadRate, uint8_t parity );
+void UartSetup( uint8_t channel, uint32_t buadRate, uint8_t parity );
 void UartTX( uint8_t * buffer, uint32_t length );
 uint8_t UartRX( void );
 void PutChar( uint8_t data );
