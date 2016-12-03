@@ -25,17 +25,18 @@ typedef enum
    NOPcommand = 0xFF
 } Commands_e;
 
-typedef struct
+struct Message
 {
-   Commands_e cmd;
-   uint8_t numBytes;
-   uint8_t data[ MAX_LENGTH ];
+   uint8_t cmd;
+   uint8_t data;
    uint8_t checksum;
-} Message_t;
+} __attribute__((__packed__));
+
+typedef struct Message Message_t;
 
 #define NUM_COMMANDS       6
 
-MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data );
+MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t data );
 MessagingErrors_e CalculateChecksum( Message_t * msg );
 MessagingErrors_e SendMessage( Message_t * msg );
 MessagingErrors_e DecodeRxMessage( Message_t * msg );

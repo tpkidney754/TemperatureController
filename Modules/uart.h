@@ -13,13 +13,13 @@
 #define DMA_TXBUFFER_SIZE  _1kBytes
 
 #ifdef FRDM
-#define DMACH_UART0RX      0
-#define DMACH_UART0TX      1
+#define DMACH_UART0RX      NO_DMA
+#define DMACH_UART0TX      NO_DMA
 #define DMA_TRANSFER_SIZE  _8bit
 #else
 #define DMACH_UART0RX      NO_DMA
 #define DMACH_UART0TX      NO_DMA
-#define MODEMDEVICE        "/dev/ttyO1" // Beaglebone Black serial port
+#define MODEMDEVICE        "/dev/ttyACM0" // Beaglebone Black serial port
 #define BONEPATH           "/sys/devices/bone_capemgr.9/slots"
 #define POSIX_SOURCE       1
 #define BAUDRATE           B57600

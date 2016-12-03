@@ -83,7 +83,7 @@ void Uart0Setup( uint32_t requestedBuadRate, uint8_t parity )
    int ret = system("echo BB-UART1 > /sys/devices/bone_capemgr.9/slots");
 
    //open uart1 for rx/tx
-   fd = open( MODEMDEVICE, O_RDWR | O_NOCTTY );
+   fd = open( MODEMDEVICE, O_RDWR | O_NOCTTY | O_NONBLOCK );
    if( fd < 0 )
    {
       LOG0( "Port failed to open\n" );
@@ -205,10 +205,10 @@ void UART0_IRQHandler( )
       data = UART0_D;
       if( CBufferAdd( UART0_RXBuffer, &data, DMACH_UART0RX ) == BUFFER_FULL )
       {
-         //LOG0( "Buffer Is FULL during RX\n" );
+
       }
-      PutChar( data );
-      if( data == CR )
+      //PutChar( data );
+      /*if( data == LF || data == CR )
       {
          data = '\0';
          if( CBufferAdd( UART0_RXBuffer, &data, DMACH_UART0RX ) == BUFFER_FULL )
@@ -216,7 +216,7 @@ void UART0_IRQHandler( )
             //LOG0( "Buffer Is FULL during RX\n" );
          }
          parseDiag = 1;
-      }
+      }*/
    }
 }
 #endif

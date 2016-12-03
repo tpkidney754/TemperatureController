@@ -27,12 +27,12 @@
 #include "nRF24L01.h"
 #define UART_LOGGING
 #include "uartlogging.h"
+#include "led.h"
 #ifdef FRDM
 #define printf( ... ) (0)
 #include "MKL25Z4.h"
 #include "core_cm0plus.h"
 #include "io.h"
-#include "led.h"
 #include "dma.h"
 #include "sevensegment.h"
 #include "adc.h"

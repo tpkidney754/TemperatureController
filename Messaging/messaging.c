@@ -12,16 +12,11 @@ static void (*commands[ NUM_COMMANDS ] )( uint8_t input ) =
                Controller_SetTempRange };
 #endif
 
-MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data )
+MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t data )
 {
    Message_t msg;
    msg.cmd = cmd;
-   msg.numBytes = numBytes;
-
-   for( uint8_t i = 0; i < numBytes; i++ )
-   {
-      msg.data[ i ] = *( data + i );
-   }
+   msg.data = data;
 
    CalculateChecksum( &msg );
 
@@ -38,12 +33,7 @@ MessagingErrors_e CalculateChecksum( Message_t * msg )
 
    uint8_t checksum = 0;
    checksum = msg->cmd;
-   checksum ^= msg->numBytes;
-
-   for( uint8_t i = 0; i < msg->numBytes; i++ )
-   {
-      checksum ^= msg->data[ i ];
-   }
+   checksum ^= msg->data;
 
    msg->checksum = checksum;
 
@@ -52,6 +42,8 @@ MessagingErrors_e CalculateChecksum( Message_t * msg )
 
 MessagingErrors_e SendMessage( Message_t * msg )
 {
+
+#if 0
    if( CBufferAdd( TXBuffer, &(msg->cmd) , DMACH_UART0TX ) == BUFFER_FULL )
    {
       return txBufferFull;
@@ -75,8 +67,11 @@ MessagingErrors_e SendMessage( Message_t * msg )
       return txBufferFull;
    }
 
-#ifdef FRDM
    SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
+#endif
+
+#ifdef BBB
+   UartTX( ( uint8_t * ) msg, 3 );
 #endif
 }
 
@@ -96,7 +91,7 @@ MessagingErrors_e DecodeRxMessage( Message_t * msg )
    */
    if( msg->cmd < NUM_COMMANDS )
    {
-      commands[ msg->cmd ]( msg->data[ 0 ] );
+      commands[ msg->cmd ]( msg->data );
    }
 #endif
    return noError;

@@ -20,6 +20,7 @@ int main()
    float temperature = 0;
    temperature = ReadTemp( );
    Controller_SetCurrentTemp( temperature );
+   Message_t msg;
 #endif
 
 #ifdef TESTING
@@ -34,15 +35,13 @@ while( 1 )
 
    Controller_StateMachine( );
    Controller_SetCurrentTemp( ReadTemp( ) );
-   if( parseDiag )
+   if( UART0_RXBuffer->numItems == 3 )
    {
-      uint32_t length = UART0_RXBuffer->numItems;
-      for( uint32_t i = 0; i < length; i++ )
-      {
-         CBufferRemove( UART0_RXBuffer, &buffer[ i ], DMACH_UART0RX  );
-      }
+      CBufferRemove( UART0_RXBuffer, &msg.cmd, DMACH_UART0RX  );
+      CBufferRemove( UART0_RXBuffer, &msg.data, DMACH_UART0RX );
+      CBufferRemove( UART0_RXBuffer, &msg.checksum, DMACH_UART0RX );
 
-      ParseDiag( buffer );
+      DecodeRxMessage( &msg );
 
       parseDiag = 0;
    }
@@ -51,7 +50,8 @@ while( 1 )
    printf( "Enter command: " );
    fgets( buffer, 100, stdin );
    length = MyStrLen( buffer );
-   UartTX( buffer, length - 1 );
+   ParseDiag( buffer );
+   //UartTX( buffer, length );
    //UartRX( );
 
 #endif
