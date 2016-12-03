@@ -24,7 +24,7 @@
 #define MODEMDEVICE        "/dev/ttyO1" // Beaglebone Black serial port
 #define BONEPATH           "/sys/devices/bone_capemgr.9/slots"
 #define POSIX_SOURCE       1
-#define BAUDRATE           B57600
+#define BAUDRATE           B115200
 #endif
 
 extern uint8_t parseDiag;
