@@ -31,7 +31,7 @@ extern uint8_t parseDiag;
 
 void UartSetup( uint8_t channel, uint32_t buadRate, uint8_t parity );
 void UartTX( uint8_t * buffer, uint32_t length );
-uint8_t UartRX( void );
+int8_t UartRX( uint8_t * data );
 void PutChar( uint8_t data );
 
 #endif //__UART__

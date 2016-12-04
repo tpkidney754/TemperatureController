@@ -23,7 +23,6 @@ int main()
    float temperature = 0;
    temperature = ReadTemp( );
    Controller_SetCurrentTemp( temperature );
-   Message_t msg;
 #endif
 
 #ifdef TESTING
@@ -32,19 +31,21 @@ int main()
 
    uint8_t buffer[ 100 ];
    uint32_t length = 0;
+   uint8_t readTempData = 0;
+   CommandMessage_t cmdmsg;
+   TemperatureData tempData;
 while( 1 )
 {
 #ifdef FRDM
-
    Controller_StateMachine( );
    Controller_SetCurrentTemp( ReadTemp( ) );
-   if( UART1_RXBuffer->numItems == 3 )
+   if( UART1_RXBuffer->numItems == COMMAND_MSG_BYTES )
    {
-      CBufferRemove( UART1_RXBuffer, &msg.cmd, DMACH_UART1RX  );
-      CBufferRemove( UART1_RXBuffer, &msg.data, DMACH_UART1RX );
-      CBufferRemove( UART1_RXBuffer, &msg.checksum, DMACH_UART1RX );
+      CBufferRemove( UART1_RXBuffer, &cmdmsg.cmd, DMACH_UART1RX  );
+      CBufferRemove( UART1_RXBuffer, &cmdmsg.data, DMACH_UART1RX );
+      CBufferRemove( UART1_RXBuffer, &cmdmsg.checksum, DMACH_UART1RX );
 
-      DecodeRxMessage( &msg );
+      DecodeCommandMessage( &cmdmsg );
 
       parseDiag = 0;
    }
@@ -53,10 +54,26 @@ while( 1 )
    printf( "Enter command: " );
    fgets( buffer, 100, stdin );
    length = MyStrLen( buffer );
-   ParseDiag( buffer );
-   //UartTX( buffer, length );
-   //UartRX( );
+   if( strstr( buffer, "read temp" ) )
+   {
+      readTempData = 1;
+   }
 
+   ParseDiag( buffer );
+
+   if( readTempData )
+   {
+      for( int32_t i = 0; i < 100000; i++ );
+      while( UartRX( ( uint8_t * ) &tempData.data ) <= 0 );
+
+      printf( "Current Temp: %d\nDesired: %d\nRange: %d\nPower: %s\n",
+               tempData.msg.currentTemp,
+               tempData.msg.currentDesired,
+               tempData.msg.currentRange,
+               tempData.msg.powerOn ? "ON" : "OFF" );
+
+      readTempData = 0;
+   }
 #endif
 }
 

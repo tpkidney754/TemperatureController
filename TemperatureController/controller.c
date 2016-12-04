@@ -3,6 +3,7 @@
 static uint8_t currentTemp;
 static uint8_t desiredTemp;
 static uint8_t tempRange;
+static uint8_t power;
 static ControllerState_e state;
 
 //*************************************************************************
@@ -18,7 +19,8 @@ void Controller_Init( )
 {
    currentTemp = 75;
    desiredTemp = 75;
-   tempRange = 10;
+   tempRange = 5;
+   power = 0;
    state = noChange;
 }
 
@@ -94,8 +96,22 @@ void Controller_SetCurrentTemp( uint8_t newTemp )
 {
    currentTemp = newTemp;
    CONVERT_C_TO_F( currentTemp );
-   currentTemp > ( desiredTemp + tempRange ) ? SwitchLEDs( RED ) :
-                                               SwitchLEDs( BLUE );
+
+   if( currentTemp > ( desiredTemp + tempRange ) )
+   {
+      power = 1;
+      SwitchLEDs( RED );
+   }
+   else if( currentTemp <= ( desiredTemp - tempRange ) )
+   {
+      power = 0;
+      SwitchLEDs( BLUE );
+   }
+   else
+   {
+      SwitchLEDs( BLUE );
+   }
+
    Controller_ChangeDisplay( currentTemp );
 }
 
@@ -142,4 +158,19 @@ void Controller_ChangeDisplay( uint8_t value )
 {
    UpdateDisplay( Display_Tens, value / 10 );
    UpdateDisplay( Display_Ones, value % 10 );
+}
+
+void Controller_SendTempData( uint8_t dontcare )
+{
+   TemperatureMessage_t msg;
+
+   msg.currentTemp = currentTemp;
+   msg.currentDesired = desiredTemp;
+   msg.currentRange = tempRange;
+   msg.powerOn = power;
+   msg.cr = CR;
+   msg.lf = LF;
+
+   CalculateTemperatureChecksum( &msg );
+   SendMessage( &msg );
 }

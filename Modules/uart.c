@@ -114,9 +114,6 @@ void UartSetup( uint8_t channel, uint32_t requestedBuadRate, uint8_t parity )
          break;
 
    }
-
-
-
 #endif // FRDM
 
 #if BBB
@@ -161,6 +158,12 @@ void UartTX( uint8_t * buffer, uint32_t length )
 {
 #ifdef BBB
    write( fd, buffer, length );
+#else
+   for( uint8_t i = 0; i < length; i++ )
+   {
+      WAIT_FOR_BIT_SET( UART1_S1 & UART_S1_TDRE_MASK );
+      UART1_D = buffer[ i ];
+   }
 #endif
 }
 
@@ -173,21 +176,16 @@ void UartTX( uint8_t * buffer, uint32_t length )
 //                                                                        *
 // Return Value:  uint8_t: byte received from UART0                       *
 //*************************************************************************
-uint8_t UartRX(  )
+int8_t UartRX( uint8_t * data )
 {
 #ifdef FRDM
    WAIT_FOR_BIT_SET( UART0_S1 & UART0_S1_RDRF_MASK );
    return UART0_D;
 #else
-   uint8_t data;
-   while( read( fd, &data, 1 ) > 0 )
-   {
-      printf( "%c", data );
-      if( data == '\n' )
-      {
-         break;
-      }
-   }
+   int8_t rt;
+   rt = read( fd, data, TEMP_MSG_BYTES );
+
+   return rt;
 #endif
 }
 
@@ -266,12 +264,13 @@ void UART1_IRQHandler( )
    uint8_t data;
    if( ( UART1_S1 & UART_S1_TDRE_MASK ) )
    {
-      if( CBufferRemove( UART1_TXBuffer, &data, DMACH_UART1TX ) == BUFFER_EMPTY )
+      if( UART1_TXBuffer->numItems == 0 )
       {
          CLEAR_BITS_IN_REG( UART1_C2, UART_C2_TIE_MASK );
       }
       else
       {
+         CBufferRemove( UART1_TXBuffer, &data, DMACH_UART1TX );
          UART1_D = data;
       }
    }

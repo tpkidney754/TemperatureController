@@ -76,7 +76,7 @@ void ParseDiag( uint8_t * buffer )
          }
 
       #if ENABLE_MESSAGING
-         BuildMessage( changeColor, ( uint8_t ) color );
+         BuildCommandMessage( changeColor, ( uint8_t ) color );
       #else
          SwitchLEDs( ( uint8_t ) color );
       #endif
@@ -87,7 +87,7 @@ void ParseDiag( uint8_t * buffer )
          uint32_t pulseWidth;
          pulseWidth = MyAtoi( commands[ i ] );
       #if ENABLE_MESSAGING
-         BuildMessage( changePWM, ( uint8_t ) pulseWidth );
+         BuildCommandMessage( changePWM, ( uint8_t ) pulseWidth );
       #else
          ChangeLEDPW( ( uint8_t ) pulseWidth );
       #endif
@@ -109,7 +109,7 @@ void ParseDiag( uint8_t * buffer )
          {
             uint32_t value = MyAtoi( commands[ i ] );
          #if ENABLE_MESSAGING
-            BuildMessage( setDisplay, ( uint8_t ) value );
+            BuildCommandMessage( setDisplay, ( uint8_t ) value );
          #else
             UpdateDisplay( 0, ( uint8_t ) ( value / 10 ) );
             UpdateDisplay( 1, ( uint8_t ) ( value % 10 ) );
@@ -122,7 +122,7 @@ void ParseDiag( uint8_t * buffer )
          uint32_t newTemp;
          newTemp = MyAtoi( commands[ i ] );
       #if ENABLE_MESSAGING
-         BuildMessage( setTemp, ( uint8_t ) newTemp );
+         BuildCommandMessage( setTemp, ( uint8_t ) newTemp );
       #else
          Controller_SetCurrentTemp( newTemp );
       #endif
@@ -133,7 +133,7 @@ void ParseDiag( uint8_t * buffer )
          i++;
          uint32_t newDesTemp = MyAtoi( commands[ i ] );
       #if ENABLE_MESSAGING
-         BuildMessage( setDesired, ( uint8_t ) newDesTemp );
+         BuildCommandMessage( setDesired, ( uint8_t ) newDesTemp );
       #else
          Controller_SetDesiredTemp( ( uint8_t ) newDesTemp );
       #endif
@@ -143,7 +143,7 @@ void ParseDiag( uint8_t * buffer )
          i++;
          uint32_t newRange = MyAtoi( commands[ i ] );
       #if ENABLE_MESSAGING
-         BuildMessage( setRange, ( uint8_t ) newRange );
+         BuildCommandMessage( setRange, ( uint8_t ) newRange );
       #else
          Controller_SetTempRange( ( uint8_t ) newRange );
       #endif
@@ -162,14 +162,12 @@ void ParseDiag( uint8_t * buffer )
          uint32_t reg = MyAtoi( commands[ i ] );
          nRF24L01_ReadReg( 0, reg );
       }
-   #ifdef FRDM
+
       else if( "temp" )
       {
-         float temperature = 0;
-         temperature = ReadTemp( );
-         Controller_SetCurrentTemp( ( uint8_t ) temperature );
+         BuildCommandMessage( readTempData, 0 );
       }
-   #endif
+
       else
       {
          LOG0( "Invalid subcommand\n" );
