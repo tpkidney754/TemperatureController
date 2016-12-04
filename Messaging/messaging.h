@@ -14,6 +14,8 @@ typedef enum
    rxBufferFull,
 } MessagingErrors_e;
 
+#define NUM_COMMANDS       7
+
 typedef enum
 {
    changeColor = 0,
@@ -22,22 +24,50 @@ typedef enum
    setDisplay,
    setDesired,
    setRange,
+   readTempData,
    NOPcommand = 0xFF
 } Commands_e;
 
-typedef struct
+#define COMMAND_MSG_BYTES  3
+struct CommandMessage
 {
-   Commands_e cmd;
-   uint8_t numBytes;
-   uint8_t data[ MAX_LENGTH ];
+   uint8_t cmd;
+   uint8_t data;
    uint8_t checksum;
-} Message_t;
+} __attribute__((__packed__));
 
-#define NUM_COMMANDS       6
+typedef struct CommandMessage CommandMessage_t;
 
-MessagingErrors_e BuildMessage( Commands_e cmd, uint8_t numBytes, uint8_t * data );
-MessagingErrors_e CalculateChecksum( Message_t * msg );
-MessagingErrors_e SendMessage( Message_t * msg );
-MessagingErrors_e DecodeRxMessage( Message_t * msg );
+#define TEMP_MSG_BYTES     7
+struct TemperatureMessage
+{
+   uint8_t currentTemp;
+   uint8_t currentDesired;
+   uint8_t currentRange;
+   uint8_t powerOn;
+   uint8_t checksum;
+   uint8_t cr;
+   uint8_t lf;
+} __attribute__((__packed__));
+
+typedef struct TemperatureMessage TemperatureMessage_t;
+
+typedef union
+{
+   uint8_t data[ TEMP_MSG_BYTES ];
+   TemperatureMessage_t msg;
+} TemperatureData;
+
+
+MessagingErrors_e BuildCommandMessage( Commands_e cmd, uint8_t data );
+MessagingErrors_e CalculateCommandChecksum( CommandMessage_t * msg );
+MessagingErrors_e CalculateTemperatureChecksum( TemperatureMessage_t * msg );
+#ifdef FRDM
+MessagingErrors_e SendMessage( TemperatureMessage_t * msg );
+#endif
+#ifdef BBB
+MessagingErrors_e SendMessage( CommandMessage_t * msg );
+#endif
+MessagingErrors_e DecodeCommandMessage( CommandMessage_t * msg );
 
 #endif // __MESSAGING__

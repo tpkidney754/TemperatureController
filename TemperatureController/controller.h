@@ -29,5 +29,6 @@ void Controller_SetCurrentTemp( uint8_t newTemp );
 void Controller_SetDesiredTemp( uint8_t newTemp );
 void Controller_SetTempRange( uint8_t newRange );
 void Controller_ChangeDisplay( uint8_t value );
+void Controller_SendTempData( uint8_t dontcare );
 
 #endif //__CONTROLLER__

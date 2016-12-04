@@ -3,6 +3,7 @@
 static uint8_t currentTemp;
 static uint8_t desiredTemp;
 static uint8_t tempRange;
+static uint8_t power;
 static ControllerState_e state;
 
 //*************************************************************************
@@ -18,7 +19,8 @@ void Controller_Init( )
 {
    currentTemp = 75;
    desiredTemp = 75;
-   tempRange = 10;
+   tempRange = 5;
+   power = 0;
    state = noChange;
    // Enable relay
    SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTC_MASK );
@@ -101,14 +103,17 @@ void Controller_SetCurrentTemp( uint8_t newTemp )
 
    if( currentTemp > ( desiredTemp + tempRange ) )
    {
-      SwitchLEDs( RED );
+
       RELAY_ON;
+      power = 1;
+      SwitchLEDs( RED );
    }
    else
    {
       SwitchLEDs( BLUE );
       if( currentTemp <= ( desiredTemp - tempRange ) )
       {
+         power = 0;
          RELAY_OFF;
       }
    }
@@ -159,4 +164,19 @@ void Controller_ChangeDisplay( uint8_t value )
 {
    UpdateDisplay( Display_Tens, value / 10 );
    UpdateDisplay( Display_Ones, value % 10 );
+}
+
+void Controller_SendTempData( uint8_t dontcare )
+{
+   TemperatureMessage_t msg;
+
+   msg.currentTemp = currentTemp;
+   msg.currentDesired = desiredTemp;
+   msg.currentRange = tempRange;
+   msg.powerOn = power;
+   msg.cr = CR;
+   msg.lf = LF;
+
+   CalculateTemperatureChecksum( &msg );
+   SendMessage( &msg );
 }

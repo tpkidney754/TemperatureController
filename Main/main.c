@@ -2,13 +2,16 @@
 
 extern CircularBuffer_t * UART0_RXBuffer;
 extern CircularBuffer_t * UART0_TXBuffer;
+extern CircularBuffer_t * UART1_RXBuffer;
+extern CircularBuffer_t * UART1_TXBuffer;
 extern CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
 extern CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 int main()
 {
-   Uart0Setup( 57600, 0 );
+   UartSetup( 0, 57600, 0 );
 #ifdef FRDM
+   UartSetup( 1, 115200, 0 );
    LEDSetup();
    InitDisplay( 0 );
    InitDisplay( 1 );
@@ -17,6 +20,9 @@ int main()
    Controller_Init( );
    InitWaitTimer( );
    SWC_Init( );
+   float temperature = 0;
+   temperature = ReadTemp( );
+   Controller_SetCurrentTemp( temperature );
 #endif
 
 #ifdef TESTING
@@ -24,25 +30,22 @@ int main()
 #endif
 
    uint8_t buffer[ 100 ];
-   uint8_t newline;
-   float temperature = 0;
-   temperature = ReadTemp( );
-   Controller_SetCurrentTemp( temperature );
+   uint32_t length = 0;
+   uint8_t readTempData = 0;
+   CommandMessage_t cmdmsg;
+   TemperatureData tempData;
 while( 1 )
 {
 #ifdef FRDM
-
    Controller_StateMachine( );
    Controller_SetCurrentTemp( ReadTemp( ) );
-   if( parseDiag )
+   if( UART1_RXBuffer->numItems == COMMAND_MSG_BYTES )
    {
-      uint32_t length = UART0_RXBuffer->numItems;
-      for( uint32_t i = 0; i < length; i++ )
-      {
-         CBufferRemove( UART0_RXBuffer, &buffer[ i ], DMACH_UART0RX  );
-      }
+      CBufferRemove( UART1_RXBuffer, &cmdmsg.cmd, DMACH_UART1RX  );
+      CBufferRemove( UART1_RXBuffer, &cmdmsg.data, DMACH_UART1RX );
+      CBufferRemove( UART1_RXBuffer, &cmdmsg.checksum, DMACH_UART1RX );
 
-      ParseDiag( buffer );
+      DecodeCommandMessage( &cmdmsg );
 
       parseDiag = 0;
    }
@@ -51,9 +54,26 @@ while( 1 )
    printf( "Enter command: " );
    fgets( buffer, 100, stdin );
    length = MyStrLen( buffer );
-   UartTX( buffer, length );
-   //UartRX( );
+   if( strstr( buffer, "read temp" ) )
+   {
+      readTempData = 1;
+   }
 
+   ParseDiag( buffer );
+
+   if( readTempData )
+   {
+      for( int32_t i = 0; i < 100000; i++ );
+      while( UartRX( ( uint8_t * ) &tempData.data ) <= 0 );
+
+      printf( "Current Temp: %d\nDesired: %d\nRange: %d\nPower: %s\n",
+               tempData.msg.currentTemp,
+               tempData.msg.currentDesired,
+               tempData.msg.currentRange,
+               tempData.msg.powerOn ? "ON" : "OFF" );
+
+      readTempData = 0;
+   }
 #endif
 }
 

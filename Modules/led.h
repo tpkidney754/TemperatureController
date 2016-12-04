@@ -1,4 +1,4 @@
-#ifdef FRDM
+
 #ifndef __LED__
 #define __LED__
 
@@ -18,12 +18,14 @@
 // The red led is being driven by TPM2_CH0 through the ALTERNATIVE_3 pin configuration.
 // The green led is being driven by TPM2_CH1 through the ALTERNATIVE_3 pin configuration.
 // The blue led is being driven by TPM0_CH1 through the ALTERNATIVE_3 pin configuration.
+#ifdef FRDM
 #define RED_LED_ON      SET_REG_VALUE( PORTB_PCR18, PORT_PCR_MUX_MASK, PORT_PCR_MUX( ALTERNATIVE_3 ) );
 #define RED_LED_OFF     SET_REG_VALUE( PORTB_PCR18, PORT_PCR_MUX_MASK, PORT_PCR_MUX( PIN_DISABLE )   );
 #define GREEN_LED_ON    SET_REG_VALUE( PORTB_PCR19, PORT_PCR_MUX_MASK, PORT_PCR_MUX( ALTERNATIVE_3 ) );
 #define GREEN_LED_OFF   SET_REG_VALUE( PORTB_PCR19, PORT_PCR_MUX_MASK, PORT_PCR_MUX( PIN_DISABLE )   );
 #define BLUE_LED_ON     SET_REG_VALUE( PORTD_PCR1 , PORT_PCR_MUX_MASK, PORT_PCR_MUX( ALTERNATIVE_4 ) );
 #define BLUE_LED_OFF    SET_REG_VALUE( PORTD_PCR1 , PORT_PCR_MUX_MASK, PORT_PCR_MUX( PIN_DISABLE )   );
+#endif
 
 typedef enum Color_t
 {
@@ -43,4 +45,3 @@ void SwitchLEDs( uint8_t color );
 void CycleLEDs( );
 
 #endif // __LED__
-#endif
