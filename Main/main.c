@@ -34,9 +34,10 @@ int main()
    uint8_t readTempData = 0;
    CommandMessage_t cmdmsg;
    TemperatureData tempData;
+
+#ifdef FRDM
 while( 1 )
 {
-#ifdef FRDM
    Controller_StateMachine( );
    Controller_SetCurrentTemp( ReadTemp( ) );
    if( UART1_RXBuffer->numItems == COMMAND_MSG_BYTES )
@@ -51,7 +52,7 @@ while( 1 )
    }
 
 #else
-   printf( "Enter command: " );
+{
    fgets( buffer, 100, stdin );
    length = MyStrLen( buffer );
    if( strstr( buffer, "read temp" ) )
@@ -66,7 +67,7 @@ while( 1 )
       for( int32_t i = 0; i < 100000; i++ );
       while( UartRX( ( uint8_t * ) &tempData.data ) <= 0 );
 
-      printf( "Current Temp: %d\nDesired: %d\nRange: %d\nPower: %s\n",
+      printf( "%d,%d,%d,%s",
                tempData.msg.currentTemp,
                tempData.msg.currentDesired,
                tempData.msg.currentRange,
