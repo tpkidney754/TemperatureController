@@ -6,37 +6,67 @@
  *  3. Function Command followed by any required data exchange
  */
 
+//*************************************************************************
+// Function:  TransactionStepOne                                          *
+//                                                                        *
+// Description: Simply calls the first step of the ds18b20 tranaction     *
+//              which is the Single Wire Comms Reset and precence pusle   *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value: uint8: Boolean to indicate if a presence pulse was       *
+//                      received.                                         *
+//                                                                        *
+//*************************************************************************
 uint8_t TransactionStepOne( )
 {
    return SWC_ResetAndPresencePulses( );
 }
 
+//*************************************************************************
+// Function:  TransactionStepTwo                                          *
+//                                                                        *
+// Description: The second part of every ds18b20 transaction is a ROM     *
+//              command and then reading the data coming from the device. *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value: NONE                                                     *
+//                                                                        *
+//*************************************************************************
 void TransactionStepTwo( )
 {
    DS8B20_ROMCode romCode;
    SWC_SendByte( READ_ROM );
-   WaitInUs( 200 );
+   WaitInUs( WAIT_TIME_LONG );
    SWC_ReadData( ROM_BYTES, ( uint8_t * ) &romCode );
-   /*uint8_t buffer[ 50 ];
-   sprintf( buffer, "ROM Data\n" );
-   LOG0( buffer );
-   for( uint8_t i = 0; i < ROM_BYTES; i++ )
-   {
-      sprintf( buffer, "Byte %d: 0x%X\n", i, romCode.romBytes[ i ] );
-      LOG0( buffer );
-   }*/
 }
 
+//*************************************************************************
+// Function:  ReadTemp                                                    *
+//                                                                        *
+// Description: Completes two different transactions to the ds18b20.      *
+//              The first transaction is starting a temperature conversion*
+//              which then places the result in the scratchpad. The second*
+//              transaction is to read the scratchpad data to retrieve the*
+//              result of the temperate reading.                          *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value: float: The floating point value of the temperature result*
+//                                                                        *
+//*************************************************************************
 float ReadTemp( )
 {
    DS8B20_Scratchpad scratchpadData;
    uint8_t devicePresent = TransactionStepOne( );
+   uint16_t rawTemperatureData;
 
    if( devicePresent == 0 )
    {
       return 0x0;
    }
-   WaitInUs( 20 );
+   WaitInUs( WAIT_TIME_SHORT );
    TransactionStepTwo ( );
    // Send the CONVERT_T command byte
    SWC_SendByte( CONVERT_T );
@@ -45,32 +75,36 @@ float ReadTemp( )
    // The master can issue a read time slot to read the status
    // of the conversion.
    //SWC_ReadStatusAndWait( );
-   WaitInUs( 200 );
+   WaitInUs( WAIT_TIME_LONG );
    TransactionStepOne( );
-   WaitInUs( 20 );
+   WaitInUs( WAIT_TIME_SHORT );
    TransactionStepTwo( );
-   WaitInUs( 20 );
+   WaitInUs( WAIT_TIME_SHORT );
    SWC_SendByte( READ_SCRATCHPAD );
-   WaitInUs( 200 );
+   WaitInUs( WAIT_TIME_LONG );
    SWC_ReadData( SCRATCPAD_BYTES, ( uint8_t * ) &scratchpadData );
-   /*
-   uint8_t buffer[ 50 ];
-   sprintf( buffer, "Scratch Pad Data\n" );
-   LOG0( buffer );
-   for( uint8_t i = 0; i < SCRATCPAD_BYTES; i++ )
-   {
-      sprintf( buffer, "Byte %d: 0x%X\n", i, scratchpadData.scratchpadBytes[ i ] );
-      LOG0( buffer );
-   }
-   */
-   uint16_t rawTemperatureData = scratchpadData.temperatureRawLSB;
+
+   rawTemperatureData = scratchpadData.temperatureRawLSB;
    rawTemperatureData |= scratchpadData.temperatureRawMSB << 8;
 
-   //sprintf( buffer, "rawTemperatureData = 0x%X\n", rawTemperatureData );
-   //LOG0( buffer );
    return ConvertRawTemperatureData( rawTemperatureData );
 }
 
+//*************************************************************************
+// Function:  ConvertRawTemperatureData                                   *
+//                                                                        *
+// Description: The raw temperature data needs to be converted to a value *
+//              that can be understood by the processor. The lowest nibble*
+//              is the fractional part of the temperature. The next byte  *
+//              is the whole part but with the most signficant bit is sign*
+//              extended to the MSB of the half word.                     *
+//                                                                        *
+// Parameters: uint16_t rawTemperatureData: The raw temperature data that *
+//             needs to be converted to a floating point value.           *
+//                                                                        *
+// Return Value: float: The floating point value of the temperature result*
+//                                                                        *
+//*************************************************************************
 float ConvertRawTemperatureData( uint16_t rawTemperatureData )
 {
    float temperature;

@@ -134,6 +134,16 @@ void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs )
    }
 }
 
+//*************************************************************************
+// Function:  InitWaitTimer                                               *
+//                                                                        *
+// Description: Initializes the timer for pauses.                         *
+//                                                                        *
+// Parameters: NONE                                                       *
+//                                                                        *
+// Return Value: NONE                                                     *
+//                                                                        *
+//*************************************************************************
 void InitWaitTimer( )
 {
    SET_BIT_IN_REG( SIM_SCGC6, SIM_SCGC6_TPM1_MASK );
@@ -141,6 +151,17 @@ void InitWaitTimer( )
    TPM_CNT_REG( WAIT_TPM ) = TPM_CNT_COUNT_MASK;
 }
 
+//*************************************************************************
+// Function:  WaitInUs                                                    *
+//                                                                        *
+// Description: Uses the timer module to pause the program for a specified*
+//              ammount of time in microseconds.                          *
+//                                                                        *
+// Parameters: uint16_t waitTime: Ammount of time in microseconds to wait *
+//                                                                        *
+// Return Value: NONE                                                     *
+//                                                                        *
+//*************************************************************************
 void WaitInUs( uint16_t waitTime )
 {
    // Each clock is 21ns

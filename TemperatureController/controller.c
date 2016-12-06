@@ -166,6 +166,16 @@ void Controller_ChangeDisplay( uint8_t value )
    UpdateDisplay( Display_Ones, value % 10 );
 }
 
+//*************************************************************************
+// Function:  Controller_SendTempData                                     *
+//                                                                        *
+// Description: Packeges the current values of the controller into a      *
+//              message and the sends it back through UART                *
+//                                                                        *
+// Parameters:  NONE                                                      *
+//                                                                        *
+// Return Value:  NONE                                                    *
+//*************************************************************************
 void Controller_SendTempData( uint8_t dontcare )
 {
    TemperatureMessage_t msg;

@@ -12,11 +12,12 @@ static int fd;
 #endif
 
 //*************************************************************************
-// Function:  Uart0Setup                                                  *
+// Function:  UartSetup                                                   *
 //                                                                        *
-// Description: Sets up UART0 through SDA USB                             *
+// Description: Sets up UART.                                             *
 //                                                                        *
-// Parameters: uint32_t requestedBaudRate: Desired baud rate              *
+// Parameters: uint8_t channel: UART channel to initialize.               *
+//             uint32_t requestedBaudRate: Desired baud rate              *
 //             uint8_t parity: Used as boolean if parity is desired.      *
 //                                                                        *
 // Return Value:  NONE                                                    *
@@ -116,7 +117,7 @@ void UartSetup( uint8_t channel, uint32_t requestedBuadRate, uint8_t parity )
    }
 #endif // FRDM
 
-#if BBB
+#ifdef BBB
    struct termios uart1, old;
    int ret = system("echo BB-UART1 > /sys/devices/bone_capemgr.9/slots");
 
@@ -144,13 +145,13 @@ void UartSetup( uint8_t channel, uint32_t requestedBuadRate, uint8_t parity )
 }
 
 //*************************************************************************
-// Function:  Uart0TX                                                     *
+// Function:  UartTX                                                      *
 //                                                                        *
-// Description: Uses the polling method to send data through UART0        *
+// Description: Uses a blocking method to transmit on UART.               *
 //                                                                        *
-// Parameters: uint8_t * data: pointer to an array of characters that are *
-//                             to be transmitted through the UART0        *
-//             uint32_t length: Num of characters to be sent through      *
+// Parameters: uint8_t * buffer: pointer to an array of characters that   *
+//                       are to be transmitted through the UART           *
+//             uint32_t length: Num of bytes to be sent through           *
 //                                                                        *
 // Return Value:  NONE                                                    *
 //*************************************************************************
@@ -168,13 +169,13 @@ void UartTX( uint8_t * buffer, uint32_t length )
 }
 
 //*************************************************************************
-// Function:  Uart0RX                                                     *
+// Function:  UartRX                                                      *
 //                                                                        *
-// Description: Uses the polling method to receive data through UART0     *
+// Description: Uses the polling method to receive data through UART      *
 //                                                                        *
 // Parameters: NONE                                                       *
 //                                                                        *
-// Return Value:  uint8_t: byte received from UART0                       *
+// Return Value:  uint8_t: byte received from UART                        *
 //*************************************************************************
 int8_t UartRX( uint8_t * data )
 {
