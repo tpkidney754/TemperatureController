@@ -6,34 +6,34 @@
  *  3. Function Command followed by any required data exchange
  */
 
-//*************************************************************************
-// Function:  TransactionStepOne                                          *
-//                                                                        *
-// Description: Simply calls the first step of the ds18b20 tranaction     *
-//              which is the Single Wire Comms Reset and precence pusle   *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value: uint8: Boolean to indicate if a presence pulse was       *
-//                      received.                                         *
-//                                                                        *
-//*************************************************************************
+///*************************************************************************
+/// Function:  TransactionStepOne                                          *
+///                                                                        *
+/// Description: Simply calls the first step of the ds18b20 tranaction     *
+///              which is the Single Wire Comms Reset and precence pusle   *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value: uint8: Boolean to indicate if a presence pulse was       *
+///                      received.                                         *
+///                                                                        *
+///*************************************************************************
 uint8_t TransactionStepOne( )
 {
    return SWC_ResetAndPresencePulses( );
 }
 
-//*************************************************************************
-// Function:  TransactionStepTwo                                          *
-//                                                                        *
-// Description: The second part of every ds18b20 transaction is a ROM     *
-//              command and then reading the data coming from the device. *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value: NONE                                                     *
-//                                                                        *
-//*************************************************************************
+///*************************************************************************
+/// Function:  TransactionStepTwo                                          *
+///                                                                        *
+/// Description: The second part of every ds18b20 transaction is a ROM     *
+///              command and then reading the data coming from the device. *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value: NONE                                                     *
+///                                                                        *
+///*************************************************************************
 void TransactionStepTwo( )
 {
    DS8B20_ROMCode romCode;
@@ -42,20 +42,20 @@ void TransactionStepTwo( )
    SWC_ReadData( ROM_BYTES, ( uint8_t * ) &romCode );
 }
 
-//*************************************************************************
-// Function:  ReadTemp                                                    *
-//                                                                        *
-// Description: Completes two different transactions to the ds18b20.      *
-//              The first transaction is starting a temperature conversion*
-//              which then places the result in the scratchpad. The second*
-//              transaction is to read the scratchpad data to retrieve the*
-//              result of the temperate reading.                          *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value: float: The floating point value of the temperature result*
-//                                                                        *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ReadTemp                                                    *
+///                                                                        *
+/// Description: Completes two different transactions to the ds18b20.      *
+///              The first transaction is starting a temperature conversion*
+///              which then places the result in the scratchpad. The second*
+///              transaction is to read the scratchpad data to retrieve the*
+///              result of the temperate reading.                          *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value: float: The floating point value of the temperature result*
+///                                                                        *
+///*************************************************************************
 float ReadTemp( )
 {
    DS8B20_Scratchpad scratchpadData;
@@ -90,21 +90,21 @@ float ReadTemp( )
    return ConvertRawTemperatureData( rawTemperatureData );
 }
 
-//*************************************************************************
-// Function:  ConvertRawTemperatureData                                   *
-//                                                                        *
-// Description: The raw temperature data needs to be converted to a value *
-//              that can be understood by the processor. The lowest nibble*
-//              is the fractional part of the temperature. The next byte  *
-//              is the whole part but with the most signficant bit is sign*
-//              extended to the MSB of the half word.                     *
-//                                                                        *
-// Parameters: uint16_t rawTemperatureData: The raw temperature data that *
-//             needs to be converted to a floating point value.           *
-//                                                                        *
-// Return Value: float: The floating point value of the temperature result*
-//                                                                        *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ConvertRawTemperatureData                                   *
+///                                                                        *
+/// Description: The raw temperature data needs to be converted to a value *
+///              that can be understood by the processor. The lowest nibble*
+///              is the fractional part of the temperature. The next byte  *
+///              is the whole part but with the most signficant bit is sign*
+///              extended to the MSB of the half word.                     *
+///                                                                        *
+/// Parameters: uint16_t rawTemperatureData: The raw temperature data that *
+///             needs to be converted to a floating point value.           *
+///                                                                        *
+/// Return Value: float: The floating point value of the temperature result*
+///                                                                        *
+///*************************************************************************
 float ConvertRawTemperatureData( uint16_t rawTemperatureData )
 {
    float temperature;

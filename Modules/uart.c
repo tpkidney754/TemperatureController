@@ -11,17 +11,17 @@ CircularBuffer_t * UART1_TXBuffer;
 static int fd;
 #endif
 
-//*************************************************************************
-// Function:  UartSetup                                                   *
-//                                                                        *
-// Description: Sets up UART.                                             *
-//                                                                        *
-// Parameters: uint8_t channel: UART channel to initialize.               *
-//             uint32_t requestedBaudRate: Desired baud rate              *
-//             uint8_t parity: Used as boolean if parity is desired.      *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  UartSetup                                                   *
+///                                                                        *
+/// Description: Sets up UART.                                             *
+///                                                                        *
+/// Parameters: uint8_t channel: UART channel to initialize.               *
+///             uint32_t requestedBaudRate: Desired baud rate              *
+///             uint8_t parity: Used as boolean if parity is desired.      *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void UartSetup( uint8_t channel, uint32_t requestedBuadRate, uint8_t parity )
 {
 #ifdef FRDM
@@ -144,17 +144,17 @@ void UartSetup( uint8_t channel, uint32_t requestedBuadRate, uint8_t parity )
 #endif
 }
 
-//*************************************************************************
-// Function:  UartTX                                                      *
-//                                                                        *
-// Description: Uses a blocking method to transmit on UART.               *
-//                                                                        *
-// Parameters: uint8_t * buffer: pointer to an array of characters that   *
-//                       are to be transmitted through the UART           *
-//             uint32_t length: Num of bytes to be sent through           *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  UartTX                                                      *
+///                                                                        *
+/// Description: Uses a blocking method to transmit on UART.               *
+///                                                                        *
+/// Parameters: uint8_t * buffer: pointer to an array of characters that   *
+///                       are to be transmitted through the UART           *
+///             uint32_t length: Num of bytes to be sent through           *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void UartTX( uint8_t * buffer, uint32_t length )
 {
 #ifdef BBB
@@ -168,15 +168,15 @@ void UartTX( uint8_t * buffer, uint32_t length )
 #endif
 }
 
-//*************************************************************************
-// Function:  UartRX                                                      *
-//                                                                        *
-// Description: Uses the polling method to receive data through UART      *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  uint8_t: byte received from UART                        *
-//*************************************************************************
+///*************************************************************************
+/// Function:  UartRX                                                      *
+///                                                                        *
+/// Description: Uses the polling method to receive data through UART      *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  uint8_t: byte received from UART                        *
+///*************************************************************************
 int8_t UartRX( uint8_t * data )
 {
 #ifdef FRDM
@@ -190,15 +190,15 @@ int8_t UartRX( uint8_t * data )
 #endif
 }
 
-//*************************************************************************
-// Function:  PutChar                                                     *
-//                                                                        *
-// Description: Transmits a single character through UART0                *
-//                                                                        *
-// Parameters: uint8_t data: character to be sent.                        *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  PutChar                                                     *
+///                                                                        *
+/// Description: Transmits a single character through UART0                *
+///                                                                        *
+/// Parameters: uint8_t data: character to be sent.                        *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void PutChar( uint8_t data )
 {
 #ifdef FRDM
@@ -209,21 +209,21 @@ void PutChar( uint8_t data )
 #endif
 }
 
-//*************************************************************************
-// Function:  UART0_IRQHandler                                            *
-//                                                                        *
-// Description: Interrupt Handler for UART0 for RX operations.            *
-//              The handler checks the RDRF flag to verify it's a RX      *
-//              then adds the character to buffer, then the character     *
-//              is printed out to UART0TX. Once a CR is identified, a LF  *
-//              and \0 character is added to buffer to terminate the      *
-//              string and a boolean is set for main to start parsing the *
-//              diag command.                                             *
-//                                                                        *
-// Parameters: uint8_t data: character to be sent.                        *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  UART0_IRQHandler                                            *
+///                                                                        *
+/// Description: Interrupt Handler for UART0 for RX operations.            *
+///              The handler checks the RDRF flag to verify it's a RX      *
+///              then adds the character to buffer, then the character     *
+///              is printed out to UART0TX. Once a CR is identified, a LF  *
+///              and \0 character is added to buffer to terminate the      *
+///              string and a boolean is set for main to start parsing the *
+///              diag command.                                             *
+///                                                                        *
+/// Parameters: uint8_t data: character to be sent.                        *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 #ifdef FRDM
 void UART0_IRQHandler( )
 {

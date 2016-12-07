@@ -6,15 +6,15 @@ static uint8_t itemsToAdd[ BUFFER_SIZE ] = { 1, 2, 3, 4, 5, 6, 7 ,8, 9, 10 };
 static uint8_t itemsRemoved[ BUFFER_SIZE ];
 uint8_t midpointTest = 0;
 
-//*************************************************************************
-// Function:  CircularBufferTesting                                       *
-//                                                                        *
-// Description: Main function that calls all individual unit test.        *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  CircularBufferTesting                                       *
+///                                                                        *
+/// Description: Main function that calls all individual unit test.        *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void CircularBufferTesting( )
 {
    midpointTest = 0;
@@ -30,16 +30,16 @@ void CircularBufferTesting( )
    DestructBufferUnitTest( );
 }
 
-//*************************************************************************
-// Function:  AddItemsUnitTestBuffEmpty                                   *
-//                                                                        *
-// Description: Basic function to verify the values that were added to    *
-//              the buffer or removed from the buffer.                    *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  AddItemsUnitTestBuffEmpty                                   *
+///                                                                        *
+/// Description: Basic function to verify the values that were added to    *
+///              the buffer or removed from the buffer.                    *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 uint8_t VerifyValues( uint8_t * values, uint32_t length, uint32_t index )
 {
    uint8_t fail = 0;
@@ -58,16 +58,16 @@ uint8_t VerifyValues( uint8_t * values, uint32_t length, uint32_t index )
    return fail;
 }
 
-//*************************************************************************
-// Function:  InitBufferUnitTest                                          *
-//                                                                        *
-// Description: Start of cirbuffer unit testing that initializes a buffer.*
-//              The test will fail if the buffer does not initialize.     *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  InitBufferUnitTest                                          *
+///                                                                        *
+/// Description: Start of cirbuffer unit testing that initializes a buffer.*
+///              The test will fail if the buffer does not initialize.     *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void InitBufferUnitTest( )
 {
    uint8_t fail = 0;
@@ -84,18 +84,18 @@ void InitBufferUnitTest( )
    }
 }
 
-//*************************************************************************
-// Function:  AddItemsUnitTestBuffEmpty                                   *
-//                                                                        *
-// Description: The buffer is empty and items need to be added and        *
-//              verified to be there. The test will fail if the buffer is *
-//              is not empty, or if the values in the buffer do not equal *
-//              what was placed into the buffer.                          *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  AddItemsUnitTestBuffEmpty                                   *
+///                                                                        *
+/// Description: The buffer is empty and items need to be added and        *
+///              verified to be there. The test will fail if the buffer is *
+///              is not empty, or if the values in the buffer do not equal *
+///              what was placed into the buffer.                          *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void AddItemsUnitTestBuffEmpty( )
 {
    sprintf( headerBuffer, "AddItems Buff Empty Unit Test" );
@@ -129,18 +129,18 @@ void AddItemsUnitTestBuffEmpty( )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  AddItemsUnitTestBuffHalfFull                                *
-//                                                                        *
-// Description: The buffer is half full and items need to be added and    *
-//              verified to be there. The test will fail if the buffer is *
-//              empty, or if the values in the buffer do not equal        *
-//              what was placed into the buffer.                          *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  AddItemsUnitTestBuffHalfFull                                *
+///                                                                        *
+/// Description: The buffer is half full and items need to be added and    *
+///              verified to be there. The test will fail if the buffer is *
+///              empty, or if the values in the buffer do not equal        *
+///              what was placed into the buffer.                          *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void AddItemsUnitTestBuffHalfFull( )
 {
    sprintf( headerBuffer, "AddItems Half Full Unit Test" );
@@ -179,19 +179,19 @@ void AddItemsUnitTestBuffHalfFull( )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  AddItemsUnitTestBuffFull                                    *
-//                                                                        *
-// Description: The buffer is full and no items can be added and should   *
-//              verified that the add command will return an error.       *
-//              The test will fail if the full is empty, or if any items  *
-//              were successfully added to the buffer and the add function*
-//              did not return a BUFFER_FULL value.                       *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  AddItemsUnitTestBuffFull                                    *
+///                                                                        *
+/// Description: The buffer is full and no items can be added and should   *
+///              verified that the add command will return an error.       *
+///              The test will fail if the full is empty, or if any items  *
+///              were successfully added to the buffer and the add function*
+///              did not return a BUFFER_FULL value.                       *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void AddItemsUnitTestBuffFull( )
 {
    sprintf( headerBuffer, "AddItems Buff Full Unit Test" );
@@ -213,18 +213,18 @@ void AddItemsUnitTestBuffFull( )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  RemoveItemsUnitTestBuffFull                                 *
-//                                                                        *
-// Description: The buffer is full, so now we test if the buffer returns  *
-//              the values to a separate data buffer. The test will fail  *
-//              if the buffer is not full or if the buffer does not return*
-//              the expected values.                                      *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  RemoveItemsUnitTestBuffFull                                 *
+///                                                                        *
+/// Description: The buffer is full, so now we test if the buffer returns  *
+///              the values to a separate data buffer. The test will fail  *
+///              if the buffer is not full or if the buffer does not return*
+///              the expected values.                                      *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void RemoveItemUnitTestBuffFull( )
 {
    sprintf( headerBuffer, "RemoveItems Buff Full Unit Test" );
@@ -257,18 +257,18 @@ void RemoveItemUnitTestBuffFull( )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  RemoveItemsUnitTestBuffHalfFull                             *
-//                                                                        *
-// Description: The buffer is half full, so now we test if the buffer     *
-//              returns the values to a separate data buffer correctly.   *
-//              The test will fail if the buffer is not full or if the    *
-//              buffer does not return the expected values.               *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  RemoveItemsUnitTestBuffHalfFull                             *
+///                                                                        *
+/// Description: The buffer is half full, so now we test if the buffer     *
+///              returns the values to a separate data buffer correctly.   *
+///              The test will fail if the buffer is not full or if the    *
+///              buffer does not return the expected values.               *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void RemoveItemUnitTestBuffHalfFull( )
 {
    sprintf( headerBuffer, "Remove Items Buff Half Full Unit Test" );
@@ -308,17 +308,17 @@ void RemoveItemUnitTestBuffHalfFull( )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  RemoveItemsUnitTestBuffHalfEmpty                            *
-//                                                                        *
-// Description: The buffer is half full, so now we test if the buffer     *
-//              returns an error that the buffer is empty when attempting *
-//              to remove and item from the buffer.                       *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  RemoveItemsUnitTestBuffHalfEmpty                            *
+///                                                                        *
+/// Description: The buffer is half full, so now we test if the buffer     *
+///              returns an error that the buffer is empty when attempting *
+///              to remove and item from the buffer.                       *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void RemoveItemUnitTestBuffEmpty( )
 {
    sprintf( headerBuffer, "RemoveItems Buff Empty Unit Test" );
@@ -340,16 +340,16 @@ void RemoveItemUnitTestBuffEmpty( )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  BufferTestFromTheMidPoint                                   *
-//                                                                        *
-// Description: The buffer is working from the end points, now check that *
-//              the buffer will wrap around as expected.                  *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  BufferTestFromTheMidPoint                                   *
+///                                                                        *
+/// Description: The buffer is working from the end points, now check that *
+///              the buffer will wrap around as expected.                  *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void BufferTestFromTheMidPoint( )
 {
    sprintf( headerBuffer, "Midpoint Buffer Test");
@@ -375,16 +375,16 @@ void BufferTestFromTheMidPoint( )
    RemoveItemUnitTestBuffEmpty( );
 }
 
-//*************************************************************************
-// Function:  DestructBufferUnitTest                                      *
-//                                                                        *
-// Description: Now deallocate the memmory for the buffer and veriy that  *
-//              the pointer is now NULL                                   *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  DestructBufferUnitTest                                      *
+///                                                                        *
+/// Description: Now deallocate the memmory for the buffer and veriy that  *
+///              the pointer is now NULL                                   *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void DestructBufferUnitTest( )
 {
    uint8_t fail = 0;

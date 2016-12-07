@@ -7,17 +7,17 @@ uint8_t dmaComplete[ 4 ];
 CircularBuffer_t * UART0_TXBuffer;
 
 
-//*************************************************************************
-// Function:  LOG0                                                        *
-//                                                                        *
-// Description: Receives a string and sends it to either UART or printf   *
-//              depending on the architecture.                            *
-//                                                                        *
-// Parameters: uint8_t * data: String to passed to next function.         *
-//             uint32_t length: Length of data to be sent out.            *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  LOG0                                                        *
+///                                                                        *
+/// Description: Receives a string and sends it to either UART or printf   *
+///              depending on the architecture.                            *
+///                                                                        *
+/// Parameters: uint8_t * data: String to passed to next function.         *
+///             uint32_t length: Length of data to be sent out.            *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void LOG0( uint8_t * data )
 {
 #ifdef FRDM
@@ -32,29 +32,25 @@ void LOG0( uint8_t * data )
       }
    }
    SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );
-   /*uint32_t length = MyStrLen( data );
-   while( dmaComplete[ DMACH_UART0TX ] == 0 );
-   CBufferAddItems( TXBuffer, data, length, DMACH_UART0TX );
-   SET_BIT_IN_REG( UART0_C2, UART0_C2_TIE_MASK );*/
 #else
    printf( "%s", data );
 #endif
 }
 
-//*************************************************************************
-// Function:  LOG1                                                        *
-//                                                                        *
-// Description: Receives a string and a set of parameters that are either *
-//              ints or floats.                                           *
-//                                                                        *
-// Parameters: uint8_t * data: String to add the parameters onto.         *
-//             uint32_t length: Length of the original string.            *
-//             DataType_t dataType: Is the data an int or a float?        *
-//             uint32_t numParams: How many parameters are being passed?  *
-//             ... : parameters to be added onto the string.              *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  LOG1                                                        *
+///                                                                        *
+/// Description: Receives a string and a set of parameters that are either *
+///              ints or floats.                                           *
+///                                                                        *
+/// Parameters: uint8_t * data: String to add the parameters onto.         *
+///             uint32_t length: Length of the original string.            *
+///             DataType_t dataType: Is the data an int or a float?        *
+///             uint32_t numParams: How many parameters are being passed?  *
+///             ... : parameters to be added onto the string.              *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void LOG1( uint8_t * data, uint32_t length, DataType_t dataType, uint32_t numParams, ... )
 {
    va_list valist;

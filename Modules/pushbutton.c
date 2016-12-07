@@ -1,17 +1,17 @@
 #include "pushbutton.h"
 
-//*************************************************************************
-// Function:  Button_Init                                                 *
-//                                                                        *
-// Description: Initializes the GPIO settings for a pushbutton.           *
-//                                                                        *
-// Parameters: uint8_t buttonNum: Not currently being used but is         *
-//             a placeholder if more than one pushbutton will be used in  *
-//             the future.                                                *
-//                                                                        *
-// Return Value: NONE                                                     *
-//                                                                        *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Button_Init                                                 *
+///                                                                        *
+/// Description: Initializes the GPIO settings for a pushbutton.           *
+///                                                                        *
+/// Parameters: uint8_t buttonNum: Not currently being used but is         *
+///             a placeholder if more than one pushbutton will be used in  *
+///             the future.                                                *
+///                                                                        *
+/// Return Value: NONE                                                     *
+///                                                                        *
+///*************************************************************************
 void Button_Init( uint8_t buttonNum )
 {
    SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTA_MASK );

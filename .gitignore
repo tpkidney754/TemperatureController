@@ -1,2 +1,5 @@
 .*
 !/.gitignore
+
+html/*
+latex/*

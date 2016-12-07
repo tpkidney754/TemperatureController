@@ -2,35 +2,35 @@
 #include "dma.h"
 
 extern uint8_t dmaComplete[ 4 ];
-//*************************************************************************
-// Function:  InitDMA                                                     *
-//                                                                        *
-// Description: Starts the clock for the DMA module and initializes the   *
-//              global boolean used to indicate when a DMA transfer is    *
-//              complete.                                                 *
-//                                                                        *
-// Parameters: uint8_t ch: DMA ch being initialized                       *
-//                                                                        *
-// Return Value:  None                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  InitDMA                                                     *
+///                                                                        *
+/// Description: Starts the clock for the DMA module and initializes the   *
+///              global boolean used to indicate when a DMA transfer is    *
+///              complete.                                                 *
+///                                                                        *
+/// Parameters: uint8_t ch: DMA ch being initialized                       *
+///                                                                        *
+/// Return Value:  None                                                    *
+///*************************************************************************
 void InitDMA( uint8_t ch )
 {
    SET_BIT_IN_REG( SIM_SCGC7, SIM_SCGC7_DMA_MASK );
    dmaComplete[ ch ] = 1;
 }
 
-//*************************************************************************
-// Function:  StartTransfer32bitMoves                                     *
-//                                                                        *
-// Description: Transfers memory 32bits at a time.                        *
-//                                                                        *
-// Parameters: uint8_t ch: DMA ch being used                              *
-//             uint8_t * src: Source memory location of data to be moved. *
-//             uint8_t * dst: Destination location to move data           *
-//             uint32_t numBytes: Number of bytes to be moved             *
-//                                                                        *
-// Return Value: DMAErors_e: Enumerated DMA errors.                       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  StartTransfer32bitMoves                                     *
+///                                                                        *
+/// Description: Transfers memory 32bits at a time.                        *
+///                                                                        *
+/// Parameters: uint8_t ch: DMA ch being used                              *
+///             uint8_t * src: Source memory location of data to be moved. *
+///             uint8_t * dst: Destination location to move data           *
+///             uint32_t numBytes: Number of bytes to be moved             *
+///                                                                        *
+/// Return Value: DMAErors_e: Enumerated DMA errors.                       *
+///*************************************************************************
 DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
    if( numBytes % 4 != 0 )
@@ -65,18 +65,18 @@ DMAErrors_e StartTransfer32bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, u
    return DMANoError;
 }
 
-//*************************************************************************
-// Function:  StartTransfer16bitMoves                                     *
-//                                                                        *
-// Description: Transfers memory 16bits at a time.                        *
-//                                                                        *
-// Parameters: uint8_t ch: DMA ch being used                              *
-//             uint8_t * src: Source memory location of data to be moved. *
-//             uint8_t * dst: Destination location to move data           *
-//             uint32_t numBytes: Number of bytes to be moved             *
-//                                                                        *
-// Return Value: DMAErors_e: Enumerated DMA errors.                       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  StartTransfer16bitMoves                                     *
+///                                                                        *
+/// Description: Transfers memory 16bits at a time.                        *
+///                                                                        *
+/// Parameters: uint8_t ch: DMA ch being used                              *
+///             uint8_t * src: Source memory location of data to be moved. *
+///             uint8_t * dst: Destination location to move data           *
+///             uint32_t numBytes: Number of bytes to be moved             *
+///                                                                        *
+/// Return Value: DMAErors_e: Enumerated DMA errors.                       *
+///*************************************************************************
 DMAErrors_e StartTransfer16bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
    if( numBytes % 2 != 0 )
@@ -108,18 +108,18 @@ DMAErrors_e StartTransfer16bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, u
    return DMANoError;
 }
 
-//*************************************************************************
-// Function:  StartTransfer8bitMoves                                      *
-//                                                                        *
-// Description: Transfers memory 8bits at a time.                         *
-//                                                                        *
-// Parameters: uint8_t ch: DMA ch being used                              *
-//             uint8_t * src: Source memory location of data to be moved. *
-//             uint8_t * dst: Destination location to move data           *
-//             uint32_t numBytes: Number of bytes to be moved             *
-//                                                                        *
-// Return Value: DMAErors_e: Enumerated DMA errors.                       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  StartTransfer8bitMoves                                      *
+///                                                                        *
+/// Description: Transfers memory 8bits at a time.                         *
+///                                                                        *
+/// Parameters: uint8_t ch: DMA ch being used                              *
+///             uint8_t * src: Source memory location of data to be moved. *
+///             uint8_t * dst: Destination location to move data           *
+///             uint32_t numBytes: Number of bytes to be moved             *
+///                                                                        *
+/// Return Value: DMAErors_e: Enumerated DMA errors.                       *
+///*************************************************************************
 DMAErrors_e StartTransfer8bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, uint32_t numBytes )
 {
    DMA_SAR( ch ) = ( uint32_t ) src;
@@ -145,19 +145,19 @@ DMAErrors_e StartTransfer8bitMoves( uint8_t ch, uint8_t * src, uint8_t * dst, ui
    return DMANoError;
 }
 
-//*************************************************************************
-// Function:  MemSet32bit                                                 *
-//                                                                        *
-// Description: Writes memory 32bits at a time.                           *
-//                                                                        *
-// Parameters: uint8_t ch: DMA ch being used                              *
-//             uint32_t data: Value to be written to memory               *
-//             uint8_t * dst: Destination location to write data          *
-//             uint32_t numBytes: Number of bytes to be written, must be  *
-//                                divisible by 4.                         *
-//                                                                        *
-// Return Value: DMAErors_e: Enumerated DMA errors.                       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MemSet32bit                                                 *
+///                                                                        *
+/// Description: Writes memory 32bits at a time.                           *
+///                                                                        *
+/// Parameters: uint8_t ch: DMA ch being used                              *
+///             uint32_t data: Value to be written to memory               *
+///             uint8_t * dst: Destination location to write data          *
+///             uint32_t numBytes: Number of bytes to be written, must be  *
+///                                divisible by 4.                         *
+///                                                                        *
+/// Return Value: DMAErors_e: Enumerated DMA errors.                       *
+///*************************************************************************
 DMAErrors_e MemSet32bit( uint8_t ch, uint32_t data, uint8_t * dst, uint32_t numBytes )
 {
    if( numBytes % 4 != 0 )
@@ -188,18 +188,18 @@ DMAErrors_e MemSet32bit( uint8_t ch, uint32_t data, uint8_t * dst, uint32_t numB
    return DMANoError;
 }
 
-//*************************************************************************
-// Function:  MemSet8bit                                                  *
-//                                                                        *
-// Description: Writes memory 8bits at a time.                            *
-//                                                                        *
-// Parameters: uint8_t ch: DMA ch being used                              *
-//             uint32_t data: Value to be written to memory               *
-//             uint8_t * dst: Destination location to write data          *
-//             uint32_t numBytes: Number of bytes to be written.          *
-//                                                                        *
-// Return Value: DMAErors_e: Enumerated DMA errors.                       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MemSet8bit                                                  *
+///                                                                        *
+/// Description: Writes memory 8bits at a time.                            *
+///                                                                        *
+/// Parameters: uint8_t ch: DMA ch being used                              *
+///             uint32_t data: Value to be written to memory               *
+///             uint8_t * dst: Destination location to write data          *
+///             uint32_t numBytes: Number of bytes to be written.          *
+///                                                                        *
+/// Return Value: DMAErors_e: Enumerated DMA errors.                       *
+///*************************************************************************
 DMAErrors_e MemSet8bit( uint8_t ch, uint8_t data, uint8_t * dst, uint32_t numBytes )
 {
    DMA_SAR( ch ) = ( uint32_t ) &data;

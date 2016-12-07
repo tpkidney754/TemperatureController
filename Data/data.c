@@ -1,17 +1,17 @@
 #include "data.h"
 
-//*************************************************************************
-// Function:  MyItoa                                                      *
-//                                                                        *
-// Description: Inputs a integer value and coverts into a stirng.         *
-//                                                                        *
-// Parameters: uint8_t * str: pointer to a string                         *
-//             int32_t data: interger to be converted into a string.      *
-//             int32_t base: What base the integer is going to be         *
-//                           converted to                                 *
-// Return Value:  int8_t: pass/fail value. A return of 0 is a successfull *
-//                        conversion. Anything else is a failure.         *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyItoa                                                      *
+///                                                                        *
+/// Description: Inputs a integer value and coverts into a stirng.         *
+///                                                                        *
+/// Parameters: uint8_t * str: pointer to a string                         *
+///             int32_t data: interger to be converted into a string.      *
+///             int32_t base: What base the integer is going to be         *
+///                           converted to                                 *
+/// Return Value:  int8_t: pass/fail value. A return of 0 is a successfull *
+///                        conversion. Anything else is a failure.         *
+///*************************************************************************
 int8_t MyItoa( uint8_t * str, int32_t data, int32_t base )
 {
    uint8_t negative = 0;
@@ -47,15 +47,15 @@ int8_t MyItoa( uint8_t * str, int32_t data, int32_t base )
    return str ? 0 : -1;
 }
 
-//*************************************************************************
-// Function:  MyAtoi                                                      *
-//                                                                        *
-// Description: Inputs a string and coverts into a signed interger.       *
-//                                                                        *
-// Parameters: uint8_t * str: pointer to a string to be converted.        *
-//                                                                        *
-// Return Value:  int32_t: integer value converted from the string input  *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyAtoi                                                      *
+///                                                                        *
+/// Description: Inputs a string and coverts into a signed interger.       *
+///                                                                        *
+/// Parameters: uint8_t * str: pointer to a string to be converted.        *
+///                                                                        *
+/// Return Value:  int32_t: integer value converted from the string input  *
+///*************************************************************************
 int32_t MyAtoi( uint8_t * str )
 {
    int32_t num = 0;
@@ -95,18 +95,18 @@ int32_t MyAtoi( uint8_t * str )
    return negative ? -num : num;
 }
 
-//*************************************************************************
-// Function:  MyFtoi                                                      *
-//                                                                        *
-// Description: Inputs floating point number and converts it to a string. *
-//                                                                        *
-// Parameters: uint8_t * str: pointer to a string buffer that is filled.  *
-//             float data: floating point number to be converted          *
-//             int32_t decimalPlaces: How many decimal places to be       *
-//                                    to be converted to a string.        *
-//                                                                        *
-// Return Value:  int32_t: integer value converted from the string input  *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyFtoi                                                      *
+///                                                                        *
+/// Description: Inputs floating point number and converts it to a string. *
+///                                                                        *
+/// Parameters: uint8_t * str: pointer to a string buffer that is filled.  *
+///             float data: floating point number to be converted          *
+///             int32_t decimalPlaces: How many decimal places to be       *
+///                                    to be converted to a string.        *
+///                                                                        *
+/// Return Value:  int32_t: integer value converted from the string input  *
+///*************************************************************************
 int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
 {
    if( str == NULL )
@@ -145,17 +145,17 @@ int32_t MyFtoa( uint8_t * str, double data, int32_t decimalPlaces )
    return str ? 0 : -1;
 }
 
-//*************************************************************************
-// Function:  DumpMemory                                                  *
-//                                                                        *
-// Description: Prints whats stored in memory starting at pointed         *
-//              passed in for the length passed in.                       *
-//                                                                        *
-// Parameters: uint8_t * start: pointer to the start of memory desired to *
-//                              be printed.                               *
-//             uint32_t length: Number of bytes to be printed             *
-// Return Value:  void                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  DumpMemory                                                  *
+///                                                                        *
+/// Description: Prints whats stored in memory starting at pointed         *
+///              passed in for the length passed in.                       *
+///                                                                        *
+/// Parameters: uint8_t * start: pointer to the start of memory desired to *
+///                              be printed.                               *
+///             uint32_t length: Number of bytes to be printed             *
+/// Return Value:  void                                                    *
+///*************************************************************************
 void DumpMemory( uint8_t * start, uint32_t length )
 {
    uint8_t buffer[ 4 ];
@@ -166,18 +166,18 @@ void DumpMemory( uint8_t * start, uint32_t length )
    }
 }
 
-//*************************************************************************
-// Function:  BigtToLittle                                                *
-//                                                                        *
-// Description: Converts a memory locaiton from big endian to             *
-//              little endian. it is left to the user to know theat the   *
-//              data being passed in is in big endian                     *
-//                                                                        *
-// Parameters: uint8_t32: Value that is in big endian to be converted     *
-//                        to little endian.                               *
-//                                                                        *
-// Return Value:  int32_t: Return value of the resulting conversion       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  BigtToLittle                                                *
+///                                                                        *
+/// Description: Converts a memory locaiton from big endian to             *
+///              little endian. it is left to the user to know theat the   *
+///              data being passed in is in big endian                     *
+///                                                                        *
+/// Parameters: uint8_t32: Value that is in big endian to be converted     *
+///                        to little endian.                               *
+///                                                                        *
+/// Return Value:  int32_t: Return value of the resulting conversion       *
+///*************************************************************************
 int32_t BigToLittle( int32_t data )
 {
    uint8_t byte0 = ( uint8_t ) ( ( data & BYTE3_MASK ) >> BYTE3_SHIFT );
@@ -193,18 +193,18 @@ int32_t BigToLittle( int32_t data )
 
 }
 
-//*************************************************************************
-// Function:  littleToBig                                                 *
-//                                                                        *
-// Description: Converts a memory locaiton from little endian to          *
-//              little endian. it is left to the user to know theat the   *
-//              data being passed in is in little endian                  *
-//                                                                        *
-// Parameters: uint8_t32: Value that is in little endian to be converted  *
-//                        to big endian.                                  *
-//                                                                        *
-// Return Value:  int32_t: Return value of the resulting conversion       *
-//*************************************************************************
+///*************************************************************************
+/// Function:  littleToBig                                                 *
+///                                                                        *
+/// Description: Converts a memory locaiton from little endian to          *
+///              little endian. it is left to the user to know theat the   *
+///              data being passed in is in little endian                  *
+///                                                                        *
+/// Parameters: uint8_t32: Value that is in little endian to be converted  *
+///                        to big endian.                                  *
+///                                                                        *
+/// Return Value:  int32_t: Return value of the resulting conversion       *
+///*************************************************************************
 int32_t LittleToBig( int32_t data )
 {
    uint8_t byte3 = ( uint8_t ) ( ( data & BYTE3_MASK ) >> BYTE3_SHIFT );

@@ -2,16 +2,16 @@
 
 static uint8_t ADC_value;
 
-//*************************************************************************
-// Function:  ADC_Init                                                    *
-//                                                                        *
-// Description: Initializes the adc wihh the corresponding adc channel    *
-//                                                                        *
-// Parameters: ADC_InputChannel ADC_ch: The analog channel to being       *
-//             initialized.                                               *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ADC_Init                                                    *
+///                                                                        *
+/// Description: Initializes the adc wihh the corresponding adc channel    *
+///                                                                        *
+/// Parameters: ADC_InputChannel ADC_ch: The analog channel to being       *
+///             initialized.                                               *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void ADC_Init( ADC_InputChannel ADC_ch )
 {
    SET_BIT_IN_REG( SIM_SCGC5, ADC_PORT );
@@ -22,17 +22,17 @@ void ADC_Init( ADC_InputChannel ADC_ch )
    ADC_value = 0;
 }
 
-//*************************************************************************
-// Function:  ADC_StartConversion                                         *
-//                                                                        *
-// Description: Starts an analog to digital conversion and enables an     *
-//              interrupt when the conversion is complete.                *
-//                                                                        *
-// Parameters: ADC_InputChannel ADC_ch: The analog channel starting       *
-//             conversion                                                 *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ADC_StartConversion                                         *
+///                                                                        *
+/// Description: Starts an analog to digital conversion and enables an     *
+///              interrupt when the conversion is complete.                *
+///                                                                        *
+/// Parameters: ADC_InputChannel ADC_ch: The analog channel starting       *
+///             conversion                                                 *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void ADC_StartConversion( ADC_InputChannel ADC_ch )
 {
    NVIC_ClearPendingIRQ( ADC0_IRQn );
@@ -42,16 +42,16 @@ void ADC_StartConversion( ADC_InputChannel ADC_ch )
                              ADC_SC1_AIEN_MASK | ( ADC_ch & ADC_SC1_ADCH_MASK ) );
 }
 
-//*************************************************************************
-// Function:  ADC_GetCurrentValue                                         *
-//                                                                        *
-// Description: Returns a floating point percentage the current value     *
-//              from the last conversion value divided by the max value   *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ADC_GetCurrentValue                                         *
+///                                                                        *
+/// Description: Returns a floating point percentage the current value     *
+///              from the last conversion value divided by the max value   *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 float ADC_GetCurrentValue( )
 {
    return ( ADC_value / MAX_VALUE );

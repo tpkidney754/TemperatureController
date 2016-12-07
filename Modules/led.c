@@ -1,15 +1,15 @@
 #ifdef FRDM
 #include "led.h"
 
-//*************************************************************************
-// Function:  SwitchLEDs                                                  *
-//                                                                        *
-// Description: Sets up the LEDs to be used as GPIO outputs               *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  SwitchLEDs                                                  *
+///                                                                        *
+/// Description: Sets up the LEDs to be used as GPIO outputs               *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void LEDSetup( void )
 {
    // Enable Port B and Port D Clocks
@@ -30,15 +30,15 @@ void LEDSetup( void )
    SET_BIT_IN_REG( GPIOD_PDDR, BLUE_PIN );
 }
 
-//*************************************************************************
-// Function:  SwitchLEDs                                                  *
-//                                                                        *
-// Description: Changes which LEDs are on/off based on the input color.   *
-//                                                                        *
-// Parameters: Color_t color: typedef enum expressing a desired color.    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  SwitchLEDs                                                  *
+///                                                                        *
+/// Description: Changes which LEDs are on/off based on the input color.   *
+///                                                                        *
+/// Parameters: Color_t color: typedef enum expressing a desired color.    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void SwitchLEDs( uint8_t color )
 {
    switch( ( Color_t ) color )
