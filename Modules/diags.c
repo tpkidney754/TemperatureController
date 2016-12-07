@@ -92,7 +92,6 @@ void ParseDiag( uint8_t * buffer )
          ChangeLEDPW( ( uint8_t ) pulseWidth );
       #endif
       }
-   #ifdef FRDM
       else if( strstr( commands[ i ], "display" ) )
       {
          i++;
@@ -100,9 +99,13 @@ void ParseDiag( uint8_t * buffer )
          {
             for( uint8_t i = 0; i < 100; i++ )
             {
+            #if ENABLE_MESSAGING
+               BuildCommandMessage( setDisplay, ( uint8_t ) i );
+            #else
                UpdateDisplay( 0, ( uint8_t ) ( i / 10 ) );
                UpdateDisplay( 1, ( uint8_t ) ( i % 10 ) );
-               for( uint32_t j = 0; j < 1000000; j++ );
+            #endif
+               for( uint32_t j = 0; j < 100000000; j++ );
             }
          }
          else
@@ -127,7 +130,6 @@ void ParseDiag( uint8_t * buffer )
          Controller_SetCurrentTemp( newTemp );
       #endif
       }
-   #endif
       else if( strstr( commands[ i ], "desired" ) )
       {
          i++;
@@ -156,23 +158,26 @@ void ParseDiag( uint8_t * buffer )
    else if( strstr( commands[ i ], "read" ) )
    {
       i++;
+   #ifdef FRDM
       if( strstr( commands[ i ], "reg" ) )
       {
          i++;
          uint32_t reg = MyAtoi( commands[ i ] );
          nRF24L01_ReadReg( 0, reg );
       }
-
-      else if( "temp" )
+      else if( strstr( commands[ i ], "temp" ) )
+   #else
+      if( strstr( commands[ i ], "temp" ) )
+   #endif
       {
          BuildCommandMessage( readTempData, 0 );
       }
-
       else
       {
          LOG0( "Invalid subcommand\n" );
       }
    }
+#ifdef FRDM
    else if( strstr( commands[ i ], "send" ) )
    {
       i++;
@@ -197,4 +202,5 @@ void ParseDiag( uint8_t * buffer )
 
       }
    }
+#endif
 }

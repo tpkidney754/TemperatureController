@@ -26,7 +26,7 @@ int main()
 #endif
 
 #ifdef TESTING
-   Testing();
+   //Testing();
 #endif
 
    uint8_t buffer[ 100 ];
@@ -34,11 +34,14 @@ int main()
    uint8_t readTempData = 0;
    CommandMessage_t cmdmsg;
    TemperatureData tempData;
+
+#ifdef FRDM
 while( 1 )
 {
-#ifdef FRDM
+#ifndef TESTING
    Controller_StateMachine( );
    Controller_SetCurrentTemp( ReadTemp( ) );
+#endif //TESTING
    if( UART1_RXBuffer->numItems == COMMAND_MSG_BYTES )
    {
       CBufferRemove( UART1_RXBuffer, &cmdmsg.cmd, DMACH_UART1RX  );
@@ -50,8 +53,14 @@ while( 1 )
       parseDiag = 0;
    }
 
-#else
+#else // FRDM
+#ifdef TESTING
+while( 1 )
+{
    printf( "Enter command: " );
+#else
+{
+#endif
    fgets( buffer, 100, stdin );
    length = MyStrLen( buffer );
    if( strstr( buffer, "read temp" ) )
