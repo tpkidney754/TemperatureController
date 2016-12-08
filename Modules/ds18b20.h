@@ -7,6 +7,9 @@
 #define SERIAL_NUM_BYTES         6
 #define SCRATCPAD_BYTES          9
 
+#define WAIT_TIME_LONG           200
+#define WAIT_TIME_SHORT          20
+
 typedef union
 {
    uint8_t romBytes[ ROM_BYTES ];

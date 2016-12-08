@@ -1,18 +1,18 @@
 #include "memory.h"
 
 uint8_t dmaComplete[ 4 ];
-//*************************************************************************
-// Function:  MyMemMove                                                   *
-//                                                                        *
-// Description: Moves a portion of memory to another location in memory.  *
-//                                                                        *
-// Parameters: uint8_t * src: Start of memory to be moved.                *
-//             uint8_t * dst: Start of memory to be copied to.            *
-//             int32_t length: Number of bytes to be moved.               *
-//                                                                        *
-// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
-//                        values are a failure.                           *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyMemMove                                                   *
+///                                                                        *
+/// Description: Moves a portion of memory to another location in memory.  *
+///                                                                        *
+/// Parameters: uint8_t * src: Start of memory to be moved.                *
+///             uint8_t * dst: Start of memory to be copied to.            *
+///             int32_t length: Number of bytes to be moved.               *
+///                                                                        *
+/// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
+///                        values are a failure.                           *
+///*************************************************************************
 int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch )
 {
    if( src == NULL || dst == NULL )
@@ -75,18 +75,18 @@ int8_t MyMemMove( uint8_t * src, uint8_t * dst, uint32_t numBytes, uint8_t DMAch
 #endif
 }
 
-//*************************************************************************
-// Function:  MyMemSet                                                    *
-//                                                                        *
-// Description: Moves a value to a number of bytes in memory using DMA.   *
-//                                                                        *
-// Parameters: uint8_t * src: Start of memory to be set                   *
-//             uin32_t value: value to set in memory
-//             int32_t length: Number of bytes to be set                  *
-//                                                                        *
-// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
-//                        values are a failure.                           *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyMemSet                                                    *
+///                                                                        *
+/// Description: Moves a value to a number of bytes in memory using DMA.   *
+///                                                                        *
+/// Parameters: uint8_t * src: Start of memory to be set                   *
+///             uin32_t value: value to set in memory
+///             int32_t length: Number of bytes to be set                  *
+///                                                                        *
+/// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
+///                        values are a failure.                           *
+///*************************************************************************
 int8_t MyMemSet( uint8_t * dst, uint32_t value, size_t numBytes, uint8_t DMAch )
 {
    if( dst == NULL )
@@ -121,17 +121,17 @@ int8_t MyMemSet( uint8_t * dst, uint32_t value, size_t numBytes, uint8_t DMAch )
    return dst ? 0 : -1;
 }
 
-//*************************************************************************
-// Function:  MyReverse                                                   *
-//                                                                        *
-// Description: Reverses the bytes starting at a location given           *
-//                                                                        *
-// Parameters: uint8_t * src: Start of memory to be reversed              *
-//             int32_t length: Number of bytes to be revversed            *
-//                                                                        *
-// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
-//                        values are a failure.                           *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyReverse                                                   *
+///                                                                        *
+/// Description: Reverses the bytes starting at a location given           *
+///                                                                        *
+/// Parameters: uint8_t * src: Start of memory to be reversed              *
+///             int32_t length: Number of bytes to be revversed            *
+///                                                                        *
+/// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
+///                        values are a failure.                           *
+///*************************************************************************
 int8_t MyReverse( uint8_t * src, uint32_t length )
 {
    if( src == NULL )
@@ -158,17 +158,17 @@ int8_t MyReverse( uint8_t * src, uint32_t length )
    return src ? 0 : -1;
 }
 
-//*************************************************************************
-// Function:  MyStringLength                                              *
-//                                                                        *
-// Description: Reverses the bytes starting at a location given           *
-//                                                                        *
-// Parameters: uint8_t * src: Start of memory to be reversed              *
-//             int32_t length: Number of bytes to be revversed            *
-//                                                                        *
-// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
-//                        values are a failure.                           *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyStringLength                                              *
+///                                                                        *
+/// Description: Reverses the bytes starting at a location given           *
+///                                                                        *
+/// Parameters: uint8_t * src: Start of memory to be reversed              *
+///             int32_t length: Number of bytes to be revversed            *
+///                                                                        *
+/// Return Value:  int8_t: pass/fail value. Success is a 0 value, all      *
+///                        values are a failure.                           *
+///*************************************************************************
 int32_t MyStrLen( uint8_t * str )
 {
    if( str == NULL )

@@ -5,19 +5,19 @@ CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 
 static int32_t spiDeviceLocation[ SPI_CHANNELS ];
 
-//*************************************************************************
-// Function:  SPI_Init                                                    *
-//                                                                        *
-// Description: Initializes a SPI channel along with the RX and TX        *
-//              circular buffers.                                         *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being initialized.             *
-//             uint8_t master: Is this channel going to be a master or a  *
-//                             slave. A value of 0 will set up the channel*
-//                             as a slave and anything else will be master*
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  SPI_Init                                                    *
+///                                                                        *
+/// Description: Initializes a SPI channel along with the RX and TX        *
+///              circular buffers.                                         *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being initialized.             *
+///             uint8_t master: Is this channel going to be a master or a  *
+///                             slave. A value of 0 will set up the channel*
+///                             as a slave and anything else will be master*
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void SPI_Init( uint8_t SPI_ch, uint8_t master )
 {
    SPI_RXBuffer[ SPI_ch ] = CBufferInit( sizeof( uint8_t ), SPI_RXBUFFER_SIZE );
@@ -116,18 +116,18 @@ void SPI_Init( uint8_t SPI_ch, uint8_t master )
 #endif // BBB
 }
 
-//*************************************************************************
-// Function:  SPI_TransmitData                                            *
-//                                                                        *
-// Description: Sets up the signals an necessary and starts sending data  *
-//              out through the SPI channel. This function assumes that   *
-//              the data to be sent is already in the TX buffer.          *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being initialized.             *
-//             size_t numBytes: How many bytes are going to be sent.      *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  SPI_TransmitData                                            *
+///                                                                        *
+/// Description: Sets up the signals an necessary and starts sending data  *
+///              out through the SPI channel. This function assumes that   *
+///              the data to be sent is already in the TX buffer.          *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being initialized.             *
+///             size_t numBytes: How many bytes are going to be sent.      *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void SPI_TransmitData( uint8_t SPI_ch, size_t numBytes )
 {
 #ifdef FRDM

@@ -6,15 +6,15 @@ static uint8_t tempRange;
 static uint8_t power;
 static ControllerState_e state;
 
-//*************************************************************************
-// Function:  Controller_Init                                             *
-//                                                                        *
-// Description: Initializes the the static variables                      *
-//                                                                        *
-// Parameters:  NONE                                                      *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_Init                                             *
+///                                                                        *
+/// Description: Initializes the the static variables                      *
+///                                                                        *
+/// Parameters:  NONE                                                      *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_Init( )
 {
    currentTemp = 75;
@@ -28,15 +28,15 @@ void Controller_Init( )
    SET_BIT_IN_REG( GPIOC_PDDR, RELAY_PIN );
 }
 
-//*************************************************************************
-// Function:  Controller_StateMachine                                     *
-//                                                                        *
-// Description: Initializes the the static variables                      *
-//                                                                        *
-// Parameters:  NONE                                                      *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_StateMachine                                     *
+///                                                                        *
+/// Description: Initializes the the static variables                      *
+///                                                                        *
+/// Parameters:  NONE                                                      *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_StateMachine( )
 {
    switch( state )
@@ -73,29 +73,29 @@ void Controller_StateMachine( )
    }
 }
 
-//*************************************************************************
-// Function:  Controller_ChangeState                                      *
-//                                                                        *
-// Description: Updates the state the next state or to the start          *
-//                                                                        *
-// Parameters:  NONE                                                      *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_ChangeState                                      *
+///                                                                        *
+/// Description: Updates the state the next state or to the start          *
+///                                                                        *
+/// Parameters:  NONE                                                      *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_ChangeState( )
 {
    state == printSettings ? state = noChange : state++;
 }
 
-//*************************************************************************
-// Function:  Controller_SetCurrentTemp                                   *
-//                                                                        *
-// Description: Updates the curernt temperature value to a new value      *
-//                                                                        *
-// Parameters:  uint8_t newTemp: New value of the current temperature.    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_SetCurrentTemp                                   *
+///                                                                        *
+/// Description: Updates the curernt temperature value to a new value      *
+///                                                                        *
+/// Parameters:  uint8_t newTemp: New value of the current temperature.    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_SetCurrentTemp( uint8_t newTemp )
 {
    currentTemp = newTemp;
@@ -123,51 +123,61 @@ void Controller_SetCurrentTemp( uint8_t newTemp )
    Controller_ChangeDisplay( currentTemp );
 }
 
-//*************************************************************************
-// Function:  Controller_SetDesiredTemp                                   *
-//                                                                        *
-// Description: Updates the desired temperature value to a new value      *
-//                                                                        *
-// Parameters:  uint8_t newTemp: New value of the desired temperature.    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_SetDesiredTemp                                   *
+///                                                                        *
+/// Description: Updates the desired temperature value to a new value      *
+///                                                                        *
+/// Parameters:  uint8_t newTemp: New value of the desired temperature.    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_SetDesiredTemp( uint8_t newTemp )
 {
    desiredTemp = newTemp;
    Controller_SetCurrentTemp( ReadTemp( ) );
 }
 
-//*************************************************************************
-// Function:  Controller_SetTempRange                                     *
-//                                                                        *
-// Description: Updates the temperature range value to a new value        *
-//                                                                        *
-// Parameters:  uint8_t newRange: New value of the new temperature range. *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_SetTempRange                                     *
+///                                                                        *
+/// Description: Updates the temperature range value to a new value        *
+///                                                                        *
+/// Parameters:  uint8_t newRange: New value of the new temperature range. *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_SetTempRange( uint8_t newRange )
 {
    tempRange = newRange;
    Controller_SetCurrentTemp( ReadTemp( ) );
 }
 
-//*************************************************************************
-// Function:  Controller_ChangeDisplay                                    *
-//                                                                        *
-// Description: Updates the displays with the input value                 *
-//                                                                        *
-// Parameters:  uint8_t value: New value sent to the diplays              *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Controller_ChangeDisplay                                    *
+///                                                                        *
+/// Description: Updates the displays with the input value                 *
+///                                                                        *
+/// Parameters:  uint8_t value: New value sent to the diplays              *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_ChangeDisplay( uint8_t value )
 {
    UpdateDisplay( Display_Tens, value / 10 );
    UpdateDisplay( Display_Ones, value % 10 );
 }
 
+///*************************************************************************
+/// Function:  Controller_SendTempData                                     *
+///                                                                        *
+/// Description: Packeges the current values of the controller into a      *
+///              message and the sends it back through UART                *
+///                                                                        *
+/// Parameters:  NONE                                                      *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Controller_SendTempData( uint8_t dontcare )
 {
    TemperatureMessage_t msg;

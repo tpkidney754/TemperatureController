@@ -1,6 +1,17 @@
 #include "pushbutton.h"
 
-static Color_t color;
+///*************************************************************************
+/// Function:  Button_Init                                                 *
+///                                                                        *
+/// Description: Initializes the GPIO settings for a pushbutton.           *
+///                                                                        *
+/// Parameters: uint8_t buttonNum: Not currently being used but is         *
+///             a placeholder if more than one pushbutton will be used in  *
+///             the future.                                                *
+///                                                                        *
+/// Return Value: NONE                                                     *
+///                                                                        *
+///*************************************************************************
 void Button_Init( uint8_t buttonNum )
 {
    SET_BIT_IN_REG( SIM_SCGC5, SIM_SCGC5_PORTA_MASK );
@@ -11,13 +22,12 @@ void Button_Init( uint8_t buttonNum )
    NVIC_ClearPendingIRQ( PORTA_IRQn );
    NVIC_EnableIRQ( PORTA_IRQn );
    NVIC_SetPriority( PORTA_IRQn, 2 );
-   color = RED;
 }
 
 void PORTA_IRQHandler( )
 {
    NVIC_DisableIRQ( PORTA_IRQn );
-
+   //Software delay to debounce pushbutton.
    for( uint32_t i = 0; i < 1000000; i++ );
    if( BUTTON0 & PORT_PCR_ISF_MASK )
    {

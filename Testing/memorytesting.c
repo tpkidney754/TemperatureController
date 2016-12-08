@@ -1,15 +1,15 @@
 #ifdef TESTING
 #include "memorytesting.h"
 
-//*************************************************************************
-// Function:  MemoryTesting                                               *
-//                                                                        *
-// Description: Main function that calls all individual unit test.        *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MemoryTesting                                               *
+///                                                                        *
+/// Description: Main function that calls all individual unit test.        *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void MemoryTesting( )
 {
    MyMemMoveUnitTest( );
@@ -18,22 +18,22 @@ void MemoryTesting( )
    MyStrLenUnitTest( );
 }
 
-//*************************************************************************
-// Function:  MyMemMoveUnitTest                                           *
-//                                                                        *
-// Description: Allocates to memory locations and defines a string. The   *
-//              string is copied to the first location using a library    *
-//              function. Then the sting is copied to another location    *
-//              using MyMemMove. Then the second location is compared     *
-//              to the original string in three different cases. First is *
-//              a direct copy with no overlap. Second is the case that    *
-//              the second location overlaps the first location. The final*
-//              case is when the fist location overlaps the second.       *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyMemMoveUnitTest                                           *
+///                                                                        *
+/// Description: Allocates to memory locations and defines a string. The   *
+///              string is copied to the first location using a library    *
+///              function. Then the sting is copied to another location    *
+///              using MyMemMove. Then the second location is compared     *
+///              to the original string in three different cases. First is *
+///              a direct copy with no overlap. Second is the case that    *
+///              the second location overlaps the first location. The final*
+///              case is when the fist location overlaps the second.       *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void MyMemMoveUnitTest(  )
 {
    sprintf( headerBuffer, "MyMemmove Unit Test" );
@@ -83,17 +83,17 @@ void MyMemMoveUnitTest(  )
 
 }
 
-//*************************************************************************
-// Function:  MyMemSetUnitTest                                            *
-//                                                                        *
-// Description: An array of data is allocated and then initialized to a   *
-//              a nonzero value. Then the array is passed to MyMemSet     *
-//              and verified to be zero.                                  *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyMemSetUnitTest                                            *
+///                                                                        *
+/// Description: An array of data is allocated and then initialized to a   *
+///              a nonzero value. Then the array is passed to MyMemSet     *
+///              and verified to be zero.                                  *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void MyMemSetUnitTest( void )
 {
    sprintf( headerBuffer, "MyMemSet Unit Test");
@@ -122,18 +122,18 @@ void MyMemSetUnitTest( void )
    free( memloc );
 }
 
-//*************************************************************************
-// Function:  MyReverseUnitTest                                           *
-//                                                                        *
-// Description: Strings are defined with a length and then a defined      *
-//              expected out of the revesed strings are also declared.    *
-//              Each string is passed to MyReverse, and then compared     *
-//              with expected output.                                     *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyReverseUnitTest                                           *
+///                                                                        *
+/// Description: Strings are defined with a length and then a defined      *
+///              expected out of the revesed strings are also declared.    *
+///              Each string is passed to MyReverse, and then compared     *
+///              with expected output.                                     *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void MyReverseUnitTest( void )
 {
    uint8_t fail = 0;
@@ -166,17 +166,17 @@ void MyReverseUnitTest( void )
    PrintHeader( headerBuffer, fail );
 }
 
-//*************************************************************************
-// Function:  MyStrLenUnitTest                                            *
-//                                                                        *
-// Description: Passes in a string with a known length and then sent to   *
-//              MyStrLen. The output is compared with the expected known  *
-//              string length.                                            *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MyStrLenUnitTest                                            *
+///                                                                        *
+/// Description: Passes in a string with a known length and then sent to   *
+///              MyStrLen. The output is compared with the expected known  *
+///              string length.                                            *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void MyStrLenUnitTest( void )
 {
    uint8_t fail = 0;

@@ -1,15 +1,15 @@
 #include "diags.h"
 
-//*************************************************************************
-// Function:  ParseDiag                                                   *
-//                                                                        *
-// Description: Receives a string signifying a diag command from          *
-//              the serial port.                                          *
-//                                                                        *
-// Parameters: uint8_t * buffer: pointer to a string buffer.              *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ParseDiag                                                   *
+///                                                                        *
+/// Description: Receives a string signifying a diag command from          *
+///              the serial port.                                          *
+///                                                                        *
+/// Parameters: uint8_t * buffer: pointer to a string buffer.              *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void ParseDiag( uint8_t * buffer )
 {
    // Support up to four commands with 10 characters each.

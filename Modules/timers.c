@@ -2,22 +2,22 @@
 
 #ifdef FRDM
 static uint32_t timerCount = 0;
-//*************************************************************************
-// Function:  SetupPWM                                                    *
-//                                                                        *
-// Description: Sets up a PWM timers                                      *
-//                                                                        *
-// Parameters: uint8_t tpm: desired timer module                          *
-//             uint8_t ch: desire tpm modules channel                     *
-//             uint16_t modulus: desired modulus, or how man clk cycle    *
-//                               before the counter increments            *
-//             uint8_t prescaler: desired prescaler, divides modulus.     *
-//             uint16_t pulseWidth: desired pulseWidth percentage, or     *
-//                                  what percentage of the period is the  *
-//                                  the signal is high.                   *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  SetupPWM                                                    *
+///                                                                        *
+/// Description: Sets up a PWM timers                                      *
+///                                                                        *
+/// Parameters: uint8_t tpm: desired timer module                          *
+///             uint8_t ch: desire tpm modules channel                     *
+///             uint16_t modulus: desired modulus, or how man clk cycle    *
+///                               before the counter increments            *
+///             uint8_t prescaler: desired prescaler, divides modulus.     *
+///             uint16_t pulseWidth: desired pulseWidth percentage, or     *
+///                                  what percentage of the period is the  *
+///                                  the signal is high.                   *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void SetupPWM( uint8_t tpm, uint8_t ch, uint16_t modulus, uint8_t prescaler, uint16_t pulseWidth )
 {
    switch( tpm )
@@ -55,17 +55,17 @@ void SetupPWM( uint8_t tpm, uint8_t ch, uint16_t modulus, uint8_t prescaler, uin
    }
 }
 
-//*************************************************************************
-// Function:  ChangeLEDPW                                                 *
-//                                                                        *
-// Description: Targets the TPM and CHs that drive the three LEDs to      *
-//              change the PW of the signal that will in turn modify the  *
-//              intensity of the light.                                   *
-//                                                                        *
-// Parameters: uint16_t pulseWidth: The new desired PW percentage.        *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  ChangeLEDPW                                                 *
+///                                                                        *
+/// Description: Targets the TPM and CHs that drive the three LEDs to      *
+///              change the PW of the signal that will in turn modify the  *
+///              intensity of the light.                                   *
+///                                                                        *
+/// Parameters: uint16_t pulseWidth: The new desired PW percentage.        *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void ChangeLEDPW( uint8_t pulseWidth )
 {
    uint16_t valueToTPM0CnV = (uint16_t) TPM0_MOD * ( pulseWidth / 100.0 );
@@ -75,16 +75,16 @@ void ChangeLEDPW( uint8_t pulseWidth )
    TPM0_C1V = valueToTPM0CnV;
 }
 
-//*************************************************************************
-// Function:  InitProfilerTimer                                           *
-//                                                                        *
-// Description: Starts a profiler timer based on the tpm, ch, and the     *
-//              interval in NS.                                           *
-//                                                                        *
-// Parameters: uint16_t pulseWidth: The new desired PW percentage.        *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  InitProfilerTimer                                           *
+///                                                                        *
+/// Description: Starts a profiler timer based on the tpm, ch, and the     *
+///              interval in NS.                                           *
+///                                                                        *
+/// Parameters: uint16_t pulseWidth: The new desired PW percentage.        *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs )
 {
    uint32_t clockPeriodInNs = NS_PER_SEC / DEFAULT_SYSTEM_CLOCK;
@@ -134,6 +134,16 @@ void InitProfilerTimer( uint8_t tpm, uint8_t ch, uint32_t intervalInNs )
    }
 }
 
+///*************************************************************************
+/// Function:  InitWaitTimer                                               *
+///                                                                        *
+/// Description: Initializes the timer for pauses.                         *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value: NONE                                                     *
+///                                                                        *
+///*************************************************************************
 void InitWaitTimer( )
 {
    SET_BIT_IN_REG( SIM_SCGC6, SIM_SCGC6_TPM1_MASK );
@@ -141,6 +151,17 @@ void InitWaitTimer( )
    TPM_CNT_REG( WAIT_TPM ) = TPM_CNT_COUNT_MASK;
 }
 
+///*************************************************************************
+/// Function:  WaitInUs                                                    *
+///                                                                        *
+/// Description: Uses the timer module to pause the program for a specified*
+///              ammount of time in microseconds.                          *
+///                                                                        *
+/// Parameters: uint16_t waitTime: Ammount of time in microseconds to wait *
+///                                                                        *
+/// Return Value: NONE                                                     *
+///                                                                        *
+///*************************************************************************
 void WaitInUs( uint16_t waitTime )
 {
    // Each clock is 21ns

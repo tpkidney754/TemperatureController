@@ -4,18 +4,18 @@ CircularBuffer_t * SPI_RXBuffer[ SPI_CHANNELS ];
 CircularBuffer_t * SPI_TXBuffer[ SPI_CHANNELS ];
 uint8_t readRegComplete;
 
-//*************************************************************************
-// Function:  nRF24L01_Activate                                           *
-//                                                                        *
-// Description: Sets up a msg that will be sent to the nRF24L01 module    *
-//              that will activate the device. The command sets the       *
-//              R_RX_PL_WID, W_ACK_PAYLOAD, and W_TX_PAYLOAD_NOACK        *
-//              features. Also this will set up the CE and IRQ pins.      *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: The spi channel being used.                *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_Activate                                           *
+///                                                                        *
+/// Description: Sets up a msg that will be sent to the nRF24L01 module    *
+///              that will activate the device. The command sets the       *
+///              R_RX_PL_WID, W_ACK_PAYLOAD, and W_TX_PAYLOAD_NOACK        *
+///              features. Also this will set up the CE and IRQ pins.      *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: The spi channel being used.                *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_Activate( uint8_t SPI_ch )
 {
 #ifdef FRDM
@@ -41,17 +41,17 @@ void nRF24L01_Activate( uint8_t SPI_ch )
    nRF24L01_SendData( &msg );
 }
 
-//*************************************************************************
-// Function:  nRF24L01_ReadReg                                            *
-//                                                                        *
-// Description: Sets up a msg that will be sent to the nRF24L01 module    *
-//              that will read a register on the device.                  *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: The spi channel being used.                *
-//             nRF24L01_Registers_e reg: Register to be read.             *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_ReadReg                                            *
+///                                                                        *
+/// Description: Sets up a msg that will be sent to the nRF24L01 module    *
+///              that will read a register on the device.                  *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: The spi channel being used.                *
+///             nRF24L01_Registers_e reg: Register to be read.             *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_ReadReg( uint8_t SPI_ch, nRF24L01_Registers_e reg )
 {
    nRF24L01_SPIMessage_t msg;
@@ -82,18 +82,18 @@ void nRF24L01_ReadReg( uint8_t SPI_ch, nRF24L01_Registers_e reg )
    nRF24L01_SendData( &msg );
 }
 
-//*************************************************************************
-// Function:  nRF24L01_WriteReg                                           *
-//                                                                        *
-// Description: Sets up a msg that will be sent to the nRF24L01 module    *
-//              that will write a value to a register on the device.      *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: The spi channel being used.                *
-//             nRF24L01_Registers_e reg: Register to be written to.       *
-//             uint8_t dataToWrite: value to be written to register       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_WriteReg                                           *
+///                                                                        *
+/// Description: Sets up a msg that will be sent to the nRF24L01 module    *
+///              that will write a value to a register on the device.      *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: The spi channel being used.                *
+///             nRF24L01_Registers_e reg: Register to be written to.       *
+///             uint8_t dataToWrite: value to be written to register       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataToWrite )
 {
    nRF24L01_SPIMessage_t msg;
@@ -106,16 +106,16 @@ void nRF24L01_WriteReg( uint8_t SPI_ch, nRF24L01_Registers_e reg, uint8_t dataTo
    nRF24L01_SendData( &msg );
 }
 
-//*************************************************************************
-// Function:  nRF24L01_SendData                                           *
-//                                                                        *
-// Description: Receives a msg structure and then adds that msg to the    *
-//              circular buffer used for SPI transmissions.               *
-//                                                                        *
-// Parameters: nRF24L01_SPIMessage_t * msg: pointer to the message struct *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_SendData                                           *
+///                                                                        *
+/// Description: Receives a msg structure and then adds that msg to the    *
+///              circular buffer used for SPI transmissions.               *
+///                                                                        *
+/// Parameters: nRF24L01_SPIMessage_t * msg: pointer to the message struct *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_SendData( nRF24L01_SPIMessage_t * msg )
 {
    uint8_t data;
@@ -132,15 +132,15 @@ void nRF24L01_SendData( nRF24L01_SPIMessage_t * msg )
    SPI_TransmitData( msg->spiCh, msg->bytesToSend + 1 );
 }
 
-//*************************************************************************
-// Function:  nRF24L01_SetTXMode                                          *
-//                                                                        *
-// Description: Sets up the nRF24L01 in TX mode                           *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_SetTXMode                                          *
+///                                                                        *
+/// Description: Sets up the nRF24L01 in TX mode                           *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_SetTXMode( uint8_t SPI_ch )
 {
    nRF24L01_WriteReg( SPI_ch, CONFIG, PWR_UP_MASK );
@@ -151,15 +151,15 @@ void nRF24L01_SetTXMode( uint8_t SPI_ch )
 #endif
 }
 
-//*************************************************************************
-// Function:  nRF24L01_SetRXMode                                          *
-//                                                                        *
-// Description: Sets up the nRF24L01 in RX mode                           *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_SetRXMode                                          *
+///                                                                        *
+/// Description: Sets up the nRF24L01 in RX mode                           *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_SetRXMode( uint8_t SPI_ch )
 {
    nRF24L01_WriteReg( SPI_ch, CONFIG, ( PWR_UP_MASK | PRIM_RX_MASK ) );
@@ -170,15 +170,15 @@ void nRF24L01_SetRXMode( uint8_t SPI_ch )
 #endif
 }
 
-//*************************************************************************
-// Function:  nRF24L01_StandbyMode                                        *
-//                                                                        *
-// Description: Sets up the nRF24L01 in RX mode                           *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_StandbyMode                                        *
+///                                                                        *
+/// Description: Sets up the nRF24L01 in RX mode                           *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_StandbyMode( uint8_t SPI_ch )
 {
    nRF24L01_WriteReg( SPI_ch, CONFIG, PWR_UP_MASK );
@@ -189,15 +189,15 @@ void nRF24L01_StandbyMode( uint8_t SPI_ch )
 #endif
 }
 
-//*************************************************************************
-// Function:  nRF24L01_PowerDown                                          *
-//                                                                        *
-// Description: Sets up the nRF24L01 in RX mode                           *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_PowerDown                                          *
+///                                                                        *
+/// Description: Sets up the nRF24L01 in RX mode                           *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_PowerDown( uint8_t SPI_ch )
 {
    nRF24L01_WriteReg( SPI_ch, CONFIG, 0 );
@@ -208,30 +208,30 @@ void nRF24L01_PowerDown( uint8_t SPI_ch )
 #endif
 }
 
-//*************************************************************************
-// Function:  nRF24L01_SetupChannel                                       *
-//                                                                        *
-// Description: Sets up the nRF24L01 transmission channel.                *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_SetupChannel                                       *
+///                                                                        *
+/// Description: Sets up the nRF24L01 transmission channel.                *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_SetupChannel( uint8_t SPI_ch )
 {
    nRF24L01_WriteReg( SPI_ch, RF_CH, nRF24L01_CHANNEL_FREQ );
    nRF24L01_WriteReg( SPI_ch, RF_SETUP, ( nRF24L01_DATA_RATE | nRF24L01_PA_CONTROL ) );
 }
 
-//*************************************************************************
-// Function:  nRF24L01_SendNOP                                            *
-//                                                                        *
-// Description: Sends a NOP command to the nRF24L01 device                *
-//                                                                        *
-// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  nRF24L01_SendNOP                                            *
+///                                                                        *
+/// Description: Sends a NOP command to the nRF24L01 device                *
+///                                                                        *
+/// Parameters: uint8_t SPI_ch: SPI channel being used.                    *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void nRF24L01_SendNOP( uint8_t SPI_ch )
 {
    nRF24L01_SPIMessage_t msg;

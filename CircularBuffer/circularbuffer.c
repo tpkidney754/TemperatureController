@@ -2,6 +2,18 @@
 
 uint8_t dmaComplete[ 4 ];
 
+///*************************************************************************
+/// Function:  CBufferInit                                                 *
+///                                                                        *
+/// Description: Initializes a circular buffer.                            *
+///                                                                        *
+/// Parameters: uint32_t itemSize: Size of each item in the buffer in bytes*
+///             uint32_t maxItems: Maximum number of items that the buffer *
+///                                can hold.                               *
+///                                                                        *
+/// Return Value:  CircularBuffer_t *: pointer to the circular buffer data *
+///                                    structure.                          *
+///*************************************************************************
 CircularBuffer_t * CBufferInit( uint32_t itemSize, uint32_t maxItems )
 {
    CircularBuffer_t cb;
@@ -25,6 +37,15 @@ CircularBuffer_t * CBufferInit( uint32_t itemSize, uint32_t maxItems )
    return pcb;
 }
 
+///*************************************************************************
+/// Function:  IsBufferFull                                                *
+///                                                                        *
+/// Description: Returns a status if the buffer is full or not             *
+///                                                                        *
+/// Parameters: CircularBuffer_t * cb: pointer to the buffer being checked.*
+///                                                                        *
+/// Return Value: BufferState_e: enumeration of buffer status.             *
+///*************************************************************************
 inline BufferState_e IsBufferFull( CircularBuffer_t * cb )
 {
    // Simple check to see if the number of items placed in the buffer
@@ -32,6 +53,15 @@ inline BufferState_e IsBufferFull( CircularBuffer_t * cb )
    return ( cb->numItems == cb->size ) ? BUFFER_FULL : BUFFER_NOT_FULL;
 }
 
+///*************************************************************************
+/// Function:  IsBufferEmpty                                               *
+///                                                                        *
+/// Description: Returns a status if the buffer is empty or not            *
+///                                                                        *
+/// Parameters: CircularBuffer_t * cb: pointer to the buffer being checked.*
+///                                                                        *
+/// Return Value: BufferState_e: enumeration of buffer status.             *
+///*************************************************************************
 inline BufferState_e IsBufferEmpty( CircularBuffer_t * cb )
 {
    // Simple check to see if anything has been written to the buffer
@@ -39,6 +69,20 @@ inline BufferState_e IsBufferEmpty( CircularBuffer_t * cb )
    return ( cb->numItems == 0 ) ? BUFFER_EMPTY : BUFFER_NOT_EMPTY;
 }
 
+///*************************************************************************
+/// Function:  CBufferAdd                                                  *
+///                                                                        *
+/// Description: Adds a value to the buffer                                *
+///                                                                        *
+/// Parameters: CircularBuffer_t * cb: pointer to the buffer that the item *
+///                                    is being added to.                  *
+///             void * data: Pointer to the data being added to the buffer *
+///             uint8_t DMAch: DMA channel being used to transfer the data.*
+///                            If DMAch is 0xFF, then software is used for *
+///                            the transfer.                               *
+///                                                                        *
+/// Return Value:  CBufferState_e: enumeration of buffer status.           *
+///*************************************************************************
 inline BufferState_e CBufferAdd( CircularBuffer_t * cb, void * data, uint8_t DMAch )
 {
    if( IsBufferFull( cb ) )
@@ -52,9 +96,24 @@ inline BufferState_e CBufferAdd( CircularBuffer_t * cb, void * data, uint8_t DMA
    cb->numItems++;
 }
 
-// If the numToAdd > cb->numItems + cb->size then this function will not add the total numToAdd.
-// If there is a need to make sure all items get added, then that checking needs to be done outside
-// by the code that is calling this function.
+///*************************************************************************
+/// Function:  CBufferAdd                                                  *
+///                                                                        *
+/// Description: Adds multiple values to the buffer with the use of DMA.   *
+///              The function currently does not work and is very          *
+///              complicated. This would help improve performance of the   *
+///              DMA transfers if needed.                                  *
+///                                                                        *
+/// Parameters: CircularBuffer_t * cb: pointer to the buffer that the item *
+///                                    is being added to.                  *
+///             void * data: Pointer to the data being added to the buffer *
+///             uint32_t numToAdd: Number of items to be added.            *
+///             uint8_t DMAch: DMA channel being used to transfer the data.*
+///                            If DMAch is 0xFF, then software is used for *
+///                            the transfer.                               *
+///                                                                        *
+/// Return Value:  CBufferState_e: enumeration of buffer status.           *
+///*************************************************************************
 BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
                                uint32_t numToAdd, uint8_t DMAch )
 {
@@ -130,6 +189,20 @@ BufferState_e CBufferAddItems( CircularBuffer_t * cb, void * data,
    return IsBufferFull( cb );
 }
 
+///*************************************************************************
+/// Function:  CBufferRemove                                               *
+///                                                                        *
+/// Description: Removes a value from the buffer                           *
+///                                                                        *
+/// Parameters: CircularBuffer_t * cb: pointer to the buffer that the item *
+///                                    is being removed from.              *
+///             void * data: Pointer to memory that the item will be placed*
+///             uint8_t DMAch: DMA channel being used to transfer the data.*
+///                            If DMAch is 0xFF, then software is used for *
+///                            the transfer.                               *
+///                                                                        *
+/// Return Value:  CBufferState_e: enumeration of buffer status.           *
+///*************************************************************************
 inline BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data, uint8_t DMAch )
 {
    if( IsBufferEmpty( cb ) )
@@ -143,6 +216,17 @@ inline BufferState_e CBufferRemove( CircularBuffer_t * cb, void * data, uint8_t 
    cb->numItems--;
 }
 
+///*************************************************************************
+/// Function:  CBufferDestruct                                             *
+///                                                                        *
+/// Description: Destructs a circular buffer and frees the memory that was *
+///              allocated to the buffer.                                  *
+///                                                                        *
+/// Parameters: CircularBuffer_t ** pcb: Double pointer to buffer to be    *
+///                                      freed.                            *
+///                                                                        *
+/// Return Value: NONE                                                     *
+///*************************************************************************
 void CBufferDestruct( CircularBuffer_t ** pcb )
 {
    CircularBuffer_t * cb = *pcb;

@@ -2,15 +2,15 @@
 #include "performancetesting.h"
 
 uint8_t dmaComplete[ 4 ];
-//*************************************************************************
-// Function:  PerformanceTesting                                          *
-//                                                                        *
-// Description: Main function that calls all individual performance test. *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  PerformanceTesting                                          *
+///                                                                        *
+/// Description: Main function that calls all individual performance test. *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void PerformanceTesting( )
 {
 #ifdef FRDM
@@ -21,17 +21,17 @@ void PerformanceTesting( )
    PrintingPerformanceTesting( );
 }
 
-//*************************************************************************
-// Function:  MemoryPerformanceTest                                       *
-//                                                                        *
-// Description: Records a timer value before and after each memory        *
-//              function and then reports the difference signifying the   *
-//              amount of time each function takes to complete.           *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  MemoryPerformanceTest                                       *
+///                                                                        *
+/// Description: Records a timer value before and after each memory        *
+///              function and then reports the difference signifying the   *
+///              amount of time each function takes to complete.           *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void MemoryPerformanceTesting( )
 {
    uint32_t memoryTestCaseSizes[ MEMORY_TEST_CASES ] = { 10, 100, 500, 1000, 5000 };
@@ -128,17 +128,17 @@ void MemoryPerformanceTesting( )
 
 }
 
-//*************************************************************************
-// Function:  DataPerformanceTest                                         *
-//                                                                        *
-// Description: Records a timer value before and after each data          *
-//              function and then reports the difference signifying the   *
-//              amount of time each function takes to complete.           *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  DataPerformanceTest                                         *
+///                                                                        *
+/// Description: Records a timer value before and after each data          *
+///              function and then reports the difference signifying the   *
+///              amount of time each function takes to complete.           *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void DataPerformanceTesting( )
 {
    int32_t intInput = 0xDEADBEEF;
@@ -205,17 +205,17 @@ void DataPerformanceTesting( )
 #endif
 }
 
-//*************************************************************************
-// Function:  PrintingPerformanceTest                                     *
-//                                                                        *
-// Description: Records a timer value before and after each printing      *
-//              function and then reports the difference signifying the   *
-//              amount of time each function takes to complete.           *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  PrintingPerformanceTest                                     *
+///                                                                        *
+/// Description: Records a timer value before and after each printing      *
+///              function and then reports the difference signifying the   *
+///              amount of time each function takes to complete.           *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void PrintingPerformanceTesting( )
 {
    uint32_t start = 0;

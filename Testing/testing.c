@@ -3,15 +3,15 @@
 
 static uint8_t fillerChar[ 3 ] = { '*', '@', '~' };
 
-//*************************************************************************
-// Function:  Testing                                                     *
-//                                                                        *
-// Description: Main function that calls all individual test suite.       *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  Testing                                                     *
+///                                                                        *
+/// Description: Main function that calls all individual test suite.       *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void Testing()
 {
 #ifdef FRDM
@@ -23,17 +23,17 @@ void Testing()
    PerformanceTesting();
 }
 
-//*************************************************************************
-// Function:  PrintHeader                                                 *
-//                                                                        *
-// Description: A string is passed in and a header type. The type will    *
-//              dictate the filler characters surrounding the header      *
-//              sting.                                                    *
-//                                                                        *
-// Parameters: NONE                                                       *
-//                                                                        *
-// Return Value:  NONE                                                    *
-//*************************************************************************
+///*************************************************************************
+/// Function:  PrintHeader                                                 *
+///                                                                        *
+/// Description: A string is passed in and a header type. The type will    *
+///              dictate the filler characters surrounding the header      *
+///              sting.                                                    *
+///                                                                        *
+/// Parameters: NONE                                                       *
+///                                                                        *
+/// Return Value:  NONE                                                    *
+///*************************************************************************
 void PrintHeader( uint8_t * header, HeaderType_t headerType )
 {
    if( headerType == pass_e )
