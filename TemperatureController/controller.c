@@ -99,7 +99,9 @@ void Controller_ChangeState( )
 void Controller_SetCurrentTemp( uint8_t newTemp )
 {
    currentTemp = newTemp;
+#ifndef TESTING
    CONVERT_C_TO_F( currentTemp );
+#endif
 
    if( currentTemp > ( desiredTemp + tempRange ) )
    {
@@ -169,7 +171,9 @@ void Controller_ChangeDisplay( uint8_t value )
 void Controller_SendTempData( uint8_t dontcare )
 {
    TemperatureMessage_t msg;
-
+#ifdef TESTING
+   Controller_SetCurrentTemp( ReadTemp( ) );
+#endif
    msg.currentTemp = currentTemp;
    msg.currentDesired = desiredTemp;
    msg.currentRange = tempRange;
